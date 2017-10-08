@@ -51,7 +51,7 @@ char* utf8ToString(u1* src, u2 length, bool isRef)  {
         // Read each byte of the string
         int j;
         string[0] = '<';
-        for (i = 1, j = 0; i < count + 1 && j < length; i++, j++) {
+        for (i = 1, j = 0; i < count + 2 && j < length; i++, j++) {
             if (src[i] >> 7 == 0x0) {
                 string[i] = (char) src[j];
             } else if (src[i] >> 5 == 0x6) {

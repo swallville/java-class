@@ -275,7 +275,7 @@ void showConstantPool() {
 
                 // Ask for the constant index
                 int chosenConst;
-                printf("_index: ");
+                printf("index: ");
                 scanf("%d", &chosenConst);
                 while(getchar() != '\n');
 
