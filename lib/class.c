@@ -630,7 +630,6 @@ LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int loc
 }
 
 void deallocateClass(Class** class) {
-
     if ((*class)->constant_pool != NULL) {
         deallocate((void**) &((*class)->constant_pool));
     }

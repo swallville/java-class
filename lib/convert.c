@@ -94,6 +94,5 @@ char* utf8ToString(u1* src, u2 length, bool isRef)  {
 
         string[count] = '\0';
     }
-
     return string;
 }

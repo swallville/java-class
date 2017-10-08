@@ -722,7 +722,6 @@ void showAttributes(AttributeInfo* attributes, int attributes_count) {
 }
 
 void showAttribute(AttributeInfo attrInfo) {
-
     infloop {
         char* name = getUtf8FromConstantPool(attrInfo.attributeName_index, class->constant_pool, false);
         char* nameRef = getUtf8FromConstantPool(attrInfo.attributeName_index, class->constant_pool, true);
@@ -858,7 +857,6 @@ void showAttribute(AttributeInfo attrInfo) {
 }
 
 void showCode(u1* code, int codeLength) {
-
     if (codeLength == 0) {
         printf("Empty Array\n");
         return;
@@ -886,7 +884,6 @@ void showCode(u1* code, int codeLength) {
 }
 
 void showExceptionTable(ExceptionTableEntry* exceptionTable, int exceptionTableLength) {
-
     if (exceptionTableLength == 0) {
         printf("Empty Array\n");
         return;

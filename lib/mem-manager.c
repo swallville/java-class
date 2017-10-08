@@ -7,7 +7,6 @@
  * This file contains all the function source codes which has the
  * signatures declared on the mem-manager.h file.
  */
-
 #include "mem-manager.h"
 
 /**
@@ -20,7 +19,6 @@
 MemManager* memList = NULL;
 
 MemManager* memInit(void* elemRef) {
-
     // Allocate memory for the new memory manager.
     MemManager *manager = (MemManager*) malloc(sizeof(MemManager));
     // Set the element reference.
@@ -31,7 +29,6 @@ MemManager* memInit(void* elemRef) {
 }
 
 void memAdd(MemManager** managerRef, void* elemRef) {
-
     // Searches for previous node with this elemRef to avoid duplicates.
     MemManager* node =  NULL;
     for (node = (*managerRef); node != NULL; node = node->next) {
@@ -51,12 +48,10 @@ void memAdd(MemManager** managerRef, void* elemRef) {
 }
 
 MemManager* memDelete(MemManager** managerRef, void* elemRef) {
-
     // Searches for some node with this specific Reference.
     MemManager* node = NULL;
     MemManager* previous = NULL;
     for (node = (*managerRef); node != NULL; node = node->next) {
-
         // Compares that element refence value with elemRef.
         if (node->elemRef == elemRef) {
 
@@ -80,7 +75,6 @@ MemManager* memDelete(MemManager** managerRef, void* elemRef) {
 }
 
 void* allocate(size_t memorySpace) {
-
     // Allocate the space of memory.
     void *pointer = malloc(memorySpace);
     // Verify if occurred some error on the allocation.
@@ -101,9 +95,7 @@ void* allocate(size_t memorySpace) {
 }
 
 void deallocate(void** pointer) {
-
     if (memList != NULL && (*pointer) != NULL) {
-
         // Deletes the node referenced by this pointer's value.
         MemManager* deletedNode = memDelete(&memList, (*pointer));
         // Verifies if the node has already been deleted.
@@ -125,11 +117,9 @@ void deallocate(void** pointer) {
 }
 
 void freeMemManager() {
-
     if (memList != NULL) {
         // Iterate until the memory manager list are empty.
         while (memList != NULL) {
-
             // Stores first node and updates new memory reference with the
             // second element.
             MemManager *previous = memList;
