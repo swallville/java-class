@@ -37,7 +37,6 @@ void memAdd(MemManager** managerRef, void* elemRef) {
             return;
         }
     }
-
     // Alocate memory for the new node.
     MemManager* newNode = (MemManager*) malloc(sizeof(MemManager));
     // Set the element reference.
@@ -54,7 +53,6 @@ MemManager* memDelete(MemManager** managerRef, void* elemRef) {
     for (node = (*managerRef); node != NULL; node = node->next) {
         // Compares that element refence value with elemRef.
         if (node->elemRef == elemRef) {
-
             // Verifies if it's the first element with "previous" variable
             // before eliminating the node.
             if (previous == NULL) {
@@ -65,11 +63,9 @@ MemManager* memDelete(MemManager** managerRef, void* elemRef) {
             // Returns the eliminated node.
             return node;
         }
-
         // Stores the previous node in this loop.
         previous = node;
     }
-
     // The node was not found.
     return NULL;
 }
@@ -81,7 +77,6 @@ void* allocate(size_t memorySpace) {
     if (pointer == NULL) {
         return NULL;
     }
-
     // Adds a new node to the memory manager or initializes it, if it wasn't
     // initialized before.
     if (memList == NULL) {
@@ -89,7 +84,6 @@ void* allocate(size_t memorySpace) {
     } else {
         memAdd(&memList, pointer);
     }
-
     // Returns the reference to the memory allocated successfully.
     return pointer;
 }
@@ -108,7 +102,6 @@ void deallocate(void** pointer) {
             deletedNode = NULL;
         }
     }
-
     // Finally, deallocate the memory and erase its reference.
     if ((*pointer) != NULL) {
         free((*pointer));
@@ -124,12 +117,10 @@ void freeMemManager() {
             // second element.
             MemManager *previous = memList;
             memList = memList->next;
-
             // Deallocate element's reference of the first node
             if (previous->elemRef != NULL) {
                 free(previous->elemRef);
             }
-
             // Erase references and deallocate the node's space of memory.
             previous->elemRef = NULL;
             previous->next = NULL;

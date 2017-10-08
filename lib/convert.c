@@ -45,9 +45,9 @@ char* utf8ToString(u1* src, u2 length, bool isRef)  {
 
     // Allocate the space of memory for the string
     char* string = NULL;
+    // Check if the Constant Type is of kind Ref such as FIELD_REF, METHOD_REF
     if (isRef) {
         string  = (char*) allocate((count + 3) * sizeof(char));
-
         // Read each byte of the string
         int j;
         string[0] = '<';
@@ -72,7 +72,6 @@ char* utf8ToString(u1* src, u2 length, bool isRef)  {
         string[count + 2] = '\0';
     } else {
         string  = (char*) allocate((count + 1) * sizeof(char));
-
         // Read each byte of the string
         int j;
         for (i = 0, j = 0; i < count && j < length; i++, j++) {

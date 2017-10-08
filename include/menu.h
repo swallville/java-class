@@ -2,7 +2,6 @@
  * @file menu.h
  * @brief Command-line Interface library header.
  * @authors Lukas Ferreira Machado (12/0127377)
- * @authors Raphael Luís Souza de Queiroz (13/0154989)
  *
  * This file contains all the function signatures used in the menus
  * and in the user choices processing.
