@@ -78,7 +78,7 @@ void showMethod(MethodInfo methodInfo);
  * @todo Description
  * @todo Parameters
  */
-void showAttributes(AttributeInfo* attributes, int attributesCount);
+void showAttributes(AttributeInfo* attributes, int attributes_count);
 
 /**
  * @todo Brief

@@ -347,7 +347,7 @@ Instruction* getNoArgsInstr(u1* bytecode, int* offset, int pc, int opcode, char*
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
-	instr->argumentsCount = 0;
+	instr->arguments_count = 0;
 	instr->arguments = NULL;
 	return instr;
 }
@@ -357,7 +357,7 @@ Instruction* getOneArgInstr(u1* bytecode, int* offset, int pc, int opcode, char*
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
-	instr->argumentsCount = 1;
+	instr->arguments_count = 1;
 	instr->arguments = (int8_t*) allocate(1 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	return instr;
@@ -368,7 +368,7 @@ Instruction* getTwoArgsInstr(u1* bytecode, int* offset, int pc, int opcode, char
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
-	instr->argumentsCount = 2;
+	instr->arguments_count = 2;
 	instr->arguments = (int8_t*) allocate(2 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	instr->arguments[1] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);

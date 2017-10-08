@@ -66,7 +66,7 @@ typedef struct _instruction {
     int pc;
     int opcode;
     char* name;
-    int argumentsCount;
+    int arguments_count;
     int8_t* arguments;
 }Instruction;
 

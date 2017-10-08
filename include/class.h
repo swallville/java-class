@@ -54,26 +54,26 @@ typedef struct _const_pool_info {
          * Contains the name index from the class.
          */
         struct {
-            u2 nameIndex;
-        } classConst;
+            u2 name_index;
+        } class_const;
         /**
          * @brief FieldRef type.
          *
          * Contains the class index and the name and type index from the FieldRef.
          */
         struct {
-            u2 classIndex;
-            u2 nameAndTypeIndex;
-        } fieldRefConst;
+            u2 class_index;
+            u2 nameAndType_index;
+        } fieldRef_const;
         /**
          * @brief Name and Type type.
          *
          * Contains the name index and the descriptor index.
          */
         struct {
-            u2 nameIndex;
-            u2 descriptorIndex;
-        } nameAndTypeConst;
+            u2 name_index;
+            u2 descriptor_index;
+        } nameAndType_const;
         /**
          * @brief UTF8 type.
          *
@@ -82,33 +82,33 @@ typedef struct _const_pool_info {
         struct {
             u2 length;
             u1* bytes;
-        } utf8Const;
+        } utf8_const;
         /**
          * @brief MethodRef type.
          *
          * Contains the class index and name and type index.
          */
         struct {
-            u2 classIndex;
-            u2 nameAndTypeIndex;
-        } methodRefConst;
+            u2 class_index;
+            u2 nameAndType_index;
+        } methodRef_const;
         /**
          * @brief InterfaceMethodRef type.
          *
          * Contains the class index and name and type index.
          */
         struct {
-            u2 classIndex;
-            u2 nameAndTypeIndex;
-        } interfaceMethodRefConst;
+            u2 class_index;
+            u2 nameAndType_index;
+        } interfaceMethodRef_const;
         /**
          * @brief String type.
          *
          * Contains the string index.
          */
         struct {
-            u2 stringIndex;
-        } stringConst;
+            u2 string_index;
+        } string_const;
         /**
          * @brief Inteiro type.
          *
@@ -116,7 +116,7 @@ typedef struct _const_pool_info {
          */
         struct {
             u4 bytes;
-        } integerConst;
+        } integer_const;
         /**
          * @brief Float type.
          *
@@ -127,7 +127,7 @@ typedef struct _const_pool_info {
                 u4 bytes;
                 float value;
             };
-        } floatConst;
+        } float_const;
         /**
          * @brief Long type.
          *
@@ -141,7 +141,7 @@ typedef struct _const_pool_info {
                 } bytes;
                 long int value;
             };
-        } longConst;
+        } long_const;
          /**
          * @brief Double type.
          *
@@ -155,7 +155,7 @@ typedef struct _const_pool_info {
                 } bytes;
                 double value;
             };
-        } doubleConst;
+        } double_const;
     };
 }ConstPoolInfo;
 
@@ -166,10 +166,10 @@ typedef struct _const_pool_info {
  * The type definition of the structure is AttributeInfo.
  */
 typedef struct _attribute_info {
-    u2 attributeNameIndex;
+    u2 attributeName_index;
     u4 attributeLength;
     u1 *info;
-    void *specificInfo;
+    void *specific_info;
 }AttributeInfo;
 
 /**
@@ -180,10 +180,10 @@ typedef struct _attribute_info {
  * The type definition of the structure is FieldInfo.
  */
 typedef struct _field_info {
-    u2 accessFlags;
-    u2 nameIndex;
-    u2 descriptorIndex;
-    u2 attributesCount;
+    u2 access_flags;
+    u2 name_index;
+    u2 descriptor_index;
+    u2 attributes_count;
     AttributeInfo *attributes;
 }FieldInfo;
 
@@ -195,10 +195,10 @@ typedef struct _field_info {
  * The type definition of the structure is MethodInfo.
  */
 typedef struct _method_info {
-    u2 accessFlags;
-    u2 nameIndex;
-    u2 descriptorIndex;
-    u2 attributesCount;
+    u2 access_flags;
+    u2 name_index;
+    u2 descriptor_index;
+    u2 attributes_count;
     AttributeInfo *attributes;
 }MethodInfo;
 
@@ -209,7 +209,7 @@ typedef struct _method_info {
  * The type definition of the structure is ExceptionTableEntry.
  */
 typedef struct _constant_value_attribute {
-    u2 constantValueIndex;
+    u2 constantValue_index;
 }ConstantValueAttribute;
 
 /**
@@ -219,10 +219,10 @@ typedef struct _constant_value_attribute {
  * The type definition of the structure is ExceptionTableEntry.
  */
 typedef struct _exception_table_entry {
-    u2 startPc;
-    u2 endPc;
-    u2 handlerPc;
-    u2 catchType;
+    u2 start_pc;
+    u2 end_pc;
+    u2 handler_pc;
+    u2 catch_type;
 }ExceptionTableEntry;
 
 /**
@@ -233,13 +233,13 @@ typedef struct _exception_table_entry {
  * The type definition of the structure is CodeAttribute.
  */
 typedef struct _code_attribute {
-    u2 maxStack;
-    u2 maxLocals;
+    u2 max_stack;
+    u2 max_locals;
     u4 codeLength;
     u1 *code;
     u2 exceptionTableLength;
     ExceptionTableEntry *exceptionTable;
-    u2 attributesCount;
+    u2 attributes_count;
     AttributeInfo *attributes;
 }CodeAttribute;
 
@@ -251,7 +251,7 @@ typedef struct _code_attribute {
  */
 typedef struct _exception_attribute {
     u2 numberOfExceptions;
-    u2 *exceptionIndexTable;
+    u2 *exception_indexTable;
 }ExceptionAttribute;
 
 /**
@@ -261,10 +261,10 @@ typedef struct _exception_attribute {
  * The type definition of the Inner Class structure is InnerClass.
  */
 typedef struct _inner_class {
-    u2 innerClassInfoIndex;
-    u2 outerClassInfoIndex;
-    u2 innerNameIndex;
-    u2 innerClassAccessFlags;
+    u2 innerClassInfo_index;
+    u2 outerClassInfo_index;
+    u2 innerName_index;
+    u2 innerClassAccess_flags;
 }InnerClass;
 
 /**
@@ -285,7 +285,7 @@ typedef struct _inner_classes_attribute {
  * The type definition of the structure is LineNumberTableEntry.
  */
 typedef struct _line_number_table_entry {
-    u2 startPc;
+    u2 start_pc;
     u2 lineNumber;
 }LineNumberTableEntry;
 
@@ -307,10 +307,10 @@ typedef struct _line_number_table_attribute {
  * The type definition of the structure is LocalVariableTableEntry.
  */
 typedef struct _local_variable_table_entry {
-    u2 startPc;
+    u2 start_pc;
     u2 length;
-    u2 nameIndex;
-    u2 descriptorIndex;
+    u2 name_index;
+    u2 descriptor_index;
     u2 index;
 }LocalVariableTableEntry;
 
@@ -332,7 +332,7 @@ typedef struct _local_variable_table_attribute {
  * The type definition of the structure is SourceFileAttribute.
  */
 typedef struct _source_file_attribute {
-    u2 sourceFileIndex;
+    u2 sourceFile_index;
 }SourceFileAttribute;
 
 /**
@@ -349,23 +349,23 @@ typedef struct _class {
      /**
      * @brief Mejor Version.
      */
-    u2 majorVersion;
+    u2 major_version;
     /**
      * @brief Minor Version..
      */
-    u2 minorVersion;
+    u2 minor_version;
    /**
      * @brief Counter for constant pool.
      */
-    u2 constantPoolCount;
+    u2 constantPool_count;
     /**
      * @brief Pointer ConstantPool type ConstantPoolInfo
      */
-    ConstPoolInfo* constantPool;
+    ConstPoolInfo* constant_pool;
    /**
      * @brief Acess Flags.
      */
-    u2 accessFlags;
+    u2 access_flags;
     /**
      * @brief This Class.
      */
@@ -377,7 +377,7 @@ typedef struct _class {
     /**
      * @brief Counter for Interfaces.
      */
-    u2 interfacesCount;
+    u2 interfaces_count;
     /**
      * @brief Interfaces type U2.
      */
@@ -385,7 +385,7 @@ typedef struct _class {
     /**
      * @brief Counter for fields.
      */
-    u2 fieldsCount;
+    u2 fields_count;
     /**
      * @brief Fields type FieldInfo.
      */
@@ -393,7 +393,7 @@ typedef struct _class {
     /**
      * @brief Coounter for Métodos.
      */
-    u2 methodsCount;
+    u2 methods_count;
     /**
      * @brief Methods type MethodsInfo.
      */
@@ -401,7 +401,7 @@ typedef struct _class {
     /**
      * @brief Counter of Attributes.
      */
-    u2 attributesCount;
+    u2 attributes_count;
     /**
      * @brief Attributes type AttributeInfo.
      */
@@ -415,6 +415,86 @@ typedef struct _class {
  * @todo Return
  */
 Class* getClassfile(FILE* fp);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+char* getUtf8FromConstantPool(int index, ConstPoolInfo* constantPool, bool isRef);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u2 get2bytesBigEndian(FILE* fp, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u4 get4bytesBigEndian(FILE* fp, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u1 get1bytesFromByteArray(u1* byteArr, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u2 get2bytesFromByteArray(u1* byteArr, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u2 get2bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u4 get4bytesFromByteArray(u1* byteArr, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+u4 get4bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+double getDouble (u4 high, u4 low);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+long getLong(u4 high, u4 low);
 
 /**
  * @brief
@@ -503,86 +583,6 @@ LineNumberTableEntry* getLineNumberTable(u1* info, int* bytecount, int lineNumbe
  * @todo Return
  */
 LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int localVariableTableLength);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-char* getUtf8FromConstantPool(int index, ConstPoolInfo* constantPool, bool isRef);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u2 get2bytesBigEndian(FILE* fp, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u4 get4bytesBigEndian(FILE* fp, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u1 get1bytesFromByteArray(u1* byteArr, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u2 get2bytesFromByteArray(u1* byteArr, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u2 get2bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u4 get4bytesFromByteArray(u1* byteArr, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u4 get4bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-double getDouble (u4 high, u4 low);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-long getLong(u4 high, u4 low);
 
 /**
  * @brief Deallocate the main elements of the .class strucure.

@@ -6,9 +6,6 @@
  * This file contains all the function source codes which has the
  * signatures declared on the class.h file.
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 #include "mem-manager.h"
 #include "file.h"
@@ -24,22 +21,22 @@ Class* getClassfile(FILE* fp) {
     bytecount += 4;
 
     // Read minor version
-    class->minorVersion = get2bytesBigEndian(fp, bytecount);
+    class->minor_version = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read major version
-    class->majorVersion = get2bytesBigEndian(fp, bytecount);
+    class->major_version = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read constant pool count
-    class->constantPoolCount = get2bytesBigEndian(fp, bytecount);
+    class->constantPool_count = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read constant pool
-    class->constantPool = getConstantPool(fp, &bytecount, class->constantPoolCount - 1);
+    class->constant_pool = getConstantPool(fp, &bytecount, class->constantPool_count - 1);
 
     // Read access flags
-    class->accessFlags = get2bytesBigEndian(fp, bytecount);
+    class->access_flags = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read this class
@@ -51,39 +48,39 @@ Class* getClassfile(FILE* fp) {
     bytecount += 2;
 
     // Read interfaces count
-    class->interfacesCount = get2bytesBigEndian(fp, bytecount);
+    class->interfaces_count = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read interfaces
-    class->interfaces = getInterfaces(fp, &bytecount, class->interfacesCount);
+    class->interfaces = getInterfaces(fp, &bytecount, class->interfaces_count);
 
     // Read fields count
-    class->fieldsCount = get2bytesBigEndian(fp, bytecount);
+    class->fields_count = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read fields
-    class->fields = getFields(fp, &bytecount, class->fieldsCount, class->constantPool);
+    class->fields = getFields(fp, &bytecount, class->fields_count, class->constant_pool);
 
     // Read methods count
-    class->methodsCount = get2bytesBigEndian(fp, bytecount);
+    class->methods_count = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read methods
-    class->methods = getMethods(fp, &bytecount, class->methodsCount, class->constantPool);
+    class->methods = getMethods(fp, &bytecount, class->methods_count, class->constant_pool);
 
     // Read attributes count
-    class->attributesCount = get2bytesBigEndian(fp, bytecount);
+    class->attributes_count = get2bytesBigEndian(fp, bytecount);
     bytecount += 2;
 
     // Read attributes
-    class->attributes = getAttributes(fp, &bytecount, class->attributesCount, class->constantPool);
+    class->attributes = getAttributes(fp, &bytecount, class->attributes_count, class->constant_pool);
 
     return class;
 }
 
-char* getUtf8FromConstantPool(int index, ConstPoolInfo* constantPool, bool isRef) {
+char* getUtf8FromConstantPool(int index, ConstPoolInfo* constant_pool, bool isRef) {
     if (index != 0) {
-        return utf8ToString(constantPool[index - 1].utf8Const.bytes, constantPool[index - 1].utf8Const.length, isRef);
+        return utf8ToString(constant_pool[index - 1].utf8_const.bytes, constant_pool[index - 1].utf8_const.length, isRef);
     } else {
         char* invalid = (char*) allocate(16 * sizeof(char));
         strcpy(invalid, "invalid constant");
@@ -145,13 +142,13 @@ long getLong(u4 high, u4 low) {
     return ((uint64_t)high) << 32 | low;
 }
 
-ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount) {
+ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cp_count) {
     int index = 0;
 
     // Allocate space for the costant pool
-    ConstPoolInfo* cpInfo = (ConstPoolInfo*) allocate(cpCount * sizeof(ConstPoolInfo));
+    ConstPoolInfo* cpInfo = (ConstPoolInfo*) allocate(cp_count * sizeof(ConstPoolInfo));
 
-    while (index < cpCount) {
+    while (index < cp_count) {
         // Read tag
         cpInfo[index].tag = getByte(fp, (*bytecount));
         (*bytecount)++;
@@ -160,32 +157,32 @@ ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount) {
         switch(cpInfo[index].tag) {
             // Read CONTANT_UTF8_Info
             case UTF8:
-                cpInfo[index].utf8Const.length = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].utf8_const.length = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
-                cpInfo[index].utf8Const.bytes = (u1*) allocate((cpInfo[index].utf8Const.length) * sizeof(u1));
-                for (int utf8Index = 0; utf8Index < (cpInfo[index].utf8Const.length); utf8Index++) {
-                    cpInfo[index].utf8Const.bytes[utf8Index] = getByte(fp, (*bytecount));
+                cpInfo[index].utf8_const.bytes = (u1*) allocate((cpInfo[index].utf8_const.length) * sizeof(u1));
+                for (int utf8_index = 0; utf8_index < (cpInfo[index].utf8_const.length); utf8_index++) {
+                    cpInfo[index].utf8_const.bytes[utf8_index] = getByte(fp, (*bytecount));
                     (*bytecount)++;
                 }
                 break;
 
             // Read CONTANT_Integer_Info
             case INTEGER:
-                cpInfo[index].integerConst.bytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].integer_const.bytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
                 break;
 
             // Read CONTANT_Float_Info
             case FLOAT:
-                cpInfo[index].floatConst.bytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].float_const.bytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
                 break;
 
             // Read CONTANT_Long_Info
             case LONG:
-                cpInfo[index].longConst.bytes.highBytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].long_const.bytes.highBytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
-                cpInfo[index].longConst.bytes.lowBytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].long_const.bytes.lowBytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
                 // This field are stored in two indexes
                 index++;
@@ -194,9 +191,9 @@ ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount) {
 
             // Read CONTANT_Double_Info
             case DOUBLE:
-                cpInfo[index].doubleConst.bytes.highBytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].double_const.bytes.highBytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
-                cpInfo[index].doubleConst.bytes.lowBytes = get4bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].double_const.bytes.lowBytes = get4bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 4;
                 // This field are stored in two indexes
                 index++;
@@ -205,49 +202,49 @@ ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount) {
 
             // Read CONTANT_Class_Info
             case CLASS:
-                cpInfo[index].classConst.nameIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].class_const.name_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
             // Read CONTANT_String_Info
             case STRING:
-                cpInfo[index].stringConst.stringIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].string_const.string_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
             // Read CONTANT_Fieldref_Info
             case FIELD_REF:
-                cpInfo[index].fieldRefConst.classIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].fieldRef_const.class_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
-                cpInfo[index].fieldRefConst.nameAndTypeIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].fieldRef_const.nameAndType_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
             // Read CONTANT_Methodref_Info
             case METHOD_REF:
-                cpInfo[index].methodRefConst.classIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].methodRef_const.class_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
-                cpInfo[index].methodRefConst.nameAndTypeIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].methodRef_const.nameAndType_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
             // Read CONTANT_InterfaceMethodref_Info
             case INTERFACE_METHOD_REF:
-                cpInfo[index].interfaceMethodRefConst.classIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].interfaceMethodRef_const.class_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
-                cpInfo[index].interfaceMethodRefConst.nameAndTypeIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].interfaceMethodRef_const.nameAndType_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
             // Read CONTANT_NameAndType_Info
             case NAME_AND_TYPE:
-                cpInfo[index].nameAndTypeConst.nameIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].nameAndType_const.name_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
-                cpInfo[index].nameAndTypeConst.descriptorIndex = get2bytesBigEndian(fp, (*bytecount));
+                cpInfo[index].nameAndType_const.descriptor_index = get2bytesBigEndian(fp, (*bytecount));
                 (*bytecount) += 2;
                 break;
 
-            // Error while geting contant pool
+            // Error while geting constant pool
             default:
                 printf("Error while geting classfile on position: %ld\n", ftell(fp));
         }
@@ -257,41 +254,41 @@ ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount) {
     return cpInfo;
 }
 
-u2* getInterfaces(FILE* fp, int* bytecount, u2 interfacesCount) {
-    u2* interfaces = (u2*) allocate(interfacesCount * sizeof(u2));
+u2* getInterfaces(FILE* fp, int* bytecount, u2 interfaces_count) {
+    u2* interfaces = (u2*) allocate(interfaces_count * sizeof(u2));
 
-    for (int interfacesIndex = 0; interfacesIndex < interfacesCount; interfacesIndex++) {
-        interfaces[interfacesIndex] = get2bytesBigEndian(fp, (*bytecount));
+    for (int interfaces_index = 0; interfaces_index < interfaces_count; interfaces_index++) {
+        interfaces[interfaces_index] = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) += 2;
     }
 
     return interfaces;
 }
 
-FieldInfo* getFields(FILE* fp, int* bytecount, u2 fieldsCount, ConstPoolInfo* constantPool) {
-    FieldInfo* field = (FieldInfo*) allocate(fieldsCount * sizeof(FieldInfo));
+FieldInfo* getFields(FILE* fp, int* bytecount, u2 fields_count, ConstPoolInfo* constant_pool) {
+    FieldInfo* field = (FieldInfo*) allocate(fields_count * sizeof(FieldInfo));
     int index = 0;
 
-    while(index < fieldsCount) {
+    while(index < fields_count) {
 
         // Read access flags
-        field[index].accessFlags = get2bytesBigEndian(fp, (*bytecount));
+        field[index].access_flags = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read name index
-        field[index].nameIndex = get2bytesBigEndian(fp, (*bytecount));
+        field[index].name_index = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read descriptor index
-        field[index].descriptorIndex = get2bytesBigEndian(fp, (*bytecount));
+        field[index].descriptor_index = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read attributes count
-        field[index].attributesCount = get2bytesBigEndian(fp, (*bytecount));
+        field[index].attributes_count = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read attributes
-        field[index].attributes = getAttributes(fp, bytecount, field[index].attributesCount, constantPool);
+        field[index].attributes = getAttributes(fp, bytecount, field[index].attributes_count, constant_pool);
 
         index++;
     }
@@ -300,29 +297,29 @@ FieldInfo* getFields(FILE* fp, int* bytecount, u2 fieldsCount, ConstPoolInfo* co
 
 }
 
-MethodInfo* getMethods(FILE* fp, int* bytecount, u2 methodsCount, ConstPoolInfo* constantPool) {
-    MethodInfo* method = (MethodInfo*) allocate(methodsCount * sizeof(MethodInfo));
+MethodInfo* getMethods(FILE* fp, int* bytecount, u2 methods_count, ConstPoolInfo* constant_pool) {
+    MethodInfo* method = (MethodInfo*) allocate(methods_count * sizeof(MethodInfo));
     int index = 0;
 
-    while (index < methodsCount) {
+    while (index < methods_count) {
         // Read access flags
-        method[index].accessFlags = get2bytesBigEndian(fp, (*bytecount));
+        method[index].access_flags = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read name index
-        method[index].nameIndex = get2bytesBigEndian(fp, (*bytecount));
+        method[index].name_index = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read descriptor index
-        method[index].descriptorIndex = get2bytesBigEndian(fp, (*bytecount));
+        method[index].descriptor_index = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read attributes count
-        method[index].attributesCount = get2bytesBigEndian(fp, (*bytecount));
+        method[index].attributes_count = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read attributes
-        method[index].attributes = getAttributes(fp, bytecount, method[index].attributesCount, constantPool);
+        method[index].attributes = getAttributes(fp, bytecount, method[index].attributes_count, constant_pool);
 
         index ++;
     }
@@ -330,13 +327,13 @@ MethodInfo* getMethods(FILE* fp, int* bytecount, u2 methodsCount, ConstPoolInfo*
     return method;
 }
 
-AttributeInfo* getAttributes (FILE* fp, int* bytecount, u2 attributesCount, ConstPoolInfo* constantPool) {
-    AttributeInfo* attribute = (AttributeInfo*) allocate(attributesCount * sizeof(AttributeInfo));
+AttributeInfo* getAttributes (FILE* fp, int* bytecount, u2 attributes_count, ConstPoolInfo* constant_pool) {
+    AttributeInfo* attribute = (AttributeInfo*) allocate(attributes_count * sizeof(AttributeInfo));
     int index = 0;
 
-    while(index < attributesCount) {
+    while(index < attributes_count) {
         // Read attribute name index
-        attribute[index].attributeNameIndex = get2bytesBigEndian(fp, (*bytecount));
+        attribute[index].attributeName_index = get2bytesBigEndian(fp, (*bytecount));
         (*bytecount) +=2;
 
         // Read attribute length
@@ -345,26 +342,26 @@ AttributeInfo* getAttributes (FILE* fp, int* bytecount, u2 attributesCount, Cons
 
         // Read info
         attribute[index].info = (u1*) allocate(attribute[index].attributeLength * sizeof(u1));
-        for (int attrIndex = 0; attrIndex < (attribute[index].attributeLength); attrIndex++) {
-            attribute[index].info[attrIndex] = getByte(fp, (*bytecount));
+        for (int attr_index = 0; attr_index < (attribute[index].attributeLength); attr_index++) {
+            attribute[index].info[attr_index] = getByte(fp, (*bytecount));
             (*bytecount)++;
         }
 
         // Decode info
-        attribute[index].specificInfo = decodeInfo(attribute[index], constantPool);
+        attribute[index].specific_info = decodeInfo(attribute[index], constant_pool);
         index++;
     }
 
     return attribute;
 }
 
-AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attributesCount, ConstPoolInfo* constantPool) {
-    AttributeInfo* attribute = (AttributeInfo*) allocate(attributesCount * sizeof(AttributeInfo));
+AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attributes_count, ConstPoolInfo* constant_pool) {
+    AttributeInfo* attribute = (AttributeInfo*) allocate(attributes_count * sizeof(AttributeInfo));
     int index = 0;
 
-    while (index < attributesCount) {
+    while (index < attributes_count) {
         // Read attribute name index
-        attribute[index].attributeNameIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        attribute[index].attributeName_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) +=2;
 
         // Read attribute length
@@ -375,13 +372,13 @@ AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attribute
 
             // Read info
             attribute[index].info = (u1*) allocate((attribute[index].attributeLength) * sizeof(u1));
-            for (int attrIndex = 0; attrIndex < (attribute[index].attributeLength); attrIndex++) {
-                attribute[index].info[attrIndex] = get1bytesFromByteArray(info, (*bytecount));
+            for (int attr_index = 0; attr_index < (attribute[index].attributeLength); attr_index++) {
+                attribute[index].info[attr_index] = get1bytesFromByteArray(info, (*bytecount));
                 (*bytecount)++;
             }
 
             // Decode info
-            attribute[index].specificInfo = decodeInfo(attribute[index], constantPool);
+            attribute[index].specific_info = decodeInfo(attribute[index], constant_pool);
         }
         index++;
     }
@@ -389,34 +386,34 @@ AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attribute
     return attribute;
 }
 
-void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
+void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constant_pool) {
     int bytecount = 0;
-    void* specificInfo = NULL;
+    void* specific_info = NULL;
 
     // Get attribute name
-    char* attributeName = getUtf8FromConstantPool(attribute.attributeNameIndex, constantPool, false);
+    char* attributeName = getUtf8FromConstantPool(attribute.attributeName_index, constant_pool, false);
 
     if (strcmp(attributeName, "ConstantValue") == 0) {
         // Allocate space
         ConstantValueAttribute* reference = (ConstantValueAttribute*) allocate(sizeof(ConstantValueAttribute));
 
         // Read contant value index
-        reference->constantValueIndex = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+        reference->constantValue_index = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
         bytecount += 2;
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "Code") == 0) {
 
         CodeAttribute* reference = (CodeAttribute*) allocate(sizeof(CodeAttribute));
 
         // Read max stack
-        reference->maxStack = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+        reference->max_stack = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
         bytecount += 2;
 
         // Read max locals
-        reference->maxLocals = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+        reference->max_locals = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
         bytecount += 2;
 
         // Read code length
@@ -438,14 +435,14 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
         reference->exceptionTable = getExceptionTable(attribute.info, &bytecount, reference->exceptionTableLength);
 
         // Read attributes count
-        reference->attributesCount = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+        reference->attributes_count = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
         bytecount += 2;
 
         // Read attributes
-        reference->attributes = getAttributesFromByteArray(attribute.info, &bytecount, reference->attributesCount, constantPool);
+        reference->attributes = getAttributesFromByteArray(attribute.info, &bytecount, reference->attributes_count, constant_pool);
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "Deprecated") == 0) {
 
@@ -460,14 +457,14 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
         bytecount += 2;
 
         // Read exception index table
-        reference->exceptionIndexTable = (u2*) allocate(reference->numberOfExceptions * sizeof(u2));
+        reference->exception_indexTable = (u2*) allocate(reference->numberOfExceptions * sizeof(u2));
         for (int count = 0; count < reference->numberOfExceptions; count++) {
-            reference->exceptionIndexTable[count] = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+            reference->exception_indexTable[count] = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
             bytecount += 2;
         }
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "InnerClasses") == 0) {
 
@@ -481,18 +478,18 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
         reference->classes = getInnerClasses(attribute.info, &bytecount, reference->numberOfClasses);
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "SourceFile") == 0) {
 
         SourceFileAttribute* reference = (SourceFileAttribute*) allocate(sizeof(SourceFileAttribute));
 
         // Read source file index
-        reference->sourceFileIndex = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
+        reference->sourceFile_index = get2bytesBigEndianFromByteArray(attribute.info, bytecount);
         bytecount += 2;
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "LineNumberTable") == 0) {
 
@@ -506,7 +503,7 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
         reference->lineNumberTable = getLineNumberTable(attribute.info, &bytecount, reference->lineNumberTableLength);
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } else if (strcmp(attributeName, "LocalVariableTable") == 0) {
 
@@ -520,12 +517,12 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool) {
         reference->localVariableTable = getLocalVariableTable(attribute.info, &bytecount, reference->localVariableTableLength);
 
         // Store reference
-        specificInfo = reference;
+        specific_info = reference;
 
     } // Ignore unknowm property
 
     deallocate( (void**) &attributeName );
-    return specificInfo;
+    return specific_info;
 }
 
 ExceptionTableEntry* getExceptionTable(u1* info, int* bytecount, int exceptionTableLength) {
@@ -534,19 +531,19 @@ ExceptionTableEntry* getExceptionTable(u1* info, int* bytecount, int exceptionTa
 
     while (index < exceptionTableLength) {
         // Read start_pc
-        exceptionTable[index].startPc = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        exceptionTable[index].start_pc = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read end_pc
-        exceptionTable[index].endPc = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        exceptionTable[index].end_pc = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read handler_pc
-        exceptionTable[index].handlerPc = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        exceptionTable[index].handler_pc = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read catch_type
-        exceptionTable[index].catchType = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        exceptionTable[index].catch_type = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         index++;
@@ -561,19 +558,19 @@ InnerClass* getInnerClasses(u1* info, int* bytecount, int numberOfClasses) {
 
     while (index < numberOfClasses) {
         // Read inner_class_info_index
-        innerClasses[index].innerClassInfoIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        innerClasses[index].innerClassInfo_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read outer_class_info_index
-        innerClasses[index].outerClassInfoIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        innerClasses[index].innerClassInfo_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read inner_name_index
-        innerClasses[index].innerNameIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        innerClasses[index].innerClassInfo_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read inner_class_access_flags
-        innerClasses[index].innerClassAccessFlags = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        innerClasses[index].innerClassAccess_flags = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         index++;
@@ -588,7 +585,7 @@ LineNumberTableEntry* getLineNumberTable(u1* info, int* bytecount, int lineNumbe
 
     while (index < lineNumberTableLength) {
         // Read start_pc
-        lineNumberTable[index].startPc = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        lineNumberTable[index].start_pc = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read line_number
@@ -607,7 +604,7 @@ LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int loc
 
     while (index < localVariableTableLength) {
         // Read start_pc
-        localVariableTable[index].startPc = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        localVariableTable[index].start_pc = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read length
@@ -615,11 +612,11 @@ LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int loc
         (*bytecount) += 2;
 
         // Read name_index
-        localVariableTable[index].nameIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        localVariableTable[index].name_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read descriptor_index
-        localVariableTable[index].descriptorIndex = get2bytesBigEndianFromByteArray(info, (*bytecount));
+        localVariableTable[index].descriptor_index = get2bytesBigEndianFromByteArray(info, (*bytecount));
         (*bytecount) += 2;
 
         // Read index
@@ -634,23 +631,23 @@ LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int loc
 
 void deallocateClass(Class** class) {
 
-    if ((*class)->constantPool != NULL) {
-        deallocate((void**) &((*class)->constantPool));
+    if ((*class)->constant_pool != NULL) {
+        deallocate((void**) &((*class)->constant_pool));
     }
 
     if ((*class)->interfaces != NULL) {
         deallocate((void**) &((*class)->interfaces));
     }
 
-    if ((*class)->fieldsCount != 0 && (*class)->fields != NULL) {
-        for (int i = 0; i < (*class)->fieldsCount; i++) {
-            if ((*class)->fields[i].attributesCount != 0 && (*class)->fields[i].attributes != NULL) {
-                for (int j = 0; j < (*class)->fields[i].attributesCount; j++) {
+    if ((*class)->fields_count != 0 && (*class)->fields != NULL) {
+        for (int i = 0; i < (*class)->fields_count; i++) {
+            if ((*class)->fields[i].attributes_count != 0 && (*class)->fields[i].attributes != NULL) {
+                for (int j = 0; j < (*class)->fields[i].attributes_count; j++) {
                     if ((*class)->fields[i].attributes[j].info != NULL) {
                         deallocate((void**) &((*class)->fields[i].attributes[j].info));
                     }
-                    if ((*class)->methods[i].attributes[j].specificInfo != NULL) {
-                        deallocate((void**) &((*class)->fields[i].attributes[j].specificInfo));
+                    if ((*class)->methods[i].attributes[j].specific_info != NULL) {
+                        deallocate((void**) &((*class)->fields[i].attributes[j].specific_info));
                     }
                 }
                 deallocate((void**) &((*class)->fields[i].attributes));
@@ -659,15 +656,15 @@ void deallocateClass(Class** class) {
         deallocate((void**) &((*class)->fields));
     }
 
-    if ((*class)->methodsCount != 0 && (*class)->methods != NULL) {
-        for (int i = 0; i < (*class)->methodsCount; i++) {
-            if ((*class)->methods[i].attributesCount != 0 && (*class)->methods[i].attributes != NULL) {
-                for (int j = 0; j < (*class)->methods[i].attributesCount; j++) {
+    if ((*class)->methods_count != 0 && (*class)->methods != NULL) {
+        for (int i = 0; i < (*class)->methods_count; i++) {
+            if ((*class)->methods[i].attributes_count != 0 && (*class)->methods[i].attributes != NULL) {
+                for (int j = 0; j < (*class)->methods[i].attributes_count; j++) {
                     if ((*class)->methods[i].attributes[j].info != NULL) {
                         deallocate((void**) &((*class)->methods[i].attributes[j].info));
                     }
-                    if ((*class)->methods[i].attributes[j].specificInfo != NULL) {
-                        deallocate((void**) &((*class)->methods[i].attributes[j].specificInfo));
+                    if ((*class)->methods[i].attributes[j].specific_info != NULL) {
+                        deallocate((void**) &((*class)->methods[i].attributes[j].specific_info));
                     }
                 }
                 deallocate((void**) &((*class)->methods[i].attributes));
@@ -677,12 +674,12 @@ void deallocateClass(Class** class) {
     }
 
     if ((*class)->attributes != NULL) {
-        for (int i = 0; i < (*class)->attributesCount; i++) {
+        for (int i = 0; i < (*class)->attributes_count; i++) {
             if ((*class)->attributes[i].info != NULL) {
                 deallocate((void**) &((*class)->attributes[i].info));
             }
-            if ((*class)->attributes[i].specificInfo != NULL) {
-                deallocate((void**) &((*class)->attributes[i].specificInfo));
+            if ((*class)->attributes[i].specific_info != NULL) {
+                deallocate((void**) &((*class)->attributes[i].specific_info));
             }
         }
         deallocate((void**) &((*class)->attributes));
