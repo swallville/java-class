@@ -8,8 +8,58 @@
  * signatures declared on the convert.h file.
  */
 #include <stdio.h>
+#include <string.h>
 #include "mem-manager.h"
 #include "convert.h"
+
+const char *names[] = {" public", " final", " super", " interface", " abstract", " synthetic", " annotation", "enum"};
+
+char* map_flags(u2 access_flags){
+    char* string = (char*) allocate(100 * sizeof(char));;
+    string[100] = '\0';
+
+    while (access_flags != 0) {
+        if (access_flags >= (u2)ACC_ENUM){
+            access_flags -= ACC_ENUM;
+            strcpy(string, names[7]);
+        }
+        else if (access_flags >= (u2)ACC_ANNOTATION){
+            access_flags -= ACC_ANNOTATION;
+            strncat(string, names[6], strlen(names[6]));
+        }
+        else if (access_flags >= (u2)ACC_SYNTHETIC){
+            access_flags -= ACC_SYNTHETIC;
+            strncat(string, names[5], strlen(names[5]));
+        }
+        else if (access_flags >= (u2)ACC_ABSTRACT){
+            access_flags -= ACC_ABSTRACT;
+            strncat(string, names[4], strlen(names[4]));
+        }
+        else if (access_flags >= (u2)ACC_INTERFACE){
+            access_flags -= ACC_INTERFACE;
+            strncat(string, names[3], strlen(names[3]));
+        }
+        else if (access_flags >= (u2)ACC_SUPER){
+            access_flags -= ACC_SUPER;
+            strncat(string, names[2], strlen(names[2]));
+        }
+        else if (access_flags >= (u2)ACC_FINAL){
+            access_flags -= ACC_FINAL;
+            strncat(string, names[1], strlen(names[1]));
+        }
+        else if (access_flags >= (u2)ACC_PUBLIC){
+            access_flags -= ACC_PUBLIC;
+            strncat(string, names[0], strlen(names[0]));
+            break;
+        }
+        else{
+            strcpy(string, "invalid argument!");
+            break;
+        }
+    }
+    string[strlen(string)] = '\0';
+    return string;
+}
 
 u2 smallEndianToBigEndian2Bytes(u2 src) {
     // Mask for the upper byte
@@ -64,7 +114,7 @@ char* utf8ToString(u1* src, u2 length, bool isRef)  {
                 u1 z = src[j];
                 string[i] = (char) ( ( ( x & 0xF ) << 12 ) | ( ( y & 0x3F ) << 6 ) | ( z & 0x3F ) );
             } else {
-                printf("Occured some error on decoding UTF-8 string\n");
+                printf(" Occured some error on decoding UTF-8 string\n");
             }
         }
 

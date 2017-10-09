@@ -81,6 +81,7 @@ void viewer(char* arquivoInicial) {
 
             char* thisClass = getUtf8FromConstantPool(class->constant_pool[class->thisClass - 1].class_const.name_index, class->constant_pool, true);
             char* superClass = getUtf8FromConstantPool(class->constant_pool[class->superClass - 1].class_const.name_index, class->constant_pool, true);
+            char* access_flags = map_flags(class->access_flags);
 
             printf("| Chosen file: %-47s |\n", shortname);
             printf("| Size (bytes): %-46d |\n", fileSize(userfilePointer));
@@ -91,7 +92,7 @@ void viewer(char* arquivoInicial) {
             printf("| Minor version:      %-40u |\n", class->minor_version);
             printf("| Major version:      %-40u |\n", class->major_version);
             printf("| Contant pool count: %-40d |\n", class->constantPool_count);
-            printf("| Access flags:       0x%.4X                                   |\n", class->access_flags);
+            printf("| Access flags:       0x%.4X %-33s |\n", class->access_flags, access_flags);
             printf("| This class:         cp_info #%-4d %-26s |\n", class->thisClass, thisClass);
             printf("| Super class:        cp_info #%-4d %-26s |\n", class->superClass, superClass);
             printf("| Interfaces count:   %-40u |\n", class->interfaces_count);
@@ -109,6 +110,7 @@ void viewer(char* arquivoInicial) {
 
             deallocate( (void**) &thisClass );
             deallocate( (void**) &superClass );
+            deallocate( (void**) &access_flags );
 
         } else {
 
@@ -525,6 +527,8 @@ void showField(FieldInfo fieldInfo) {
         char* name = getUtf8FromConstantPool(fieldInfo.name_index, class->constant_pool, false);
         char* nameRef = getUtf8FromConstantPool(fieldInfo.name_index, class->constant_pool, true);
         char* descriptorRef = getUtf8FromConstantPool(fieldInfo.descriptor_index, class->constant_pool, true);
+        char* access_flags = map_flags(fieldInfo.access_flags);
+
         printf("|==============================================================|\n");
         printf("| %-60s |\n", name);
         printf("|==============================================================|\n");
@@ -534,13 +538,14 @@ void showField(FieldInfo fieldInfo) {
         deallocate( (void**) &nameRef );
         deallocate( (void**) &descriptorRef );
 
-        printf("| Access flag:      0x%.4X                                     |\n", fieldInfo.access_flags);
+        printf("| Access flag:      0x%.4X %-34s  |\n", fieldInfo.access_flags, access_flags);
         printf("| Attributes count: %-42d |\n", fieldInfo.attributes_count);
         printf("|--------------------------------------------------------------|\n");
         printf("| 1) Attributes                                                |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
         printf("Choose one of the options: ");
+        deallocate( (void**) &access_flags );
 
         // Read and process user's option
         scanf("%d", &userOption);
@@ -625,6 +630,8 @@ void showMethod(MethodInfo methodInfo) {
         char* name = getUtf8FromConstantPool(methodInfo.name_index, class->constant_pool, false);
         char* nameRef = getUtf8FromConstantPool(methodInfo.name_index, class->constant_pool, true);
         char* descriptorRef = getUtf8FromConstantPool(methodInfo.descriptor_index, class->constant_pool, true);
+        char* access_flags = map_flags(methodInfo.access_flags);
+
         printf("|==============================================================|\n");
         printf("| %-60s |\n", name);
         printf("|==============================================================|\n");
@@ -634,14 +641,14 @@ void showMethod(MethodInfo methodInfo) {
         deallocate( (void**) &nameRef );
         deallocate( (void**) &descriptorRef );
 
-        printf("| Access flag:      0x%.4X                                     |\n", methodInfo.access_flags);
+        printf("| Access flag:      0x%.4X %-34s  |\n", methodInfo.access_flags, access_flags);
         printf("| Attributes count: %-42d |\n", methodInfo.attributes_count);
         printf("|--------------------------------------------------------------|\n");
         printf("| 1) Attributes                                                |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
         printf("Choose one of the options: ");
-
+        deallocate( (void**) &access_flags );
         // Read and process user's option
         scanf("%d", &userOption);
         while(getchar() != '\n');

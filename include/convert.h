@@ -14,6 +14,29 @@
 #include "utils.h"
 
 /**
+ * @brief Enum with a type name assignment with the access flag's name.
+ * Contains the constants types matching with its flag.
+ */
+enum {
+    ACC_PUBLIC = 1,
+    ACC_FINAL = 16,
+    ACC_SUPER = 32,
+    ACC_INTERFACE = 512,
+    ACC_ABSTRACT = 1024,
+    ACC_SYNTHETIC = 4096,
+    ACC_ANNOTATION = 8192,
+    ACC_ENUM = 16384
+} ACC_flags;
+
+/**
+ * @todo Brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+char* map_flags(u2 access_flags);
+
+/**
  * @todo Brief
  * @todo Description
  * @todo Parameters
