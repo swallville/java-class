@@ -18,49 +18,6 @@ FILE* openFile(char filename[255], char* mode) {
     return fp;
 }
 
-u1* get(FILE* fp, int offset, int bytes) {
-    u1* content;
-
-    // Alocate with file size
-    content = (u1*) allocate(sizeof(u1) * bytes);
-
-    // Read file
-    fseek(fp, offset, SEEK_SET);
-    fread(content, sizeof(u1), bytes, fp);
-
-    return content;
-}
-
-u1 getByte(FILE* fp, int offset) {
-    u1 byte;
-
-    // Read byte
-    fseek(fp, offset, SEEK_SET);
-    fread(&byte, sizeof(u1), 1, fp);
-
-    return byte;
-}
-
-u2 getWord(FILE* fp, int offset) {
-    u2 word;
-
-    // Read word
-    fseek(fp, offset, SEEK_SET);
-    fread(&word, sizeof(u2), 1, fp);
-
-    return word;
-}
-
-u4 getDoubleWord(FILE* fp, int offset) {
-    u4 doubleWord;
-
-    // Read double word
-    fseek(fp, offset, SEEK_SET);
-    fread(&doubleWord, sizeof(u4), 1, fp);
-
-    return doubleWord;
-}
-
 int fileSize(FILE* fp) {
     fseek(fp, 0, SEEK_END);
     return ftell(fp);
@@ -69,4 +26,42 @@ int fileSize(FILE* fp) {
 void closeFile(FILE** fp) {
     fclose((*fp));
     (*fp) = NULL;
+}
+
+uint8_t* get(FILE* fp, int offset, int bytes) {
+    uint8_t* content;
+
+    content = (uint8_t*) set_mem(bytes * sizeof(uint8_t));
+
+    fseek(fp, offset, SEEK_SET);
+    fread(content, sizeof(uint8_t), bytes, fp);
+
+    return content;
+}
+
+uint8_t getByte(FILE* fp, int offset) {
+    uint8_t byte;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&byte, sizeof(uint8_t), 1, fp);
+
+    return byte;
+}
+
+uint16_t getWord(FILE* fp, int offset) {
+    uint16_t word;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&word, sizeof(uint16_t), 1, fp);
+
+    return word;
+}
+
+uint32_t getDoubleWord(FILE* fp, int offset) {
+    uint32_t doubleWord;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&doubleWord, sizeof(uint32_t), 1, fp);
+
+    return doubleWord;
 }

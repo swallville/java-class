@@ -11,7 +11,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "utils.h"
 
 /**
  * @brief Enum with a type name assignment with the access flag's name.
@@ -29,35 +28,39 @@ enum {
 } ACC_flags;
 
 /**
- * @todo Brief
+ * @brief Map with strings the access flags
+ *
  * @todo Description
  * @todo Parameters
  * @todo Return
  */
-char* map_flags(u2 access_flags);
+char* map_flags(uint16_t access_flags);
 
 /**
- * @todo Brief
+ * @brief Transform a little Endian to a Big Endian in 2 bytes
+ *
  * @todo Description
  * @todo Parameters
  * @todo Return
  */
-u2 smallEndianToBigEndian2Bytes(u2 src);
+uint16_t to2Bytes(uint16_t src);
 
 /**
- * @todo Brief
+ * @brief Transform a little Endian to a Big Endian in 4 bytes
+ *
  * @todo Description
  * @todo Parameters
  * @todo Return
  */
-u4 smallEndianToBigEndian4Bytes(u4 src);
+uint32_t to4Bytes(uint32_t src);
 
 /**
- * @todo Brief
+ * @brief Transform a UTF8 to a string
+ *
  * @todo Description
  * @todo Parameters
  * @todo Return
  */
-char* utf8ToString(u1* src, u2 length, bool isRef);
+char* utf8ToString(uint8_t* src, uint16_t length, bool isRef);
 
 #endif //_CONVERT_H

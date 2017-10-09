@@ -11,36 +11,14 @@
 #define _MENU_H
 
 #include <stdio.h>
+#include <stdint.h>
 #include "class.h"
-
-/**
- * @brief Shows the JVM main menu.
- *
- * Shows the application main menu as CLI and gets the user option to do some
- * action. The available options are "Choose a .class file" and "Quit".
- * Here, the user can choose to set a .class file and after this,
- * the class file structure is shown in this menu.
- */
-void viewer();
-
-/**
- * @brief Process the user's option received on the .class viewer menu.
- *
- * @todo Description
- */
-void viewerOption(int userOption);
 
 /**
  * @todo Brief
  * @todo Description
  */
 void showConstantPool();
-
-/**
- * @todo Brief
- * @todo Description
- */
-void showConstant(ConstPoolInfo cpInfo);
 
 /**
  * @todo Brief
@@ -58,7 +36,7 @@ void showFields();
  * @todo Brief
  * @todo Description
  */
-void showField(FieldInfo fieldInfo);
+void showField(Field fieldInfo);
 
 /**
  * @todo Brief
@@ -70,28 +48,28 @@ void showMethods();
  * @todo Brief
  * @todo Description
  */
-void showMethod(MethodInfo methodInfo);
+void showMethod(Method methodInfo);
 
 /**
  * @todo Brief
  * @todo Description
  * @todo Parameters
  */
-void showAttributes(AttributeInfo* attributes, int attributes_count);
+void showAttributes(Attribute* attributes, int attributes_count);
 
 /**
  * @todo Brief
  * @todo Description
  * @todo Parameters
  */
-void showAttribute(AttributeInfo attribute);
+void showAttribute(Attribute attribute);
 
 /**
  * @todo Brief
  * @todo Description
  * @todo Parameters
  */
-void showCode(u1* code, int codeLength);
+void showCode(uint8_t* code, int codeLength);
 
 /**
  * @todo Brief
@@ -101,21 +79,36 @@ void showCode(u1* code, int codeLength);
 void showExceptionTable(ExceptionTableEntry* exceptionTable, int exceptionTableLength);
 
 /**
- * @brief Shows the menu that let the user to choose some .class file.
+ * @brief Menu to specify .class file.
  *
  * @todo Description
  */
 void chooseFile();
 
 /**
- * @brief Gets the short name of the local userfilePath.
+ * @brief Shows the .class main menu.
+ *
+ * Shows the application main menu as CLI and gets the user option to do some
+ * action. The available options are "Choose a .class file" and "Quit".
+ */
+void menu();
+
+/**
+ * @brief Process the user's option received on the .class viewer menu.
  *
  * @todo Description
  */
-char* getShortName();
+void viewerOption(int userOption);
 
 /**
- * @brief Clears the current screen.
+ * @brief Gets the name of the file .class.
+ *
+ * @todo Description
+ */
+char* getNewName();
+
+/**
+ * @brief Clear the screen.
  *
  * @todo Description
  */

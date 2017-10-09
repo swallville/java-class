@@ -11,10 +11,9 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include "utils.h"
 
 /**
- * @brief Opens some file in a specific mode.
+ * @brief Opens a file into a specific mode
  *
  * @todo Description
  * @todo Parameters
@@ -23,40 +22,7 @@
 FILE* openFile(char filename[255], char* mode);
 
 /**
- * @brief Reads a specific amount of bytes in a specific offset of a file pointer.
- *
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-u1* get(FILE* fp, int offset, int bytes);
-
-/**
- * @todo Brief
- * @todo Description
- * @todo Params
- * @todo Return
- */
-u1 getByte(FILE* fp, int offset);
-
-/**
- * @todo Brief
- * @todo Description
- * @todo Params
- * @todo Return
- */
-u2 getWord(FILE* fp, int offset);
-
- /**
- * @todo Brief
- * @todo Description
- * @todo Params
- * @todo Return
- */
-u4 getDoubleWord(FILE* fp, int offset);
-
-/**
- * @brief Returns the size of some file.
+ * @brief Get the file's size
  *
  * @todo Description
  * @todo Parameters
@@ -65,11 +31,50 @@ u4 getDoubleWord(FILE* fp, int offset);
 int fileSize(FILE* fp);
 
 /**
- * @brief Closes a file pointer and removes the pointer reference.
+ * @brief Close and Remove a file pointer
  *
  * @todo Description
  * @todo Parameters
  */
 void closeFile(FILE**);
 
-#endif
+/**
+ * @brief Reads bytes in a specific offset of a file pointer.
+ *
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+uint8_t* get(FILE* fp, int offset, int bytes);
+
+/**
+ * @brief Reads a byte in a file pointer.
+ *
+ * @todo Brief
+ * @todo Description
+ * @todo Params
+ * @todo Return
+ */
+uint8_t getByte(FILE* fp, int offset);
+
+/**
+ * @brief Reads a word in a file pointer.
+ *
+ * @todo Brief
+ * @todo Description
+ * @todo Params
+ * @todo Return
+ */
+uint16_t getWord(FILE* fp, int offset);
+
+ /**
+ * @brief Reads a double word in a file pointer.
+ *
+ * @todo Brief
+ * @todo Description
+ * @todo Params
+ * @todo Return
+ */
+uint32_t getDoubleWord(FILE* fp, int offset);
+
+#endif // _FILE_H

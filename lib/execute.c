@@ -4,21 +4,20 @@
  * @authors Lukas Ferreira Machado (12/0127377)
  * @authors Raphael Luís Souza de Queiroz (13/0154989)
  *
- * @todo Description
+ * Definitions for all the execute.h functions
  */
 
 #include <stdio.h>
 #include <string.h>
 #include "execute.h"
 #include "mem-manager.h"
-#include "utils.h"
 
-Instruction* decode(u1* bytecode, int* offset) {
+Instruction* decode(uint8_t* bytecode, int* offset) {
 	int pc = (*offset);
-	int opcode = bytecode[(*offset)++];
-	// Instruction functions' opcodes with:
+	int position = (*offset)++;
+	int opcode = bytecode[position];
 	switch (opcode) {
-		// No arguments
+		// With No arguments
 		case AALOAD:
 			return getNoArgsInstr(bytecode, offset, pc, opcode, "aaload");
 		case AASTORE:
@@ -342,8 +341,8 @@ Instruction* decode(u1* bytecode, int* offset) {
 	}
 }
 
-Instruction* getNoArgsInstr(u1* bytecode, int* offset, int pc, int opcode, char* name) {
-	Instruction* instr = (Instruction*) allocate(sizeof(Instruction));
+Instruction* getNoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
@@ -352,24 +351,24 @@ Instruction* getNoArgsInstr(u1* bytecode, int* offset, int pc, int opcode, char*
 	return instr;
 }
 
-Instruction* getOneArgInstr(u1* bytecode, int* offset, int pc, int opcode, char* name) {
-	Instruction* instr = (Instruction*) allocate(sizeof(Instruction));
+Instruction* getOneArgInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 1;
-	instr->arguments = (int8_t*) allocate(1 * sizeof(int8_t));
+	instr->arguments = (int8_t*) set_mem(1 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	return instr;
 }
 
-Instruction* getTwoArgsInstr(u1* bytecode, int* offset, int pc, int opcode, char* name) {
-	Instruction* instr = (Instruction*) allocate(sizeof(Instruction));
+Instruction* getTwoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 2;
-	instr->arguments = (int8_t*) allocate(2 * sizeof(int8_t));
+	instr->arguments = (int8_t*) set_mem(2 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	instr->arguments[1] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	return instr;

@@ -10,8 +10,7 @@
 #ifndef _INSTRUCTION_H
 #define _INSTRUCTION_H
 
-#include "utils.h"
-
+#include <stdint.h>
 /**
  * @todo Brief
  * @todo Description

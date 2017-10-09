@@ -9,8 +9,6 @@
 #define _CLASS_H
 
 #include <stdbool.h>
-#include "utils.h"
-
 /**
  * @brief Enum with a type name assignment with the bytecode number that represents that name.
  * Contains the constants types matching with its tag.
@@ -28,11 +26,11 @@ enum {
     METHOD_REF = 10,
     INTERFACE_METHOD_REF = 11,
     NAME_AND_TYPE = 12
-} ContantsInfo;
+} ConstTab;
 
 /**
  * @brief Structure of the constant pool, separated by type.
- * The type definition of the structure is ConstPoolInfo.
+ * The type definition of the structure is ConstPool.
  */
 typedef struct _const_pool_info {
     /**
@@ -40,7 +38,7 @@ typedef struct _const_pool_info {
      *
      * Field tag is common for all types.
      */
-    u1 tag;
+    uint8_t tag;
     /**
      * @brief Union of structs containing the types within the constant pool.
      *
@@ -53,7 +51,7 @@ typedef struct _const_pool_info {
          * Contains the name index from the class.
          */
         struct {
-            u2 name_index;
+            uint16_t name_index;
         } class_const;
         /**
          * @brief FieldRef type.
@@ -61,8 +59,8 @@ typedef struct _const_pool_info {
          * Contains the class index and the name and type index from the FieldRef.
          */
         struct {
-            u2 class_index;
-            u2 nameAndType_index;
+            uint16_t class_index;
+            uint16_t nameAndType_index;
         } fieldRef_const;
         /**
          * @brief Name and Type type.
@@ -70,8 +68,8 @@ typedef struct _const_pool_info {
          * Contains the name index and the descriptor index.
          */
         struct {
-            u2 name_index;
-            u2 descriptor_index;
+            uint16_t name_index;
+            uint16_t descriptor_index;
         } nameAndType_const;
         /**
          * @brief UTF8 type.
@@ -79,8 +77,8 @@ typedef struct _const_pool_info {
          * Contains the lenght and the pointer for bytes from the UTF8.
          */
         struct {
-            u2 length;
-            u1* bytes;
+            uint16_t length;
+            uint8_t* bytes;
         } utf8_const;
         /**
          * @brief MethodRef type.
@@ -88,8 +86,8 @@ typedef struct _const_pool_info {
          * Contains the class index and name and type index.
          */
         struct {
-            u2 class_index;
-            u2 nameAndType_index;
+            uint16_t class_index;
+            uint16_t nameAndType_index;
         } methodRef_const;
         /**
          * @brief InterfaceMethodRef type.
@@ -97,8 +95,8 @@ typedef struct _const_pool_info {
          * Contains the class index and name and type index.
          */
         struct {
-            u2 class_index;
-            u2 nameAndType_index;
+            uint16_t class_index;
+            uint16_t nameAndType_index;
         } interfaceMethodRef_const;
         /**
          * @brief String type.
@@ -106,7 +104,7 @@ typedef struct _const_pool_info {
          * Contains the string index.
          */
         struct {
-            u2 string_index;
+            uint16_t string_index;
         } string_const;
         /**
          * @brief Inteiro type.
@@ -114,7 +112,7 @@ typedef struct _const_pool_info {
          * Contains the bytes.
          */
         struct {
-            u4 bytes;
+            uint32_t bytes;
         } integer_const;
         /**
          * @brief Float type.
@@ -123,7 +121,7 @@ typedef struct _const_pool_info {
          */
         struct {
             union {
-                u4 bytes;
+                uint32_t bytes;
                 float value;
             };
         } float_const;
@@ -135,8 +133,8 @@ typedef struct _const_pool_info {
         struct {
             union {
                 struct {
-                    u4 lowBytes;
-                    u4 highBytes;
+                    uint32_t lowBytes;
+                    uint32_t highBytes;
                 } bytes;
                 long int value;
             };
@@ -149,57 +147,57 @@ typedef struct _const_pool_info {
         struct {
             union {
                 struct {
-                    u4 lowBytes;
-                    u4 highBytes;
+                    uint32_t lowBytes;
+                    uint32_t highBytes;
                 } bytes;
                 double value;
             };
         } double_const;
     };
-}ConstPoolInfo;
+}ConstPool;
 
 /**
  * @brief Attribute info structure.
  *
  * Contains the name index, lenght, info and specific info.
- * The type definition of the structure is AttributeInfo.
+ * The type definition of the structure is Attribute.
  */
 typedef struct _attribute_info {
-    u2 attributeName_index;
-    u4 attributeLength;
-    u1 *info;
+    uint16_t attributeName_index;
+    uint32_t attributeLength;
+    uint8_t *info;
     void *specific_info;
-}AttributeInfo;
+}Attribute;
 
 /**
  * @brief Field info structure.
  *
  * Contains the acess flags, name index, descriptor index,
  * attributtes count and a pointer type Attribute Info.
- * The type definition of the structure is FieldInfo.
+ * The type definition of the structure is Field.
  */
 typedef struct _field_info {
-    u2 access_flags;
-    u2 name_index;
-    u2 descriptor_index;
-    u2 attributes_count;
-    AttributeInfo *attributes;
-}FieldInfo;
+    uint16_t access_flags;
+    uint16_t name_index;
+    uint16_t descriptor_index;
+    uint16_t attributes_count;
+    Attribute *attributes;
+}Field;
 
  /**
  * @brief Method info definition.
  *
  * Contains the acess flags, name index, descriptor index,
  * attributtes count and a pointer type Attribute Info.
- * The type definition of the structure is MethodInfo.
+ * The type definition of the structure is Method.
  */
 typedef struct _method_info {
-    u2 access_flags;
-    u2 name_index;
-    u2 descriptor_index;
-    u2 attributes_count;
-    AttributeInfo *attributes;
-}MethodInfo;
+    uint16_t access_flags;
+    uint16_t name_index;
+    uint16_t descriptor_index;
+    uint16_t attributes_count;
+    Attribute *attributes;
+}Method;
 
 /**
  * @brief Constant value index definition.
@@ -208,7 +206,7 @@ typedef struct _method_info {
  * The type definition of the structure is ExceptionTableEntry.
  */
 typedef struct _constant_value_attribute {
-    u2 constantValue_index;
+    uint16_t constantValue_index;
 }ConstantValueAttribute;
 
 /**
@@ -218,28 +216,28 @@ typedef struct _constant_value_attribute {
  * The type definition of the structure is ExceptionTableEntry.
  */
 typedef struct _exception_table_entry {
-    u2 start_pc;
-    u2 end_pc;
-    u2 handler_pc;
-    u2 catch_type;
+    uint16_t start_pc;
+    uint16_t end_pc;
+    uint16_t handler_pc;
+    uint16_t catch_type;
 }ExceptionTableEntry;
 
 /**
  * @brief Code Attribute definition.
  *
  * Contains the max stack, max locals, code lenght, pointer for code, exception table lenght,
- * a pointer type ExceptionTableEntry, attribute count and a pointer type AttributeInfo.
+ * a pointer type ExceptionTableEntry, attribute count and a pointer type Attribute.
  * The type definition of the structure is CodeAttribute.
  */
 typedef struct _code_attribute {
-    u2 max_stack;
-    u2 max_locals;
-    u4 codeLength;
-    u1 *code;
-    u2 exceptionTableLength;
+    uint16_t max_stack;
+    uint16_t max_locals;
+    uint32_t codeLength;
+    uint8_t *code;
+    uint16_t exceptionTableLength;
     ExceptionTableEntry *exceptionTable;
-    u2 attributes_count;
-    AttributeInfo *attributes;
+    uint16_t attributes_count;
+    Attribute *attributes;
 }CodeAttribute;
 
 /**
@@ -249,8 +247,8 @@ typedef struct _code_attribute {
  * The type definition of the Inner Class structure is ExceptionAttribute.
  */
 typedef struct _exception_attribute {
-    u2 numberOfExceptions;
-    u2 *exception_indexTable;
+    uint16_t numberOfExceptions;
+    uint16_t *exception_indexTable;
 }ExceptionAttribute;
 
 /**
@@ -260,10 +258,10 @@ typedef struct _exception_attribute {
  * The type definition of the Inner Class structure is InnerClass.
  */
 typedef struct _inner_class {
-    u2 innerClassInfo_index;
-    u2 outerClassInfo_index;
-    u2 innerName_index;
-    u2 innerClassAccess_flags;
+    uint16_t innerClassInfo_index;
+    uint16_t outerClassInfo_index;
+    uint16_t innerName_index;
+    uint16_t innerClassAccess_flags;
 }InnerClass;
 
 /**
@@ -273,7 +271,7 @@ typedef struct _inner_class {
  * The type definition of the Inner Class structure is InnerClassesAttribute.
  */
 typedef struct _inner_classes_attribute {
-    u2 numberOfClasses;
+    uint16_t numberOfClasses;
     InnerClass *classes;
 }InnerClassesAttribute;
 
@@ -284,8 +282,8 @@ typedef struct _inner_classes_attribute {
  * The type definition of the structure is LineNumberTableEntry.
  */
 typedef struct _line_number_table_entry {
-    u2 start_pc;
-    u2 lineNumber;
+    uint16_t start_pc;
+    uint16_t lineNumber;
 }LineNumberTableEntry;
 
 /**
@@ -295,7 +293,7 @@ typedef struct _line_number_table_entry {
  * The type definition of the structure is LineNumberTableAttribute.
  */
 typedef struct _line_number_table_attribute {
-    u2 lineNumberTableLength;
+    uint16_t lineNumberTableLength;
     LineNumberTableEntry *lineNumberTable;
 }LineNumberTableAttribute;
 
@@ -306,11 +304,11 @@ typedef struct _line_number_table_attribute {
  * The type definition of the structure is LocalVariableTableEntry.
  */
 typedef struct _local_variable_table_entry {
-    u2 start_pc;
-    u2 length;
-    u2 name_index;
-    u2 descriptor_index;
-    u2 index;
+    uint16_t start_pc;
+    uint16_t length;
+    uint16_t name_index;
+    uint16_t descriptor_index;
+    uint16_t index;
 }LocalVariableTableEntry;
 
 /**
@@ -320,7 +318,7 @@ typedef struct _local_variable_table_entry {
  * The type definition of the structure is LocalVariableTableAttribute.
  */
 typedef struct _local_variable_table_attribute {
-    u2 localVariableTableLength;
+    uint16_t localVariableTableLength;
     LocalVariableTableEntry *localVariableTable;
 }LocalVariableTableAttribute;
 
@@ -331,7 +329,7 @@ typedef struct _local_variable_table_attribute {
  * The type definition of the structure is SourceFileAttribute.
  */
 typedef struct _source_file_attribute {
-    u2 sourceFile_index;
+    uint16_t sourceFile_index;
 }SourceFileAttribute;
 
 /**
@@ -344,67 +342,67 @@ typedef struct _class {
     /**
      * @brief Magic Number.
      */
-    u4 magic;
+    uint32_t magic;
      /**
      * @brief Mejor Version.
      */
-    u2 major_version;
+    uint16_t major_version;
     /**
      * @brief Minor Version..
      */
-    u2 minor_version;
+    uint16_t minor_version;
    /**
      * @brief Counter for constant pool.
      */
-    u2 constantPool_count;
+    uint16_t constantPool_count;
     /**
      * @brief Pointer ConstantPool type ConstantPoolInfo
      */
-    ConstPoolInfo* constant_pool;
+    ConstPool* constant_pool;
    /**
      * @brief Acess Flags.
      */
-    u2 access_flags;
+    uint16_t access_flags;
     /**
      * @brief This Class.
      */
-    u2 thisClass;
+    uint16_t thisClass;
     /**
      * @brief Super Class.
      */
-    u2 superClass;
+    uint16_t superClass;
     /**
      * @brief Counter for Interfaces.
      */
-    u2 interfaces_count;
+    uint16_t interfaces_count;
     /**
      * @brief Interfaces type U2.
      */
-    u2 *interfaces;
+    uint16_t *interfaces;
     /**
      * @brief Counter for fields.
      */
-    u2 fields_count;
+    uint16_t fields_count;
     /**
-     * @brief Fields type FieldInfo.
+     * @brief Fields type Field.
      */
-    FieldInfo *fields;
+    Field *fields;
     /**
      * @brief Coounter for Métodos.
      */
-    u2 methods_count;
+    uint16_t methods_count;
     /**
      * @brief Methods type MethodsInfo.
      */
-    MethodInfo *methods;
+    Method *methods;
     /**
      * @brief Counter of Attributes.
      */
-    u2 attributes_count;
+    uint16_t attributes_count;
     /**
-     * @brief Attributes type AttributeInfo.
+     * @brief Attributes type Attribute.
      */
-    AttributeInfo *attributes;
+    Attribute *attributes;
 }Class;
 
 /**
@@ -413,7 +411,7 @@ typedef struct _class {
  * @todo Parameters
  * @todo Return
  */
-Class* getClassfile(FILE* fp);
+void sum2(int* bytecount);
 
 /**
  * @brief
@@ -421,7 +419,7 @@ Class* getClassfile(FILE* fp);
  * @todo Parameters
  * @todo Return
  */
-char* getUtf8FromConstantPool(int index, ConstPoolInfo* constantPool, bool isRef);
+void sum4(int* bytecount);
 
 /**
  * @brief
@@ -429,7 +427,7 @@ char* getUtf8FromConstantPool(int index, ConstPoolInfo* constantPool, bool isRef
  * @todo Parameters
  * @todo Return
  */
-u2 get2bytesBigEndian(FILE* fp, int bytecount);
+char* getUtf8FromConstantPool(int index, ConstPool* constantPool, bool isRef);
 
 /**
  * @brief
@@ -437,7 +435,7 @@ u2 get2bytesBigEndian(FILE* fp, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u4 get4bytesBigEndian(FILE* fp, int bytecount);
+uint8_t get1bytesFromByteArray(uint8_t* byteArr, int bytecount);
 
 /**
  * @brief
@@ -445,7 +443,7 @@ u4 get4bytesBigEndian(FILE* fp, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u1 get1bytesFromByteArray(u1* byteArr, int bytecount);
+uint16_t get2bytesFromByteArray(uint8_t* byteArr, int bytecount);
 
 /**
  * @brief
@@ -453,7 +451,7 @@ u1 get1bytesFromByteArray(u1* byteArr, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u2 get2bytesFromByteArray(u1* byteArr, int bytecount);
+uint32_t get4bytesFromByteArray(uint8_t* byteArr, int bytecount);
 
 /**
  * @brief
@@ -461,7 +459,7 @@ u2 get2bytesFromByteArray(u1* byteArr, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u2 get2bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
+double getDouble (uint32_t high, uint32_t low);
 
 /**
  * @brief
@@ -469,7 +467,7 @@ u2 get2bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u4 get4bytesFromByteArray(u1* byteArr, int bytecount);
+long getLong(uint32_t high, uint32_t low);
 
 /**
  * @brief
@@ -477,7 +475,7 @@ u4 get4bytesFromByteArray(u1* byteArr, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-u4 get4bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
+ConstPool* getConstantPool(FILE* fp, int* bytecount, uint16_t cpCount);
 
 /**
  * @brief
@@ -485,7 +483,7 @@ u4 get4bytesBigEndianFromByteArray(u1* byteArr, int bytecount);
  * @todo Parameters
  * @todo Return
  */
-double getDouble (u4 high, u4 low);
+uint16_t* getInterfaces(FILE* fp, int* bytecount, uint16_t interfacesCount);
 
 /**
  * @brief
@@ -493,7 +491,7 @@ double getDouble (u4 high, u4 low);
  * @todo Parameters
  * @todo Return
  */
-long getLong(u4 high, u4 low);
+Field * getFields(FILE* fp, int* bytecount, uint16_t fieldCount, ConstPool* constantPool);
 
 /**
  * @brief
@@ -501,7 +499,7 @@ long getLong(u4 high, u4 low);
  * @todo Parameters
  * @todo Return
  */
-ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount);
+Method* getMethods(FILE* fp, int* bytecount, uint16_t methodsCount, ConstPool* constantPool);
 
 /**
  * @brief
@@ -509,7 +507,7 @@ ConstPoolInfo* getConstantPool(FILE* fp, int* bytecount, u2 cpCount);
  * @todo Parameters
  * @todo Return
  */
-u2* getInterfaces(FILE* fp, int* bytecount, u2 interfacesCount);
+Attribute* getAttributes(FILE* fp, int* bytecount, uint16_t attributesCount, ConstPool* constantPool);
 
 /**
  * @brief
@@ -517,7 +515,7 @@ u2* getInterfaces(FILE* fp, int* bytecount, u2 interfacesCount);
  * @todo Parameters
  * @todo Return
  */
-FieldInfo * getFields(FILE* fp, int* bytecount, u2 fieldCount, ConstPoolInfo* constantPool);
+Attribute* getAttributesFromByteArray(uint8_t* info, int* bytecount, uint16_t attributesCount, ConstPool* constantPool);
 
 /**
  * @brief
@@ -525,7 +523,7 @@ FieldInfo * getFields(FILE* fp, int* bytecount, u2 fieldCount, ConstPoolInfo* co
  * @todo Parameters
  * @todo Return
  */
-MethodInfo* getMethods(FILE* fp, int* bytecount, u2 methodsCount, ConstPoolInfo* constantPool);
+void* decodeInfo(Attribute attribute, ConstPool* constantPool);
 
 /**
  * @brief
@@ -533,7 +531,7 @@ MethodInfo* getMethods(FILE* fp, int* bytecount, u2 methodsCount, ConstPoolInfo*
  * @todo Parameters
  * @todo Return
  */
-AttributeInfo* getAttributes(FILE* fp, int* bytecount, u2 attributesCount, ConstPoolInfo* constantPool);
+ExceptionTableEntry* getExceptionTable(uint8_t* info, int* bytecount, int exceptionTableLength);
 
 /**
  * @brief
@@ -541,7 +539,7 @@ AttributeInfo* getAttributes(FILE* fp, int* bytecount, u2 attributesCount, Const
  * @todo Parameters
  * @todo Return
  */
-AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attributesCount, ConstPoolInfo* constantPool);
+InnerClass* getInnerClasses(uint8_t* info, int* bytecount, int numberOfClasses);
 
 /**
  * @brief
@@ -549,7 +547,7 @@ AttributeInfo* getAttributesFromByteArray(u1* info, int* bytecount, u2 attribute
  * @todo Parameters
  * @todo Return
  */
-void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool);
+LineNumberTableEntry* getLineNumberTable(uint8_t* info, int* bytecount, int lineNumberTableLength);
 
 /**
  * @brief
@@ -557,31 +555,7 @@ void* decodeInfo(AttributeInfo attribute, ConstPoolInfo* constantPool);
  * @todo Parameters
  * @todo Return
  */
-ExceptionTableEntry* getExceptionTable(u1* info, int* bytecount, int exceptionTableLength);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-InnerClass* getInnerClasses(u1* info, int* bytecount, int numberOfClasses);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-LineNumberTableEntry* getLineNumberTable(u1* info, int* bytecount, int lineNumberTableLength);
-
-/**
- * @brief
- * @todo Description
- * @todo Parameters
- * @todo Return
- */
-LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int localVariableTableLength);
+LocalVariableTableEntry* getLocalVariableTable(uint8_t* info, int* bytecount, int localVariableTableLength);
 
 /**
  * @brief Deallocate the main elements of the .class strucure.
@@ -592,5 +566,13 @@ LocalVariableTableEntry* getLocalVariableTable(u1* info, int* bytecount, int loc
  * @params class Referece of the pointer to the .class structure.
  */
 void deallocateClass(Class** class);
+
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+Class* getClassfile(FILE* fp);
 
 #endif //_CLASS_H
