@@ -2,6 +2,7 @@ var searchData=
 [
   ['magic',['magic',['../struct__class.html#afcc54e09b60bb7c34819b873a9877201',1,'_class']]],
   ['major_5fversion',['major_version',['../struct__class.html#ae39268b7fa8be687ea638a36c60679f6',1,'_class']]],
+  ['map_5fflags',['map_flags',['../convert_8h.html#a1fdaedf3100d1d413a7a8a1939bb2137',1,'map_flags(u2 access_flags):&#160;convert.c'],['../convert_8c.html#a1fdaedf3100d1d413a7a8a1939bb2137',1,'map_flags(u2 access_flags):&#160;convert.c']]],
   ['mem_2dmanager_2ec',['mem-manager.c',['../mem-manager_8c.html',1,'']]],
   ['mem_2dmanager_2eh',['mem-manager.h',['../mem-manager_8h.html',1,'']]],
   ['memadd',['memAdd',['../mem-manager_8h.html#a76430c75594bcbb7a25d22145f5b12f6',1,'memAdd(MemManager **managerRef, void *elemRef):&#160;mem-manager.c'],['../mem-manager_8c.html#a76430c75594bcbb7a25d22145f5b12f6',1,'memAdd(MemManager **managerRef, void *elemRef):&#160;mem-manager.c']]],

@@ -89,7 +89,8 @@ $(document).ready(function(){initNavTree('convert_8c.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">convert.c File Reference</div>  </div>
 </div><!--header-->
@@ -98,6 +99,7 @@ $(document).ready(function(){initNavTree('convert_8c.html','');});
 <p>Convertion operations library source.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="mem-manager_8h_source.html">mem-manager.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="convert_8h_source.html">convert.h</a>&quot;</code><br />
 </div>
@@ -105,12 +107,20 @@ $(document).ready(function(){initNavTree('convert_8c.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1fdaedf3100d1d413a7a8a1939bb2137"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8c.html#a1fdaedf3100d1d413a7a8a1939bb2137">map_flags</a> (u2 access_flags)</td></tr>
+<tr class="separator:a1fdaedf3100d1d413a7a8a1939bb2137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e6068e0100d9d6a64046b424724a377"><td class="memItemLeft" align="right" valign="top">u2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8c.html#a6e6068e0100d9d6a64046b424724a377">smallEndianToBigEndian2Bytes</a> (u2 src)</td></tr>
 <tr class="separator:a6e6068e0100d9d6a64046b424724a377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abadcb3660fd2b35296077bd061cfdb8b"><td class="memItemLeft" align="right" valign="top">u4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8c.html#abadcb3660fd2b35296077bd061cfdb8b">smallEndianToBigEndian4Bytes</a> (u4 src)</td></tr>
 <tr class="separator:abadcb3660fd2b35296077bd061cfdb8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59c72b4abf74b585be4c5574621db1e6"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="convert_8c.html#a59c72b4abf74b585be4c5574621db1e6">utf8ToString</a> (u1 *src, u2 length, bool isRef)</td></tr>
 <tr class="separator:a59c72b4abf74b585be4c5574621db1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a0737f2a8dd8fbaf9c6608f85e2b79778"><td class="memItemLeft" align="right" valign="top"><a id="a0737f2a8dd8fbaf9c6608f85e2b79778"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>names</b> [] = {&quot; public&quot;, &quot; final&quot;, &quot; super&quot;, &quot; interface&quot;, &quot; abstract&quot;, &quot; synthetic&quot;, &quot; annotation&quot;, &quot;enum&quot;}</td></tr>
+<tr class="separator:a0737f2a8dd8fbaf9c6608f85e2b79778"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Authors</dt><dd>Lukas Ferreira Machado (12/0127377) </dd>
@@ -120,6 +130,31 @@ Raphael Luís Souza de Queiroz (13/0154989)</dd></dl>
 
 <p>Definition in file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a1fdaedf3100d1d413a7a8a1939bb2137"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fdaedf3100d1d413a7a8a1939bb2137">&sect;&nbsp;</a></span>map_flags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* map_flags </td>
+          <td>(</td>
+          <td class="paramtype">u2&#160;</td>
+          <td class="paramname"><em>access_flags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
+<p>Description </p>
+<p>Parameters </p>
+<p class="enddd">Return </p>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="convert_8c_source.html#l00017">17</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
+
+</div>
+</div>
 <a id="a6e6068e0100d9d6a64046b424724a377"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6e6068e0100d9d6a64046b424724a377">&sect;&nbsp;</a></span>smallEndianToBigEndian2Bytes()</h2>
 
@@ -135,13 +170,13 @@ Raphael Luís Souza de Queiroz (13/0154989)</dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
 <p>Description </p>
 <p>Parameters </p>
 <p class="enddd">Return </p>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="convert_8c_source.html#l00014">14</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
+<p>Definition at line <a class="el" href="convert_8c_source.html#l00064">64</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
 
 </div>
 </div>
@@ -160,13 +195,13 @@ Raphael Luís Souza de Queiroz (13/0154989)</dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
 <p>Description </p>
 <p>Parameters </p>
 <p class="enddd">Return </p>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="convert_8c_source.html#l00019">19</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
+<p>Definition at line <a class="el" href="convert_8c_source.html#l00069">69</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
 
 </div>
 </div>
@@ -201,13 +236,13 @@ Raphael Luís Souza de Queiroz (13/0154989)</dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd><p class="startdd">Brief </p>
 <p>Description </p>
 <p>Parameters </p>
 <p class="enddd">Return </p>
 </dd></dl>
 
-<p>Definition at line <a class="el" href="convert_8c_source.html#l00027">27</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
+<p>Definition at line <a class="el" href="convert_8c_source.html#l00077">77</a> of file <a class="el" href="convert_8c_source.html">convert.c</a>.</p>
 
 </div>
 </div>
