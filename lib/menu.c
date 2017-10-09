@@ -127,7 +127,7 @@ void viewer(char* arquivoInicial) {
         scanf("%d", &userOption);
         while(getchar() != '\n');
         printf("\n");
-        // Option #3: Go back to last page
+        // Option #2: Quit the program
         if (userOption == 2) {
             // Close file and erase userfile path
             strcpy(userfilePath, "");
@@ -136,7 +136,6 @@ void viewer(char* arquivoInicial) {
             }
             // Free all allocated memory
             freeMemManager();
-
             break;
         }
         // Process other options
