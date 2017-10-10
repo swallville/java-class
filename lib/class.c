@@ -7,8 +7,7 @@
  */
 #include <string.h>
 #include "mem-manager.h"
-#include "file.h"
-#include "convert.h"
+#include "utils.h"
 #include "class.h"
 /**
  * @brief Get the class file components

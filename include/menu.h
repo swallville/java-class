@@ -91,14 +91,14 @@ void chooseFile();
  * Shows the application main menu as CLI and gets the user option to do some
  * action. The available options are "Choose a .class file" and "Quit".
  */
-void menu();
+void menu(char* arquivoInicial);
 
 /**
  * @brief Process the user's option received on the .class viewer menu.
  *
  * @todo Description
  */
-void viewerOption(int userOption);
+void displayOption(int userOption);
 
 /**
  * @brief Gets the name of the file .class.

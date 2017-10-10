@@ -19,329 +19,329 @@ Instruction* decode(uint8_t* bytecode, int* offset) {
 	switch (opcode) {
 		// With No arguments
 		case AALOAD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aaload");
+			return readNoArgs(bytecode, offset, pc, opcode, "aaload");
 		case AASTORE:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aastore");
+			return readNoArgs(bytecode, offset, pc, opcode, "aastore");
 		case ACONST_NULL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aconst_null");
+			return readNoArgs(bytecode, offset, pc, opcode, "aconst_null");
 		case ALOAD_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aload_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "aload_0");
 		case ALOAD_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aload_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "aload_1");
 		case ALOAD_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aload_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "aload_2");
 		case ALOAD_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "aload_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "aload_3");
 		case ARETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "areturn");
+			return readNoArgs(bytecode, offset, pc, opcode, "areturn");
 		case ASTORE_1:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "astore_1");
+			return readTwoArgs(bytecode, offset, pc, opcode, "astore_1");
 		case DLOAD_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dload_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "dload_0");
 		case DLOAD_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dload_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "dload_1");
 		case DLOAD_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dload_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "dload_2");
 		case DLOAD_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dload_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "dload_3");
 		case DMUL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dmul");
+			return readNoArgs(bytecode, offset, pc, opcode, "dmul");
 		case DNEG:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dneg");
+			return readNoArgs(bytecode, offset, pc, opcode, "dneg");
 		case DREM:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "drem");
+			return readNoArgs(bytecode, offset, pc, opcode, "drem");
 		case DRETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dreturn");
+			return readNoArgs(bytecode, offset, pc, opcode, "dreturn");
 		case DSTORE_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dstore_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "dstore_0");
 		case DSTORE_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dsotre_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "dsotre_1");
 		case DSTORE_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dstore_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "dstore_2");
 		case DSTORE_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dstore_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "dstore_3");
 		case DSUB:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dsub");
+			return readNoArgs(bytecode, offset, pc, opcode, "dsub");
 		case DUP:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup");
 		case DUP_X1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup_x1");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup_x1");
 		case DUP_X2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup_x2");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup_x2");
 		case DUP2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup2");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup2");
 		case DUP2_X1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup2_x1");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup2_x1");
 		case DUP2_X2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "dup2_x2");
+			return readNoArgs(bytecode, offset, pc, opcode, "dup2_x2");
 		case F2D:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "f2d");
+			return readNoArgs(bytecode, offset, pc, opcode, "f2d");
 		case F2I:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "f2i");
+			return readNoArgs(bytecode, offset, pc, opcode, "f2i");
 		case F2L:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "f2l");
+			return readNoArgs(bytecode, offset, pc, opcode, "f2l");
 		case FADD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fadd");
+			return readNoArgs(bytecode, offset, pc, opcode, "fadd");
 		case FALOAD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "faload");
+			return readNoArgs(bytecode, offset, pc, opcode, "faload");
 		case FASTORE:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fastore");
+			return readNoArgs(bytecode, offset, pc, opcode, "fastore");
 		case FCMPG:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fcmpg");
+			return readNoArgs(bytecode, offset, pc, opcode, "fcmpg");
 		 case FCMPL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fcmpl");
+			return readNoArgs(bytecode, offset, pc, opcode, "fcmpl");
 		case FCONST_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fconst_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "fconst_0");
 		case FCONST_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fconst_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "fconst_1");
 		case FCONST_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fconst_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "fconst_2");
 		case FDIV:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fdiv");
+			return readNoArgs(bytecode, offset, pc, opcode, "fdiv");
 		case FLOAD_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fload_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "fload_0");
 		case FLOAD_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fload_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "fload_1");
 		case FLOAD_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fload_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "fload_2");
 		case FLOAD_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fload_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "fload_3");
 		case FMUL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fmul");
+			return readNoArgs(bytecode, offset, pc, opcode, "fmul");
 		case FNEG:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fneg");
+			return readNoArgs(bytecode, offset, pc, opcode, "fneg");
 		case FREM:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "frem");
+			return readNoArgs(bytecode, offset, pc, opcode, "frem");
 		case FRETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "freturn");
+			return readNoArgs(bytecode, offset, pc, opcode, "freturn");
 		case FSTORE_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fstore_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "fstore_0");
 		case FSTORE_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fstore_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "fstore_1");
 		case FSTORE_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fstore_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "fstore_2");
 		case FSTORE_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fstore_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "fstore_3");
 		case FSUB:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "fsub");
+			return readNoArgs(bytecode, offset, pc, opcode, "fsub");
 		case I2B:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "i2b");
+			return readNoArgs(bytecode, offset, pc, opcode, "i2b");
 		case I2C:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "i2c");
+			return readNoArgs(bytecode, offset, pc, opcode, "i2c");
 		case I2S:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "i2s");
+			return readNoArgs(bytecode, offset, pc, opcode, "i2s");
 		case IADD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iadd");
+			return readNoArgs(bytecode, offset, pc, opcode, "iadd");
 		case IALOAD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iaload");
+			return readNoArgs(bytecode, offset, pc, opcode, "iaload");
 		case IAND:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iand");
+			return readNoArgs(bytecode, offset, pc, opcode, "iand");
 		case IASTORE:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iastore");
+			return readNoArgs(bytecode, offset, pc, opcode, "iastore");
 		case ICONST_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_0");
 		case ICONST_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_1");
 		case ICONST_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_2");
 		case ICONST_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_3");
 		case ICONST_4:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_4");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_4");
 		case ICONST_5:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iconst_5");
+			return readNoArgs(bytecode, offset, pc, opcode, "iconst_5");
 		case IDIV:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "idiv");
+			return readNoArgs(bytecode, offset, pc, opcode, "idiv");
 		case ILOAD_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iload_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "iload_0");
 		case ILOAD_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iload_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "iload_1");
 		case ILOAD_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iload_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "iload_2");
 		case ILOAD_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iload_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "iload_3");
 		case IMPDEP1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "impdep1");
+			return readNoArgs(bytecode, offset, pc, opcode, "impdep1");
 		case IMPDEP2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "impdep2");
+			return readNoArgs(bytecode, offset, pc, opcode, "impdep2");
 		case IMUL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "imul");
+			return readNoArgs(bytecode, offset, pc, opcode, "imul");
 		case INEG:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ineg");
+			return readNoArgs(bytecode, offset, pc, opcode, "ineg");
 		case IOR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ior");
+			return readNoArgs(bytecode, offset, pc, opcode, "ior");
 		case IREM:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "irem");
+			return readNoArgs(bytecode, offset, pc, opcode, "irem");
 		case IRETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ireturn");
+			return readNoArgs(bytecode, offset, pc, opcode, "ireturn");
 		case ISHL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ishl");
+			return readNoArgs(bytecode, offset, pc, opcode, "ishl");
 		case ISHR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ishr");
+			return readNoArgs(bytecode, offset, pc, opcode, "ishr");
 		case ISTORE_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode,"istore_0");
+			return readNoArgs(bytecode, offset, pc, opcode,"istore_0");
 		case ISTORE_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode,"istore_1");
+			return readNoArgs(bytecode, offset, pc, opcode,"istore_1");
 		case ISTORE_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode,"istore_2");
+			return readNoArgs(bytecode, offset, pc, opcode,"istore_2");
 		case ISTORE_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode,"istore_3");
+			return readNoArgs(bytecode, offset, pc, opcode,"istore_3");
 		case ISUB:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "isub");
+			return readNoArgs(bytecode, offset, pc, opcode, "isub");
 		case IUSHR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "iushr");
+			return readNoArgs(bytecode, offset, pc, opcode, "iushr");
 		case IXOR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ixor");
+			return readNoArgs(bytecode, offset, pc, opcode, "ixor");
 		case LADD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ladd");
+			return readNoArgs(bytecode, offset, pc, opcode, "ladd");
 		case LALOAD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "laload");
+			return readNoArgs(bytecode, offset, pc, opcode, "laload");
 		case LAND:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "land");
+			return readNoArgs(bytecode, offset, pc, opcode, "land");
 		case LASTORE:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lastore");
+			return readNoArgs(bytecode, offset, pc, opcode, "lastore");
 		case LCMP:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lcmp");
+			return readNoArgs(bytecode, offset, pc, opcode, "lcmp");
 		case LCONST_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lconst_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "lconst_0");
 		case LCONST_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lconst_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "lconst_1");
 		case LDIV:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "ldiv");
+			return readNoArgs(bytecode, offset, pc, opcode, "ldiv");
 		case LLOAD_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lload_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "lload_0");
 		case LLOAD_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lload_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "lload_1");
 		case LLOAD_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lload_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "lload_2");
 		case LLOAD_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lload_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "lload_3");
 		case LMUL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lmul");
+			return readNoArgs(bytecode, offset, pc, opcode, "lmul");
 		case LNEG:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lneg");
+			return readNoArgs(bytecode, offset, pc, opcode, "lneg");
 		case LREM:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lrem");
+			return readNoArgs(bytecode, offset, pc, opcode, "lrem");
 		case LRETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lreturn");
+			return readNoArgs(bytecode, offset, pc, opcode, "lreturn");
 		case LSHL:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lshl");
+			return readNoArgs(bytecode, offset, pc, opcode, "lshl");
 		case LSHR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lshr");
+			return readNoArgs(bytecode, offset, pc, opcode, "lshr");
 		case LSTORE_0:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lstore_0");
+			return readNoArgs(bytecode, offset, pc, opcode, "lstore_0");
 		case LSTORE_1:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lstore_1");
+			return readNoArgs(bytecode, offset, pc, opcode, "lstore_1");
 		case LSTORE_2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lstore_2");
+			return readNoArgs(bytecode, offset, pc, opcode, "lstore_2");
 		case LSTORE_3:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lstore_3");
+			return readNoArgs(bytecode, offset, pc, opcode, "lstore_3");
 		case LSUB:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lsub");
+			return readNoArgs(bytecode, offset, pc, opcode, "lsub");
 		case LUSHR:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "lushr");
+			return readNoArgs(bytecode, offset, pc, opcode, "lushr");
 		case MONITORENTER:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "monitorenter");
+			return readNoArgs(bytecode, offset, pc, opcode, "monitorenter");
 		case MONITOREXIT:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "monitorexit");
+			return readNoArgs(bytecode, offset, pc, opcode, "monitorexit");
 		case NOP:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "nop");
+			return readNoArgs(bytecode, offset, pc, opcode, "nop");
 		case POP:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "pop");
+			return readNoArgs(bytecode, offset, pc, opcode, "pop");
 		case POP2:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "pop2");
+			return readNoArgs(bytecode, offset, pc, opcode, "pop2");
 		case RETURN:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "return");
+			return readNoArgs(bytecode, offset, pc, opcode, "return");
 		case SALOAD:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "saload");
+			return readNoArgs(bytecode, offset, pc, opcode, "saload");
 		case SASTORE:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "sastore");
+			return readNoArgs(bytecode, offset, pc, opcode, "sastore");
 		case SWAP:
-			return getNoArgsInstr(bytecode, offset, pc, opcode, "swap");
+			return readNoArgs(bytecode, offset, pc, opcode, "swap");
 		// One argument
 		case BIPUSH:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "bipush");
+			return readOneArg(bytecode, offset, pc, opcode, "bipush");
 		case LDC:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "ldc");
+			return readOneArg(bytecode, offset, pc, opcode, "ldc");
 		case ILOAD:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "iload");
+			return readOneArg(bytecode, offset, pc, opcode, "iload");
 		case LLOAD:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "lload");
+			return readOneArg(bytecode, offset, pc, opcode, "lload");
 		case FLOAD:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "fload");
+			return readOneArg(bytecode, offset, pc, opcode, "fload");
 		case ISTORE:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "istore");
+			return readOneArg(bytecode, offset, pc, opcode, "istore");
 		case LSTORE:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "lstore");
+			return readOneArg(bytecode, offset, pc, opcode, "lstore");
 		case NEWARRAY:
-			return getOneArgInstr(bytecode, offset, pc, opcode, "newarray");
+			return readOneArg(bytecode, offset, pc, opcode, "newarray");
 		// Two arguments
 		case GOTO:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "goto");
+			return readTwoArgs(bytecode, offset, pc, opcode, "goto");
 		case IF_ICMPEQ:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_acmpeq");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_acmpeq");
 		case IF_ICMPGE:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_acmpge");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_acmpge");
 		case IF_ICMPGT:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_icmpgt");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_icmpgt");
 		case IF_ICMPLE:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_acmple");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_acmple");
 		case IF_ICMPLT:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_acmplt");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_acmplt");
 		case IF_ICMPNE:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "if_acmpne");
+			return readTwoArgs(bytecode, offset, pc, opcode, "if_acmpne");
 		case IFEQ:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifeq");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifeq");
 		case IFGE:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifge");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifge");
 		case IFGT:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifgt");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifgt");
 		case IFLT:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "iflt");
+			return readTwoArgs(bytecode, offset, pc, opcode, "iflt");
 		case IFNE:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifne");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifne");
 		case IFNONNULL:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifnonnull");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifnonnull");
 		case IFNULL:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ifnull");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ifnull");
 		case JSR:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "jsr");
+			return readTwoArgs(bytecode, offset, pc, opcode, "jsr");
 		case SIPUSH:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "sipush");
+			return readTwoArgs(bytecode, offset, pc, opcode, "sipush");
 		case IINC:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "iinc");
+			return readTwoArgs(bytecode, offset, pc, opcode, "iinc");
 		case ANEWARRAY:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "anewarray");
+			return readTwoArgs(bytecode, offset, pc, opcode, "anewarray");
 		case CHECKCAST:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "checkcast");
+			return readTwoArgs(bytecode, offset, pc, opcode, "checkcast");
 		case GETFIELD:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "getfield");
+			return readTwoArgs(bytecode, offset, pc, opcode, "getfield");
 		case GETSTATIC:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "getstatic");
+			return readTwoArgs(bytecode, offset, pc, opcode, "getstatic");
 		case INSTANCEOF:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "instanceof");
+			return readTwoArgs(bytecode, offset, pc, opcode, "instanceof");
 		case INVOKESPECIAL:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "invokespecial");
+			return readTwoArgs(bytecode, offset, pc, opcode, "invokespecial");
 		case INVOKESTATIC:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "invokestatic");
+			return readTwoArgs(bytecode, offset, pc, opcode, "invokestatic");
 		case INVOKEVIRTUAL:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "invokevirtual");
+			return readTwoArgs(bytecode, offset, pc, opcode, "invokevirtual");
 		case LDC_W:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ldc_w");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ldc_w");
 		case LDC2_W:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "ldc2_w");
+			return readTwoArgs(bytecode, offset, pc, opcode, "ldc2_w");
 		case NEW:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "new");
+			return readTwoArgs(bytecode, offset, pc, opcode, "new");
 		case PUTFIELD:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "putfield");
+			return readTwoArgs(bytecode, offset, pc, opcode, "putfield");
 		case PUTSTATIC:
-			return getTwoArgsInstr(bytecode, offset, pc, opcode, "putstatic");
+			return readTwoArgs(bytecode, offset, pc, opcode, "putstatic");
 		default:
 			return NULL;
 	}
 }
 
-Instruction* getNoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+Instruction* readNoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
 	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;
@@ -351,7 +351,7 @@ Instruction* getNoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, 
 	return instr;
 }
 
-Instruction* getOneArgInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+Instruction* readOneArg(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
 	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;
@@ -362,7 +362,7 @@ Instruction* getOneArgInstr(uint8_t* bytecode, int* offset, int pc, int opcode, 
 	return instr;
 }
 
-Instruction* getTwoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
+Instruction* readTwoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name) {
 	Instruction* instr = (Instruction*) set_mem(sizeof(Instruction));
 	instr->pc = pc;
 	instr->opcode = opcode;

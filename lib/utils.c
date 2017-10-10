@@ -1,16 +1,15 @@
 /**
- * @file convert.c
- * @brief Convertion operations library source.
+ * @file utils.c
+ * @brief File operations library source.
  * @authors Lukas Ferreira Machado (12/0127377)
  * @authors Raphael Luís Souza de Queiroz (13/0154989)
  *
  * This file contains all the function source codes which has the
- * signatures declared on the convert.h file.
+ * signatures declared on the utils.h file.
  */
-#include <stdio.h>
 #include <string.h>
 #include "mem-manager.h"
-#include "convert.h"
+#include "utils.h"
 
 const char *names[] = {" public", " final", " super", " interface", " abstract", " synthetic", " annotation", "enum"};
 
@@ -86,7 +85,7 @@ char* utf8ToString(uint8_t* src, uint16_t length, bool isRef)  {
             count++;
             i = i + 2;
         } else {
-            printf("Occured some error on decoding UTF-8 string\n");
+            printf("Error on decoding!\n");
         }
     }
 
@@ -108,7 +107,7 @@ char* utf8ToString(uint8_t* src, uint16_t length, bool isRef)  {
                 uint8_t z = src[j];
                 string[i] = (char) ( ( ( x & 0xF ) << 12 ) | ( ( y & 0x3F ) << 6 ) | ( z & 0x3F ) );
             } else {
-                printf(" Occured some error on decoding UTF-8 string\n");
+                printf("Error on decoding!\n");
             }
         }
 
@@ -136,4 +135,60 @@ char* utf8ToString(uint8_t* src, uint16_t length, bool isRef)  {
         string[count] = '\0';
     }
     return string;
+}
+
+FILE* openFile(char filename[255], char* mode) {
+    FILE* fp;
+    if ((fp = fopen(filename, mode)) == NULL) {
+        printf("Error opening the file!Terminating...\n");
+    }
+    return fp;
+}
+
+int fileSize(FILE* fp) {
+    fseek(fp, 0, SEEK_END);
+    return ftell(fp);
+}
+
+void closeFile(FILE** fp) {
+    fclose((*fp));
+    (*fp) = NULL;
+}
+
+uint8_t* get(FILE* fp, int offset, int bytes) {
+    uint8_t* content;
+
+    content = (uint8_t*) set_mem(bytes * sizeof(uint8_t));
+
+    fseek(fp, offset, SEEK_SET);
+    fread(content, sizeof(uint8_t), bytes, fp);
+
+    return content;
+}
+
+uint8_t getByte(FILE* fp, int offset) {
+    uint8_t byte;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&byte, sizeof(uint8_t), 1, fp);
+
+    return byte;
+}
+
+uint16_t getWord(FILE* fp, int offset) {
+    uint16_t word;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&word, sizeof(uint16_t), 1, fp);
+
+    return word;
+}
+
+uint32_t getDoubleWord(FILE* fp, int offset) {
+    uint32_t doubleWord;
+
+    fseek(fp, offset, SEEK_SET);
+    fread(&doubleWord, sizeof(uint32_t), 1, fp);
+
+    return doubleWord;
 }

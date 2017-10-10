@@ -9,27 +9,23 @@
 #include <string.h>
 #include "mem-manager.h"
 #include "menu.h"
-#include "convert.h"
-#include "file.h"
+#include "utils.h"
 #include "execute.h"
 
 /**
- * @brief Global variable for the userfile pointer.
- *
+ * @brief Stores the user's selected file.
  * @todo Description
  */
-FILE* userfilePointer = NULL;
+FILE* file = NULL;
 
 /**
- * @brief Global variable for the userfile path.
- *
+ * @brief Stores the user's selected path.
  * @todo Description
  */
-char userfilePath[255] = "";
+char path[255] = "";
 
 /**
- * @brief Global variable for the main class variable.
- *
+ * @brief Represents the file content
  * @todo Description
  */
 Class* class = NULL;
@@ -177,7 +173,7 @@ void showInterfaces() {
     int interfaces_index;
 
     if (class->interfaces_count == 0) {
-        printf("Empty array.\n");
+        printf("No data in Interfaces table\n");
         return;
     }
 
@@ -200,7 +196,7 @@ void showFields() {
     int userOption;
 
     if (class->fields_count == 0) {
-        printf("Empty Array\n");
+        printf("No data in Fields Table\n");
         return;
     }
 
@@ -218,7 +214,7 @@ void showFields() {
         printf("| 1) Choose a field                                            |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options (1-2): ");
+        printf("Choose the desired option (1-2): ");
         scanf("%d", &userOption);
         while(getchar() != '\n');
         if (userOption == 1) {
@@ -233,7 +229,7 @@ void showFields() {
                     showField(class->fields[chosenField]);
                     break;
                 } else {
-                    printf("Invalid option! Please choose a valid one.\n");
+                    printf("The selected option is not valid! Try again.\n");
                 }
             }
         } else if (userOption == 2) {
@@ -241,8 +237,7 @@ void showFields() {
             break;
         } else {
             clearScreen();
-            printf("Invalid option! Please choose a valid one.\n");
-        }
+            printf("The selected option is not valid! Try again.\n");        }
 
     }
 }
@@ -271,7 +266,7 @@ void showField(Field fieldInfo) {
         printf("| 1) Attributes                                                |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options: ");
+        printf("Choose the desired option: ");
         free_mem( (void**) &access_flags );
 
         scanf("%d", &userOption);
@@ -285,7 +280,7 @@ void showField(Field fieldInfo) {
             break;
         } else {
             clearScreen();
-            printf("Invalid option! Please choose a valid one.\n");
+            printf("The selected option is not valid! Try again.\n");
         }
     }
 }
@@ -294,7 +289,7 @@ void showMethods() {
     int userOption;
 
     if (class->methods_count == 0) {
-        printf("Empty Array\n");
+        printf("No data into Methods Table\n");
         return;
     }
 
@@ -313,7 +308,7 @@ void showMethods() {
         printf("| 1) Choose a method                                           |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options (1-2): ");
+        printf("Choose the desired option (1-2): ");
         scanf("%d", &userOption);
         while(getchar() != '\n');
 
@@ -328,7 +323,7 @@ void showMethods() {
                     showMethod(class->methods[chosenMethod]);
                     break;
                 } else {
-                    printf("Invalid option! Please choose a valid one.\n");
+                    printf("The selected option is not valid! Try again.\n");
                 }
             }
         } else if (userOption == 2) {
@@ -336,7 +331,7 @@ void showMethods() {
             break;
         } else {
             clearScreen();
-            printf("Invalid option! Please choose a valid one.\n");
+            printf("The selected option is not valid! Try again.\n");
         }
     }
 }
@@ -365,7 +360,7 @@ void showMethod(Method methodInfo) {
         printf("| 1) Attributes                                                |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options: ");
+        printf("Choose the desired option: ");
         free_mem( (void**) &access_flags );
         scanf("%d", &userOption);
         while(getchar() != '\n');
@@ -377,7 +372,7 @@ void showMethod(Method methodInfo) {
             break;
         } else {
             clearScreen();
-            printf("Invalid option! Please choose a valid one.\n");
+           printf("The selected option is not valid! Try again.\n");
         }
     }
 }
@@ -386,7 +381,7 @@ void showAttributes(Attribute* attributes, int attributes_count) {
     int userOption;
 
     if (attributes_count == 0) {
-        printf("Empty Array\n");
+        printf("No data in Attributes Table\n");
         return;
     }
 
@@ -406,7 +401,7 @@ void showAttributes(Attribute* attributes, int attributes_count) {
         printf("| 1) Choose a attribute                                        |\n");
         printf("| 2) Back                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options (1-2): ");
+        printf("Choose the desired options (1-2): ");
         scanf("%d", &userOption);
         while(getchar() != '\n');
         if (userOption == 1) {
@@ -420,16 +415,14 @@ void showAttributes(Attribute* attributes, int attributes_count) {
                     showAttribute(attributes[chosenAttribute]);
                     break;
                 } else {
-                    printf("Invalid option! Please choose a valid one.\n");
-                }
+                   printf("The selected option is not valid! Try again.\n");                }
             }
         } else if (userOption == 2) {
             clearScreen();
             break;
         } else {
             clearScreen();
-            printf("Invalid option! Please choose a valid one.\n");
-        }
+            printf("The selected option is not valid! Try again.\n");        }
 
     }
 }
@@ -469,7 +462,7 @@ void showAttribute(Attribute attrInfo) {
             printf("| 3) Attributes                                                |\n");
             printf("| 4) Back                                                      |\n");
             printf("|==============================================================|\n");
-            printf("Choose one of the options: ");
+            printf("Choose desired option: ");
 
             scanf("%d", &userOption);
             while(getchar() != '\n');
@@ -488,7 +481,7 @@ void showAttribute(Attribute attrInfo) {
                 break;
             } else {
                 clearScreen();
-                printf("Invalid option! Please choose a valid one.\n");
+                printf("The selected option is not valid! Try again.\n");
             }
 
         } else if (strcmp(name, "Deprecated") == 0) {
@@ -556,7 +549,7 @@ void showAttribute(Attribute attrInfo) {
 
 void showCode(uint8_t* code, int codeLength) {
     if (codeLength == 0) {
-        printf("Empty Array\n");
+        printf("No data in Byte Code\n");
         return;
     }
 
@@ -583,7 +576,7 @@ void showCode(uint8_t* code, int codeLength) {
 
 void showExceptionTable(ExceptionTableEntry* exceptionTable, int exceptionTableLength) {
     if (exceptionTableLength == 0) {
-        printf("Empty Array\n");
+        printf("No data in the Exception Table\n");
         return;
     }
 
@@ -604,7 +597,7 @@ void chooseFile() {
         printf("|==============================================================|\n");
         printf("|                     Choose a .class file                     |\n");
         printf("|==============================================================|\n");
-        printf("Set the path (\"none\" to return): ");
+        printf("Enter (\"none\" to return): ");
         scanf("%s", tempPath);
         while(getchar() != '\n');
 
@@ -622,73 +615,72 @@ void chooseFile() {
         }
 
         while(true) {
-            printf("Are you sure (Y-y or N-n)? ");
+            printf("Are you sure to open the class file (Y-y or N-n)? ");
             scanf("%c", &confirmation);
             while(getchar() != '\n');
 
             if (confirmation == 'Y' || confirmation == 'y') {
-
                 clearScreen();
-                if (userfilePointer != NULL) {
-                    closeFile(&userfilePointer);
+                if (file != NULL) {
+                    closeFile(&file);
                 }
-                userfilePointer = tempPointer;
-                strcpy(userfilePath, tempPath);
+                file = tempPointer;
+                strcpy(path, tempPath);
                 if (class != NULL) {
                     deallocateClass(&class);
                 }
-                class = getClassfile(userfilePointer);
-                goto fileAccepted;
+                class = getClassfile(file);
+                goto confirmation;
 
             } else if (confirmation == 'N' || confirmation == 'n') {
                 clearScreen();
                 strcpy(tempPath, "");
                 closeFile(&tempPointer);
-                goto fileDeclined;
+                goto noConfirmation;
             } else {
-                printf("Invalid option!\n");
+                printf("Chosen option is not valid. Try again!\n");
                 continue;
             }
         }
 
-        fileDeclined:
+        noConfirmation:
             continue;
 
-        fileAccepted:
+        confirmation:
             break;
     }
 }
 
-void menu(char* arquivoInicial) {
-    int userOption;
-    char* file_name = NULL;
-    FILE* tempPointer = NULL;
+void menu(char* nome) {
 
-    if (arquivoInicial != NULL) {
-        // Check if the file is a .class
-        if (strstr(arquivoInicial, ".class") != NULL) {
-            tempPointer = openFile(arquivoInicial, "rb");
-            if (tempPointer != NULL) {
-                if (userfilePointer != NULL) {
-                    closeFile(&userfilePointer);
-                }
-                userfilePointer = tempPointer;
-                strcpy(userfilePath, arquivoInicial);
+    if (nome != NULL) {
+        if (strstr(nome, ".class") != NULL){
+            if(file != NULL){
+                closeFile(&file);
+            }
+
+            file = openFile(nome, "rb");
+            if (file != NULL) {
+
+                strcpy(path, nome);
                 if (class != NULL) {
                     deallocateClass(&class);
                 }
-                class = getClassfile(userfilePointer);
+                class = getClassfile(file);
 
             } else {
-                printf("Invalid path!\n");
+                printf("The path is not valid! Try again!\n");
             }
         } else {
-            printf("Invalid file extension!\n");
+            printf("The file extension is not allowed. Try again!\n");
         }
     }
 
+    int option;
+    char *file_name;
+
     while(true) {
-        if (userfilePointer != NULL && userfilePath[0] != '\0') {
+        if (file != NULL && path[0] != '\0') {
             file_name = getNewName();
         }
 
@@ -696,14 +688,14 @@ void menu(char* arquivoInicial) {
         printf("|                       Classfile Viewer                       |\n");
         printf("|==============================================================|\n");
 
-        if (userfilePointer != NULL && userfilePath[0] != '\0') {
+        if (file != NULL && path[0] != '\0') {
 
             char* thisClass = getUtf8FromConstantPool(class->constant_pool[class->thisClass - 1].class_const.name_index, class->constant_pool, true);
             char* superClass = getUtf8FromConstantPool(class->constant_pool[class->superClass - 1].class_const.name_index, class->constant_pool, true);
             char* access_flags = map_flags(class->access_flags);
 
             printf("| Chosen file: %-47s |\n", file_name);
-            printf("| Size (bytes): %-46d |\n", fileSize(userfilePointer));
+            printf("| Size (bytes): %-46d |\n", fileSize(file));
             printf("|--------------------------------------------------------------|\n");
             printf("| General Information:                                         |\n");
             printf("|                                                              |\n");
@@ -719,11 +711,11 @@ void menu(char* arquivoInicial) {
             printf("| Methods count:      %-40u |\n", class->methods_count);
             printf("| Attributes count:   %-40u |\n",class->attributes_count);
             printf("|--------------------------------------------------------------|\n");
-            printf("| -1) Constant pool                                            |\n");
-            printf("| -2) Interfaces                                               |\n");
-            printf("| -3) Fields                                                   |\n");
-            printf("| -4) Methods                                                  |\n");
-            printf("| -5) Attributes                                               |\n");
+            printf("| 3) Constant pool                                             |\n");
+            printf("| 4) Interfaces                                                |\n");
+            printf("| 5) Fields                                                    |\n");
+            printf("| 6) Methods                                                   |\n");
+            printf("| 7) Attributes                                                |\n");
             printf("|--------------------------------------------------------------|\n");
             printf("| 1) Choose another .class file                                |\n");
 
@@ -733,79 +725,53 @@ void menu(char* arquivoInicial) {
 
         } else {
 
-            printf("| Chosen file: none                                            |\n");
+            printf("| No Chosen file                                               |\n");
             printf("|--------------------------------------------------------------|\n");
             printf("| 1) Choose a .class file                                      |\n");
 
         }
         printf("| 2) Quit                                                      |\n");
         printf("|==============================================================|\n");
-        printf("Choose one of the options (1-2): ");
-        scanf("%d", &userOption);
+        printf("Enter desired option [1-7] ");
+        scanf("%d", &option);
         while(getchar() != '\n');
         printf("\n");
-        if (userOption == 2) {
-            strcpy(userfilePath, "");
-            if (userfilePointer != NULL) {
-                closeFile(&userfilePointer);
+        if (option == 2) {
+            strcpy(path, "");
+            if (file != NULL) {
+                closeFile(&file);
             }
             freeMemManager();
             break;
         }
-        viewerOption(userOption);
+        displayOption(option);
     }
 }
 
-void viewerOption(int userOption) {
+void displayOption(int option) {
     clearScreen();
 
-    switch(userOption) {
+    switch(option) {
         case 1:
             chooseFile();
             break;
-
-        case -1:
-            if (userfilePointer != NULL && userfilePath[0] != '\0') {
-                showConstantPool();
-            } else {
-                printf("Invalid option! Please choose a valid one.\n");
-            }
+        case 3:
+            showConstantPool();
             break;
-
-        case -2:
-            if (userfilePointer != NULL && userfilePath[0] != '\0') {
-                showInterfaces();
-            } else {
-                printf("Invalid option! Please choose a valid one.\n");
-            }
+        case 4:
+           showInterfaces();
             break;
-
-        case -3:
-            if (userfilePointer != NULL && userfilePath[0] != '\0') {
-                showFields();
-            } else {
-                printf("Invalid option! Please choose a valid one.\n");
-            }
+        case 5:
+            showFields();
             break;
-
-        case -4:
-            if (userfilePointer != NULL && userfilePath[0] != '\0') {
-                showMethods();
-            } else {
-                printf("Invalid option! Please choose a valid one.\n");
-            }
+        case 6:
+            showMethods();
             break;
-
-        case -5:
-            if (userfilePointer != NULL && userfilePath[0] != '\0') {
-                showAttributes(class->attributes, class->attributes_count);
-            } else {
-                printf("Invalid option! Please choose a valid one.\n");
-            }
+        case 7:
+            showAttributes(class->attributes, class->attributes_count);
             break;
-
         default:
-            printf("Invalid option! Please choose a valid one.\n");
+            printf("The chosen option is not valid! Try again.\n");
     }
 }
 
@@ -813,21 +779,21 @@ char* getNewName() {
     int delimeter_position = 0;
     int i = 0;
 
-    if (strstr(userfilePath, "/") != NULL) {
-        for (int pos = 0; userfilePath[pos] != '\0'; pos++) {
-            if (userfilePath[pos] == '\\') {
+    if (strstr(path, "/") != NULL) {
+        for (int pos = 0; path[pos] != '\0'; pos++) {
+            if (path[pos] == '\\') {
                 delimeter_position = pos;
             }
         }
     }
 
-    while (userfilePath[i] != '\0') {
-        if (userfilePath[i] == '/') {
+    while (path[i] != '\0') {
+        if (path[i] == '/') {
             delimeter_position = i;
         }
         i++;
     }
-    return &userfilePath[delimeter_position + 1];
+    return &path[delimeter_position + 1];
 }
 
 void clearScreen() {

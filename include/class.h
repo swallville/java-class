@@ -40,7 +40,7 @@ typedef struct _const_pool_info {
      */
     uint8_t tag;
     /**
-     * @brief Union of structs containing the types within the constant pool.
+     * @brief Union of structs that have the constant_pool components
      *
      * Each type has its own structure.
      */
@@ -560,8 +560,7 @@ LocalVariableTableEntry* getLocalVariableTable(uint8_t* info, int* bytecount, in
 /**
  * @brief Deallocate the main elements of the .class strucure.
  *
- * Free memory from the main elements of the .class struct. It will be
- * important to save memory for the jvm tests with many .class files.
+ * Free memory from the Class.
  *
  * @params class Referece of the pointer to the .class structure.
  */

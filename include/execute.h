@@ -15,43 +15,40 @@
 #include "instruction.h"
 
 /**
- * @Brief Returns the instruction to be executed from the offset.
+ * @Brief Set Instruction parmams by its opcode
  * @Description
- * Through a switch case of all types of functions, it returns a call to another
- * function depending on the number of arguments of each function.
+ * Through a switch case, it sets an Instruction depending on
+ * the number of arguments.
  * @Parameters char *byteCode and an int offset
  * @Return Instruction*
  */
 Instruction* decode(uint8_t* byteCode, int* offset);
 
 /**
- * @Brief It initializes the struct instruction with all its variables. In this case, no arguments.
+ * @Brief Set the Instruction instance with no arguments.
  * @Description
- * The function allocates memory for the instructions and sets its variables with the parameters passed throught the
- * the function parameters.
+ * Sets all fields of the instance Instruction to be returned.
  * @Parameters char *bytecode, int offset, int pc, int opcode, char name(from the instruction), int (*func) Instruction
  * @Return Instruction*
  */
-Instruction* getNoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
+Instruction* readNoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
 
 
 /**
- * @Brief It initializes the struct instruction with all its variables. In this case, one arguments.
- * The function allocates memory for the instructions and sets its variables with the parameters passed throught the
- * the function parameters.
+ * @Brief Set the Instruction instance with one argument.
+ * Sets all fields of the instance Instruction to be returned.
  * @Parameters char *bytecode, int offset, int pc, int opcode, char name(from the instruction), int (*func) Instruction
  * @Return Instruction*
  */
-Instruction* getOneArgInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
+Instruction* readOneArg(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
 
 /**
- * @Brief It initializes the struct instruction with all its variables. In this case, two arguments.
+ * @Brief Set the Instruction instance with two arguments.
  * @Description
- * The function allocates memory for the instructions and sets its variables with the parameters passed throught the
- * the function parameters.
+ * Sets all fields of the instance Instruction to be returned.
  * @Parameters char *bytecode, int offset, int pc, int opcode, char name(from the instruction), int (*func) Instruction
  * @Return Instruction*
  */
-Instruction* getTwoArgsInstr(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
+Instruction* readTwoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
 
 #endif // _EXECUTE_H
