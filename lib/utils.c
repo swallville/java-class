@@ -11,44 +11,82 @@
 #include "mem-manager.h"
 #include "utils.h"
 
-const char *names[] = {" public", " final", " super", " interface", " abstract", " synthetic", " annotation", "enum"};
+const char *names[] = {" public", " private", " protected", " static", " final",
+ " super", " volatile", " transient", " interface", " abstract", " synthetic",
+ " annotation", "enum"};
 
 char* map_flags(uint16_t access_flags){
-    char* string = (char*) set_mem(100 * sizeof(char));;
-    string[100] = '\0';
+    char** tokens = (char**) malloc(13 * 15);
+    char* string = (char*) set_mem(150 * sizeof(char));
+    string[150] = '\0';
+    int i = 0;
+
     // Map the access flags into strings.
     while (access_flags != 0) {
         if (access_flags >= (uint16_t)ACC_ENUM){
             access_flags -= ACC_ENUM;
-            strcpy(string, names[7]);
+            tokens[i] = (char*)names[12];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_ANNOTATION){
             access_flags -= ACC_ANNOTATION;
-            strncat(string, names[6], strlen(names[6]));
+            tokens[i] = (char*)names[11];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_SYNTHETIC){
             access_flags -= ACC_SYNTHETIC;
-            strncat(string, names[5], strlen(names[5]));
+            tokens[i] = (char*)names[10];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_ABSTRACT){
             access_flags -= ACC_ABSTRACT;
-            strncat(string, names[4], strlen(names[4]));
+            tokens[i] = (char*)names[9];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_INTERFACE){
             access_flags -= ACC_INTERFACE;
-            strncat(string, names[3], strlen(names[3]));
+            tokens[i] = (char*)names[8];
+            i++;
+        }
+        else if (access_flags >= (uint16_t)ACC_TRANSIENT){
+            access_flags -= ACC_TRANSIENT;
+            tokens[i] = (char*)names[7];
+            i++;
+        }
+        else if (access_flags >= (uint16_t)ACC_VOLATILE){
+            access_flags -= ACC_VOLATILE;
+            tokens[i] = (char*)names[6];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_SUPER){
             access_flags -= ACC_SUPER;
-            strncat(string, names[2], strlen(names[2]));
+            tokens[i] = (char*)names[5];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_FINAL){
             access_flags -= ACC_FINAL;
-            strncat(string, names[1], strlen(names[1]));
+            tokens[i] = (char*)names[4];
+            i++;
+        }
+        else if (access_flags >= (uint16_t)ACC_STATIC){
+            access_flags -= ACC_STATIC;
+            tokens[i] = (char*)names[3];
+            i++;
+        }
+        else if (access_flags >= (uint16_t)ACC_PROTECTED){
+            access_flags -= ACC_PROTECTED;
+            tokens[i] = (char*)names[2];
+            i++;
+        }
+        else if (access_flags >= (uint16_t)ACC_PRIVATE){
+            access_flags -= ACC_PRIVATE;
+            tokens[i] = (char*)names[1];
+            i++;
         }
         else if (access_flags >= (uint16_t)ACC_PUBLIC){
             access_flags -= ACC_PUBLIC;
-            strncat(string, names[0], strlen(names[0]));
+            tokens[i] = (char*)names[0];
+            i++;
             break;
         }
         else{
@@ -56,7 +94,17 @@ char* map_flags(uint16_t access_flags){
             break;
         }
     }
-    string[strlen(string)] = '\0';
+    strcpy(string, tokens[i - 1]);
+
+    if (i > 1) {
+        for (int j = i - 2; j >= 0 ; j--){
+            strcat(string, tokens[j]);
+        }
+    }
+
+    free(tokens);
+    tokens = NULL;
+
     return string;
 }
 
@@ -73,68 +121,16 @@ uint32_t to4Bytes(uint32_t src) {
     return (high << 16) | low;
 }
 
-char* utf8ToString(uint8_t* src, uint16_t length, bool isRef)  {
-    int i, count;
-    for (i = 0, count = 0; i < length; i++) {
-        if (src[i] >> 7 == 0x0) {
-            count++;
-        } else if (src[i] >> 5 == 0x6) {
-            count++;
-            i++;
-        } else if (src[i] >> 4 == 0xC) {
-            count++;
-            i = i + 2;
-        } else {
-            printf("Error on decoding!\n");
-        }
-    }
+char* utf8ToString(uint8_t* src, uint16_t length)  {
+    char* retorno = (char*) set_mem((length + 1) * sizeof(char));
+    char *auxretorno = retorno;
 
-    char* string = NULL;
-    if (isRef) {
-        string  = (char*) set_mem((count + 3) * sizeof(char));
-        int j;
-        string[0] = '<';
-        for (i = 1, j = 0; i < count + 2 && j < length; i++, j++) {
-            if (src[i] >> 7 == 0x0) {
-                string[i] = (char) src[j];
-            } else if (src[i] >> 5 == 0x6) {
-                uint8_t x = src[j++];
-                uint8_t y = src[j];
-                string[i] = (char) ( ( ( x & 0x1F ) << 6 ) | ( y & 0x3F ) );
-            } else if (src[i] >> 4 == 0xC) {
-                uint8_t x = src[j++];
-                uint8_t y = src[j++];
-                uint8_t z = src[j];
-                string[i] = (char) ( ( ( x & 0xF ) << 12 ) | ( ( y & 0x3F ) << 6 ) | ( z & 0x3F ) );
-            } else {
-                printf("Error on decoding!\n");
-            }
-        }
-
-        string[count + 1] = '>';
-        string[count + 2] = '\0';
-    } else {
-        string  = (char*) set_mem((count + 1) * sizeof(char));
-        int j;
-        for (i = 0, j = 0; i < count && j < length; i++, j++) {
-            if (src[i] >> 7 == 0x0) {
-                string[i] = (char) src[j];
-            } else if (src[i] >> 5 == 0x6) {
-                uint8_t x = src[j++];
-                uint8_t y = src[j];
-                string[i] = (char) ( ( ( x & 0x1F ) << 6 ) | ( y & 0x3F ) );
-            } else if (src[i] >> 4 == 0xC) {
-                uint8_t x = src[j++];
-                uint8_t y = src[j++];
-                uint8_t z = src[j];
-                string[i] = (char) ( ( ( x & 0xF ) << 12 ) | ( ( y & 0x3F ) << 6 ) | ( z & 0x3F ) );
-            } else {
-                printf("Error on decoding!\n");
-            }
-        }
-        string[count] = '\0';
+    for (uint8_t *aux = src; aux < (src + length); aux++){
+        *(auxretorno++) = (char) *aux;
     }
-    return string;
+    *auxretorno = '\0';
+
+    return retorno;
 }
 
 FILE* openFile(char filename[255], char* mode) {

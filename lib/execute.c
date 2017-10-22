@@ -46,8 +46,6 @@ Instruction* decode(uint8_t* bytecode, int* offset) {
 			return readNoArgs(bytecode, offset, pc, opcode, "dload_3");
 		case DMUL:
 			return readNoArgs(bytecode, offset, pc, opcode, "dmul");
-		case DNEG:
-			return readNoArgs(bytecode, offset, pc, opcode, "dneg");
 		case DREM:
 			return readNoArgs(bytecode, offset, pc, opcode, "drem");
 		case DRETURN:
@@ -82,6 +80,8 @@ Instruction* decode(uint8_t* bytecode, int* offset) {
 			return readNoArgs(bytecode, offset, pc, opcode, "f2l");
 		case FADD:
 			return readNoArgs(bytecode, offset, pc, opcode, "fadd");
+	  case DADD:
+			return readNoArgs(bytecode, offset, pc, opcode, "dadd");
 		case FALOAD:
 			return readNoArgs(bytecode, offset, pc, opcode, "faload");
 		case FASTORE:
@@ -98,6 +98,8 @@ Instruction* decode(uint8_t* bytecode, int* offset) {
 			return readNoArgs(bytecode, offset, pc, opcode, "fconst_2");
 		case FDIV:
 			return readNoArgs(bytecode, offset, pc, opcode, "fdiv");
+		case DDIV:
+			return readNoArgs(bytecode, offset, pc, opcode, "ddiv");
 		case FLOAD_0:
 			return readNoArgs(bytecode, offset, pc, opcode, "fload_0");
 		case FLOAD_1:
@@ -110,6 +112,8 @@ Instruction* decode(uint8_t* bytecode, int* offset) {
 			return readNoArgs(bytecode, offset, pc, opcode, "fmul");
 		case FNEG:
 			return readNoArgs(bytecode, offset, pc, opcode, "fneg");
+		case DNEG:
+			return readNoArgs(bytecode, offset, pc, opcode, "dneg");
 		case FREM:
 			return readNoArgs(bytecode, offset, pc, opcode, "frem");
 		case FRETURN:

@@ -19,8 +19,13 @@
  */
 enum {
     ACC_PUBLIC = 1,
+    ACC_PRIVATE = 2,
+    ACC_PROTECTED = 4,
+    ACC_STATIC = 8,
     ACC_FINAL = 16,
     ACC_SUPER = 32,
+    ACC_VOLATILE = 64,
+    ACC_TRANSIENT = 128,
     ACC_INTERFACE = 512,
     ACC_ABSTRACT = 1024,
     ACC_SYNTHETIC = 4096,
@@ -62,7 +67,7 @@ uint32_t to4Bytes(uint32_t src);
  * @todo Parameters
  * @todo Return
  */
-char* utf8ToString(uint8_t* src, uint16_t length, bool isRef);
+char* utf8ToString(uint8_t* src, uint16_t length);
 
 /**
  * @brief Opens a file into a specific mode

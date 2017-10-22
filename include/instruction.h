@@ -16,7 +16,6 @@
  * @todo Description
  */
 enum {
-
     NOP = 0x0,
     ACONST_NULL = 0x1,
     ICONST_M1 = 0x2,
@@ -215,7 +214,6 @@ enum {
     BREAKPOINT = 0xCA,
     IMPDEP1 = 0xFE,
     IMPDEP2 = 0xFF
-
 } byteCodeEnum;
 
 /**
