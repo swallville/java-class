@@ -267,8 +267,6 @@ void showInterfaces() {
 }
 
 void showFields() {
-    int userOption;
-
     if (class->fields_count == 0) {
         printf("No data in Fields Table\n");
         return;
@@ -284,84 +282,41 @@ void showFields() {
             printf(" [%-3d] %-54s \n", field_index, name);
             free_mem( (void**) &name );
         }
-        printf("|--------------------------------------------------------------|\n");
-        printf("| 1) Choose a field                                            |\n");
-        printf("| 2) Back                                                      |\n");
-        printf("|==============================================================|\n");
-        printf("Choose the desired option (1-2): ");
-        scanf("%d", &userOption);
-        while(getchar() != '\n');
-        if (userOption == 1) {
-            while(true) {
-                int chosenField;
-                printf("index: ");
-                scanf("%d", &chosenField);
-                while(getchar() != '\n');
 
-                if (chosenField >= 0 && chosenField < class->fields_count) {
-                    clearScreen();
-                    showField(class->fields[chosenField]);
-                    break;
-                } else {
-                    printf("The selected option is not valid! Try again.\n");
-                }
-            }
-        } else if (userOption == 2) {
-            clearScreen();
-            break;
-        } else {
-            clearScreen();
-            printf("The selected option is not valid! Try again.\n");        }
+				for (int i = 0; i < class->fields_count; i++) {
+					char* name = getUtf8FromConstantPool(class->fields[i].name_index, class->constant_pool);
+					char* nameRef = getUtf8FromConstantPool(class->fields[i].name_index, class->constant_pool);
+					char* descriptorRef = getUtf8FromConstantPool(class->fields[i].descriptor_index, class->constant_pool);
+					char* access_flags = map_flags(class->fields[i].access_flags);
 
-    }
-}
+					printf("|==============================================================|\n");
+					printf("| %-60s |\n", name);
+					printf("|==============================================================|\n");
+					printf(" Name:             cp_info #%-4d <%s> \n", class->fields[i].name_index, nameRef);
+					printf(" Descriptor:       cp_info #%-4d <%s> \n", class->fields[i].descriptor_index, descriptorRef);
+					free_mem( (void**) &name );
+					free_mem( (void**) &nameRef );
+					free_mem( (void**) &descriptorRef );
 
-void showField(Field fieldInfo) {
-    int userOption;
+					printf(" Access flags:      0x%.4X %-34s  \n", class->fields[i].access_flags, access_flags);
+					printf(" Attributes count: %-42d \n", class->fields[i].attributes_count);
+					free_mem( (void**) &access_flags );
 
-    while(true) {
-        char* name = getUtf8FromConstantPool(fieldInfo.name_index, class->constant_pool);
-        char* nameRef = getUtf8FromConstantPool(fieldInfo.name_index, class->constant_pool);
-        char* descriptorRef = getUtf8FromConstantPool(fieldInfo.descriptor_index, class->constant_pool);
-        char* access_flags = map_flags(fieldInfo.access_flags);
+					if (class->fields[i].attributes_count > 0) {
+						showAttributes(class->fields[i].attributes, class->fields[i].attributes_count);
+					}
 
-        printf("|==============================================================|\n");
-        printf("| %-60s |\n", name);
-        printf("|==============================================================|\n");
-        printf(" Name:             cp_info #%-4d <%s> \n", fieldInfo.name_index, nameRef);
-        printf(" Descriptor:       cp_info #%-4d <%s> \n", fieldInfo.descriptor_index, descriptorRef);
-        free_mem( (void**) &name );
-        free_mem( (void**) &nameRef );
-        free_mem( (void**) &descriptorRef );
+				}
 
-        printf(" Access flags:      0x%.4X %-34s  \n", fieldInfo.access_flags, access_flags);
-        printf(" Attributes count: %-42d \n", fieldInfo.attributes_count);
-        printf("|--------------------------------------------------------------|\n");
-        printf("| 1) Attributes                                                |\n");
-        printf("| 2) Back                                                      |\n");
-        printf("|==============================================================|\n");
-        printf("Choose the desired option: ");
-        free_mem( (void**) &access_flags );
-
-        scanf("%d", &userOption);
-        while(getchar() != '\n');
-
-        if (userOption == 1) {
-            clearScreen();
-            showAttributes(fieldInfo.attributes, fieldInfo.attributes_count);
-        } else if (userOption == 2) {
-            clearScreen();
-            break;
-        } else {
-            clearScreen();
-            printf("The selected option is not valid! Try again.\n");
-        }
-    }
+				printf("|==============================================================|\n");
+				printf("Press ENTER to return...");
+				while(getchar() != '\n');
+				clearScreen();
+				break;
+	 }
 }
 
 void showMethods() {
-    int userOption;
-
     if (class->methods_count == 0) {
         printf("No data into Methods Table\n");
         return;
@@ -378,82 +333,39 @@ void showMethods() {
             free_mem( (void**) &name );
         }
 
-        printf("|--------------------------------------------------------------|\n");
-        printf("| 1) Choose a method                                           |\n");
-        printf("| 2) Back                                                      |\n");
-        printf("|==============================================================|\n");
-        printf("Choose the desired option (1-2): ");
-        scanf("%d", &userOption);
-        while(getchar() != '\n');
+				for (int i = 0; i < class->methods_count; i++) {
+					char* name = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
+	        char* nameRef = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
+	        char* descriptorRef = getUtf8FromConstantPool(class->methods[i].descriptor_index, class->constant_pool);
+	        char* access_flags = map_flags(class->methods[i].access_flags);
 
-        if (userOption == 1) {
-            while(true) {
-                int chosenMethod;
-                printf("index: ");
-                scanf("%d", &chosenMethod);
-                while(getchar() != '\n');
-                if (chosenMethod >= 0 && chosenMethod < class->methods_count) {
-                    clearScreen();
-                    showMethod(class->methods[chosenMethod]);
-                    break;
-                } else {
-                    printf("The selected option is not valid! Try again.\n");
-                }
-            }
-        } else if (userOption == 2) {
-            clearScreen();
-            break;
-        } else {
-            clearScreen();
-            printf("The selected option is not valid! Try again.\n");
-        }
-    }
-}
+	        printf("|==============================================================|\n");
+	        printf("| %-60s |\n", name);
+	        printf("|==============================================================|\n");
+	        printf(" Name:             cp_info #%-4d <%s> \n", class->methods[i].name_index, nameRef);
+	        printf(" Descriptor:       cp_info #%-4d <%s> \n", class->methods[i].descriptor_index, descriptorRef);
+	        free_mem( (void**) &name );
+	        free_mem( (void**) &nameRef );
+	        free_mem( (void**) &descriptorRef );
 
-void showMethod(Method methodInfo) {
-    int userOption;
+	        printf(" Access flags:      0x%.4X %-34s  \n", class->methods[i].access_flags, access_flags);
+	        printf(" Attributes count: %-42d \n", class->methods[i].attributes_count);
+					free_mem( (void**) &access_flags );
 
-    while(true) {
-        char* name = getUtf8FromConstantPool(methodInfo.name_index, class->constant_pool);
-        char* nameRef = getUtf8FromConstantPool(methodInfo.name_index, class->constant_pool);
-        char* descriptorRef = getUtf8FromConstantPool(methodInfo.descriptor_index, class->constant_pool);
-        char* access_flags = map_flags(methodInfo.access_flags);
+					if (class->methods[i].attributes_count) {
+						showAttributes(class->methods[i].attributes, class->methods[i].attributes_count);
+					}
+				}
 
-        printf("|==============================================================|\n");
-        printf("| %-60s |\n", name);
-        printf("|==============================================================|\n");
-        printf(" Name:             cp_info #%-4d <%s> \n", methodInfo.name_index, nameRef);
-        printf(" Descriptor:       cp_info #%-4d <%s> \n", methodInfo.descriptor_index, descriptorRef);
-        free_mem( (void**) &name );
-        free_mem( (void**) &nameRef );
-        free_mem( (void**) &descriptorRef );
-
-        printf(" Access flags:      0x%.4X %-34s  \n", methodInfo.access_flags, access_flags);
-        printf(" Attributes count: %-42d \n", methodInfo.attributes_count);
-        printf("|--------------------------------------------------------------|\n");
-        printf("| 1) Attributes                                                |\n");
-        printf("| 2) Back                                                      |\n");
-        printf("|==============================================================|\n");
-        printf("Choose the desired option: ");
-        free_mem( (void**) &access_flags );
-        scanf("%d", &userOption);
-        while(getchar() != '\n');
-        if (userOption == 1) {
-            clearScreen();
-            showAttributes(methodInfo.attributes, methodInfo.attributes_count);
-        } else if (userOption == 2) {
-            clearScreen();
-            break;
-        } else {
-            clearScreen();
-           printf("The selected option is not valid! Try again.\n");
-        }
+				printf("|==============================================================|\n");
+				printf("Press ENTER to return...");
+				while(getchar() != '\n');
+				clearScreen();
+				break;
     }
 }
 
 void showAttributes(Attribute* attributes, int attributes_count) {
-    int userOption;
-
     if (attributes_count == 0) {
         printf("No data in Attributes Table\n");
         return;
@@ -471,33 +383,12 @@ void showAttributes(Attribute* attributes, int attributes_count) {
             free_mem( (void**) &string );
         }
 
-        printf("|--------------------------------------------------------------|\n");
-        printf("| 1) Choose a attribute                                        |\n");
-        printf("| 2) Back                                                      |\n");
-        printf("|==============================================================|\n");
-        printf("Choose the desired options (1-2): ");
-        scanf("%d", &userOption);
-        while(getchar() != '\n');
-        if (userOption == 1) {
-            while(true) {
-                int chosenAttribute;
-                printf("index: ");
-                scanf("%d", &chosenAttribute);
-                while(getchar() != '\n');
-                if (chosenAttribute >= 0 && chosenAttribute < attributes_count) {
-                    clearScreen();
-                    showAttribute(attributes[chosenAttribute]);
-                    break;
-                } else {
-                   printf("The selected option is not valid! Try again.\n");                }
-            }
-        } else if (userOption == 2) {
-            clearScreen();
-            break;
-        } else {
-            clearScreen();
-            printf("The selected option is not valid! Try again.\n");        }
+				for (int i = 0; i < attributes_count; i++) {
+					showAttribute(attributes[i]);
+				}
 
+				clearScreen();
+				break;
     }
 }
 

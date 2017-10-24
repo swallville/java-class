@@ -42,19 +42,7 @@ void showFields();
  * @todo Brief
  * @todo Description
  */
-void showField(Field fieldInfo);
-
-/**
- * @todo Brief
- * @todo Description
- */
 void showMethods();
-
-/**
- * @todo Brief
- * @todo Description
- */
-void showMethod(Method methodInfo);
 
 /**
  * @todo Brief
