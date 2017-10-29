@@ -24,14 +24,29 @@ enum {
     ACC_STATIC = 8,
     ACC_FINAL = 16,
     ACC_SUPER = 32,
+    ACC_SYNCHRONIZED = 32,
+    ACC_BRIDGE = 64,
     ACC_VOLATILE = 64,
+    ACC_VARARGS = 128,
     ACC_TRANSIENT = 128,
+    ACC_NATIVE = 256,
     ACC_INTERFACE = 512,
     ACC_ABSTRACT = 1024,
+    ACC_STRICT = 2048,
     ACC_SYNTHETIC = 4096,
     ACC_ANNOTATION = 8192,
     ACC_ENUM = 16384
 } ACC_flags;
+
+/**
+ * @brief Map with strings the methods'access flags
+ *
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+
+char* map_method_flags(uint16_t access_flags);
 
 /**
  * @brief Map with strings the access flags

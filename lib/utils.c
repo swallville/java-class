@@ -13,12 +13,100 @@
 
 const char *names[] = {" public", " private", " protected", " static", " final",
  " super", " volatile", " transient", " interface", " abstract", " synthetic",
- " annotation", "enum"};
+ " annotation", " enum", " synchronized", " bridge", " varargs", " native", " strict"};
+
+ char* map_method_flags(uint16_t access_flags){
+     char** tokens = (char**) malloc(12 * 15);
+     char* string = (char*) set_mem(250 * sizeof(char));
+     string[250] = '\0';
+     int i = 0;
+
+     // Map the access flags into strings.
+     while (access_flags != 0) {
+        if (access_flags >= (uint16_t)ACC_SYNTHETIC){
+             access_flags -= ACC_SYNTHETIC;
+             tokens[i] = (char*)names[10];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_STRICT){
+             access_flags -= ACC_STRICT;
+             tokens[i] = (char*)names[17];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_ABSTRACT){
+             access_flags -= ACC_ABSTRACT;
+             tokens[i] = (char*)names[9];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_NATIVE){
+             access_flags -= ACC_NATIVE;
+             tokens[i] = (char*)names[16];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_VARARGS){
+             access_flags -= ACC_VARARGS;
+             tokens[i] = (char*)names[15];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_BRIDGE){
+             access_flags -= ACC_BRIDGE;
+             tokens[i] = (char*)names[14];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_SYNCHRONIZED){
+             access_flags -= ACC_SYNCHRONIZED;
+             tokens[i] = (char*)names[13];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_FINAL){
+             access_flags -= ACC_FINAL;
+             tokens[i] = (char*)names[4];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_STATIC){
+             access_flags -= ACC_STATIC;
+             tokens[i] = (char*)names[3];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_PROTECTED){
+             access_flags -= ACC_PROTECTED;
+             tokens[i] = (char*)names[2];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_PRIVATE){
+             access_flags -= ACC_PRIVATE;
+             tokens[i] = (char*)names[1];
+             i++;
+         }
+         else if (access_flags >= (uint16_t)ACC_PUBLIC){
+             access_flags -= ACC_PUBLIC;
+             tokens[i] = (char*)names[0];
+             i++;
+             break;
+         }
+         else{
+             strcpy(string, "invalid argument!");
+             break;
+         }
+     }
+     strcpy(string, tokens[i - 1]);
+
+     if (i > 1) {
+         for (int j = i - 2; j >= 0 ; j--){
+             strcat(string, tokens[j]);
+         }
+     }
+
+     free(tokens);
+     tokens = NULL;
+
+     return string;
+ }
 
 char* map_flags(uint16_t access_flags){
     char** tokens = (char**) malloc(13 * 15);
-    char* string = (char*) set_mem(150 * sizeof(char));
-    string[150] = '\0';
+    char* string = (char*) set_mem(250 * sizeof(char));
+    string[250] = '\0';
     int i = 0;
 
     // Map the access flags into strings.

@@ -337,7 +337,7 @@ void showMethods() {
 					char* name = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
 	        char* nameRef = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
 	        char* descriptorRef = getUtf8FromConstantPool(class->methods[i].descriptor_index, class->constant_pool);
-	        char* access_flags = map_flags(class->methods[i].access_flags);
+	        char* access_flags = map_method_flags(class->methods[i].access_flags);
 
 	        printf("|==============================================================|\n");
 	        printf("| %-60s |\n", name);
@@ -808,13 +808,24 @@ void showCode(uint8_t* code, int codeLength) {
     printf("|==============================================================|\n");
     int code_index = 0;
     while(code_index < codeLength) {
-        Instruction* instr = decode(code, &code_index);
+        Instruction* instr = decode(code, &code_index, 1);
         if (instr->arguments_count == 0) {
             printf(" %-4d %-55s \n", instr->pc, instr->name);
         } else if (instr->arguments_count == 1) {
-            printf(" %-4d %-15s cp_info #%d                                    \n", instr->pc, instr->name, instr->arguments[0]);
+						if (strstr(instr->name, "push") != NULL) {
+							printf(" %-4d %-15s %d                                    		 		 \n", instr->pc, instr->name, instr->arguments[0]);
+						} else {
+							printf(" %-4d %-15s cp_info #%d                                    \n", instr->pc, instr->name, instr->arguments[0]);
+						}
         } else if (instr->arguments_count == 2) {
+						if ((strstr(instr->name, "goto") != NULL) || (strstr(instr->name, "if") != NULL)) {
+							printf(" %-4d %-15s %d (+%d)                                     \n", instr->pc, instr->name, (instr->pc + instr->arguments[1]), instr->arguments[1]);
+						}
             printf(" %-4d %-15s cp_info #%d                                    \n", instr->pc, instr->name, instr->arguments[1]);
+        } else if (instr->arguments_count == 3) {
+            printf(" %-4d %-15s cp_info #%d                                    \n", instr->pc, instr->name, instr->arguments[2]);
+        } else if (instr->arguments_count == 4) {
+            printf(" %-4d %-15s cp_info #%d                                    \n", instr->pc, instr->name, instr->arguments[3]);
         }
         free_mem( (void**) &instr);
     }
@@ -970,6 +981,7 @@ void menu(char* nome) {
             printf("| 5) Fields                                                    |\n");
             printf("| 6) Methods                                                   |\n");
             printf("| 7) Attributes                                                |\n");
+						printf("| 8) Run JVM                                                   |\n");
             printf("|--------------------------------------------------------------|\n");
             printf("| 1) Choose another .class file                                |\n");
 
@@ -1024,6 +1036,13 @@ void displayOption(int option) {
         case 7:
             showAttributes(class->attributes, class->attributes_count);
             break;
+				case 8:
+		        run(*class);
+						printf("|==============================================================|\n");
+						printf("Press ENTER to return...");
+						while(getchar() != '\n');
+						clearScreen();
+		        break;
         default:
             printf("The chosen option is not valid! Try again.\n");
     }

@@ -14,15 +14,21 @@
 #include "class.h"
 #include "instruction.h"
 
+void run(Class class);
+
+CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool);
+
+void executeMethod(Method* method, Class class);
+
 /**
  * @Brief Set Instruction parmams by its opcode
  * @Description
  * Through a switch case, it sets an Instruction depending on
  * the number of arguments.
- * @Parameters char *byteCode and an int offset
+ * @Parameters char *byteCode, an int offset and an int mode
  * @Return Instruction*
  */
-Instruction* decode(uint8_t* byteCode, int* offset);
+Instruction* decode(uint8_t* byteCode, int* offset, int mode);
 
 /**
  * @Brief Set the Instruction instance with no arguments.
@@ -50,5 +56,24 @@ Instruction* readOneArg(uint8_t* bytecode, int* offset, int pc, int opcode, char
  * @Return Instruction*
  */
 Instruction* readTwoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
+
+/**
+ * @Brief Set the Instruction instance with three arguments.
+ * @Description
+ * Sets all fields of the instance Instruction to be returned.
+ * @Parameters char *bytecode, int offset, int pc, int opcode, char name(from the instruction), int (*func) Instruction
+ * @Return Instruction*
+ */
+
+Instruction* readThreeArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
+
+/**
+ * @Brief Set the Instruction instance with four arguments.
+ * @Description
+ * Sets all fields of the instance Instruction to be returned.
+ * @Parameters char *bytecode, int offset, int pc, int opcode, char name(from the instruction), int (*func) Instruction
+ * @Return Instruction*
+ */
+Instruction* readFourArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char* name);
 
 #endif // _EXECUTE_H

@@ -11,6 +11,9 @@
 #define _INSTRUCTION_H
 
 #include <stdint.h>
+#include "stack.h"
+#include "heap.h"
+
 /**
  * @todo Brief
  * @todo Description
@@ -150,9 +153,16 @@ enum {
     LXOR = 0x83,
     IINC = 0x84,
     I2L = 0x85,
-    F2D=0x8D,
-    F2I=0X8B,
-    F2L=0X8C,
+    I2F = 0x86,
+    I2D = 0x87,
+    L2I = 0x88,
+    L2F = 0x89,
+    L2D = 0x8A,
+    F2I = 0x8B,
+    F2L = 0x8C,
+    F2D = 0x8D,
+    D2I = 0X8E,
+    D2L = 0X8F,
     D2F = 0x90,
     I2B = 0x91,
     I2C = 0x92,
@@ -210,11 +220,19 @@ enum {
     IFNULL = 0xC6,
     IFNONNULL = 0xC7,
     GOTO_W = 0xC8,
-    JSR_W = 0xC9,
-    BREAKPOINT = 0xCA,
-    IMPDEP1 = 0xFE,
-    IMPDEP2 = 0xFF
+    JSR_W = 0xC9
 } byteCodeEnum;
+
+typedef struct _frame {
+  uint32_t *localVariables;
+  Stack *operandStack;
+  Stack *framesStack;
+  ConstPool *runtimeConstantPool;
+  Class *currentClass;
+  CodeAttribute *codeAttribute;
+  Heap* heap;
+  int* codeIndexRef;
+}Frame;
 
 /**
  * @todo Brief
@@ -227,5 +245,7 @@ typedef struct _instruction {
     int arguments_count;
     int8_t* arguments;
 }Instruction;
+
+Frame* createFrame(Class* currentClass, CodeAttribute* codeAttribute, Heap* heap);
 
 #endif // _INSTRUCTION_H
