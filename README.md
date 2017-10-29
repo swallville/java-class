@@ -2,8 +2,8 @@ Java .class viewer and executer
 ====================
 Implementation in C99 of Java .class viewer and executer for Java SE 7 version.
 
-Link to Repository: https://github.com/swallville/java-class
-Official Documentation: https://docs.oracle.com/javase/specs/jvms/se8/html/index.html
+- Link to Repository: https://github.com/swallville/java-class
+- Official Documentation: https://docs.oracle.com/javase/specs/jvms/se8/html/index.html
 
 Members
 -------
