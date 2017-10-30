@@ -1682,7 +1682,7 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode) {
 			return readNoArgs(bytecode, offset, pc, opcode, "monitorexit");
 
 		case WIDE:
-			runtime_instr = readFourArgs(bytecode, offset, pc, opcode, "invokedynamic");
+			runtime_instr = readFourArgs(bytecode, offset, pc, opcode, "wide");
 
 			if (mode == 0) {
 				opcode1 = runtime_instr->opcode;
