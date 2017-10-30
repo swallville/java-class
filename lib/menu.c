@@ -500,7 +500,9 @@ void showAttribute(Attribute attrInfo) {
 											printf(" \t\t\tUNINITIALIZED THIS\n");
 											break;
 										case 7:
-											printf(" \t\t\tOBJECT cp_info#%d \n", ver_type->type_info.object_variable_info.cpool_index);
+											printf(" \t\t\tOBJECT cp_info#%d ", ver_type->type_info.object_variable_info.cpool_index);
+											get_instr_def((int)(ver_type->type_info.object_variable_info.cpool_index) - 1);
+											printf("\n");
 											break;
 										case 8:
 											printf(" \t\t\tUNINITIALIZED Offset: %d\n", ver_type->type_info.uninitialized_variable_info.offset);
@@ -537,7 +539,9 @@ void showAttribute(Attribute attrInfo) {
 											printf(" \t\t\tUNINITIALIZED THIS\n");
 											break;
 										case 7:
-											printf(" \t\t\tOBJECT cp_info#%d \n", ver_type->type_info.object_variable_info.cpool_index);
+											printf(" \t\t\tOBJECT cp_info#%d ", ver_type->type_info.object_variable_info.cpool_index);
+											get_instr_def((int)(ver_type->type_info.object_variable_info.cpool_index) - 1);
+											printf("\n");
 											break;
 										case 8:
 											printf(" \t\t\tUNINITIALIZED Offset: %d\n", ver_type->type_info.uninitialized_variable_info.offset);
@@ -581,7 +585,9 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT cp_info#%d \n", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info#%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
+												printf("\n");
 												break;
 											case 8:
 												printf(" \t\t\tUNINITIALIZED Offset: %d\n", ver_type[posicaoVTI].type_info.uninitialized_variable_info.offset);
@@ -618,7 +624,9 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT cp_info#%d \n", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info#%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
+												printf("\n");
 												break;
 											case 8:
 												printf(" \t\t\tUNINITIALIZED Offset: %d\n", ver_type[posicaoVTI].type_info.uninitialized_variable_info.offset);
@@ -652,7 +660,9 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT cp_info#%d \n", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info#%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
+												printf("\n");
 												break;
 											case 8:
 												printf(" \t\t\tUNINITIALIZED Offset: %d\n", ver_type[posicaoVTI].type_info.uninitialized_variable_info.offset);
@@ -683,10 +693,10 @@ void showAttribute(Attribute attrInfo) {
 						printf(" Exceptions Length: %d\n",(int)specific_info->numberOfExceptions);
 					  printf(" Attribute Info: \n");
 
-						printf("Nr.\t\tException\t\tVerbose\n");
+						printf("  Nr.\t\tException\t\tVerbose\n");
 						for (int i = 0; i < specific_info->numberOfExceptions; i++) {
 							info = getUtf8FromConstantPool(class->constant_pool[specific_info->exception_indexTable[i] - 1].class_const.name_index, class->constant_pool);
-							printf("%d\t\tcp_info #%d\t\t <%s> \n", i, specific_info->exception_indexTable[i], info);
+							printf("  %d\t\tcp_info #%d\t\t<%s> \n", i, specific_info->exception_indexTable[i], info);
 							free_mem( (void**) &info);
 						}
             printf("|=====================================================================================|\n");
