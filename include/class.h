@@ -625,8 +625,6 @@ typedef struct _bootstrap_methods{
 }Bootstrap_methods;
 
 typedef struct _BootstrapMethods_attribute {
-    uint16_t attribute_name_index;
-    uint32_t attribute_length;
     uint16_t num_bootstrap_methods;
     Bootstrap_methods * bootstrap_methods;
 }BootstrapMethods_attribute;
@@ -832,6 +830,13 @@ Attribute* getAttributesFromByteArray(uint8_t* info, int* bytecount, uint16_t at
  */
 void* decodeInfo(Attribute attribute, ConstPool* constantPool);
 
+/**
+ * @brief
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+Bootstrap_methods* getBootstrapMethods(uint8_t* info, int* bytecount, int num_bootstrap_methods);
 /**
  * @brief
  * @todo Description

@@ -378,9 +378,38 @@ void sum4(int* bytecount){
          bytecount += 2;
          ref->localVariableTable = getLocalVariableTable(attribute.info, &bytecount, ref->localVariableTableLength);
          specific_info = ref;
+     } else if (strncmp(attributeName, "BootstrapMethods", strlen(attributeName)) == 0) {
+        BootstrapMethods_attribute* ref = (BootstrapMethods_attribute*) set_mem(sizeof(BootstrapMethods_attribute));
+        ref->num_bootstrap_methods = to2Bytes(get2bytesFromByteArray(attribute.info, bytecount));
+        bytecount += 2;
+        ref->bootstrap_methods = getBootstrapMethods(attribute.info, &bytecount, ref->num_bootstrap_methods);
+        specific_info = ref;
      }
      free_mem( (void**) &attributeName );
      return specific_info;
+ }
+
+ Bootstrap_methods* getBootstrapMethods(uint8_t* info, int* bytecount, int num_bootstrap_methods) {
+     Bootstrap_methods* bootstrap_methods = (Bootstrap_methods*) set_mem(num_bootstrap_methods * sizeof(Bootstrap_methods));
+     int index = 0;
+     int inner_index = 0;
+
+     while (index < num_bootstrap_methods) {
+         bootstrap_methods[index].bootstrap_method_ref = to2Bytes(get2bytesFromByteArray(info, (*bytecount)));
+         sum2(bytecount);
+         bootstrap_methods[index].num_bootstrap_arguments = to2Bytes(get2bytesFromByteArray(info, (*bytecount)));
+         sum2(bytecount);
+         while (inner_index < bootstrap_methods[index].num_bootstrap_arguments) {
+            bootstrap_methods[index].bootstrap_arguments[inner_index] = to2Bytes(get2bytesFromByteArray(info, (*bytecount)));
+            sum2(bytecount);
+
+            inner_index++;
+         }
+
+         index++;
+         inner_index = 0;
+     }
+     return bootstrap_methods;
  }
 
  StackMapFrame* getStackMapFrame(uint8_t* info, int* bytecount, int localVariableTableLength) {

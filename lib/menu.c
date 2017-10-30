@@ -83,6 +83,7 @@ void showConstantPool() {
         printf("|                         Constant Pool                        |\n");
         printf("|==============================================================|\n");
         int cp_index;
+				int for_method_handle = 0;
         char* string = NULL;
         char* aux = NULL;
         for (cp_index = 0; cp_index < class->constantPool_count - 1; cp_index++) {
@@ -175,6 +176,7 @@ void showConstantPool() {
                     free_mem( (void**) &string );
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
                     aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
+										for_method_handle = cp_index;
                     printf(" Name and type: cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].methodRef_const.nameAndType_index, string, aux);
                     free_mem( (void**) &string );
                     free_mem( (void**) &aux );
@@ -204,34 +206,37 @@ void showConstantPool() {
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
+
 							case METHOD_HANDLE:
 										printf("| [%-3d] CONSTANT_MethodHandle                              	 |\n", cp_index + 1);
 										printf("|--------------------------------------------------------------|\n");
-										string = getUtf8FromConstantPool(class->constant_pool[cp_index].methodHandle_const.reference_kind, class->constant_pool);
-										printf(" MethodHandle Reference Kind:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_kind, string);
+										printf(" Reference Kind:  %s \n", map_methods_handle_types(class->constant_pool[cp_index].methodHandle_const.reference_kind));
+										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
+										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
+										printf(" Reference Index: cp_info #%-4d <%s.%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_index, string, aux);
 										free_mem( (void**) &string );
-										string = getUtf8FromConstantPool(class->constant_pool[cp_index].methodHandle_const.reference_index, class->constant_pool);
-										printf(" MethodHandle Reference Index: cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_index, string);
-										free_mem( (void**) &string );
+										free_mem( (void**) &aux );
 										printf("|--------------------------------------------------------------|\n");
 										break;
+
 							 case METHOD_TYPE:
-										printf("| [%-3d] CONSTANT_MethodType                              	 |\n", cp_index + 1);
+										printf("| [%-3d] CONSTANT_MethodType                              	   |\n", cp_index + 1);
 										printf("|--------------------------------------------------------------|\n");
 										string = getUtf8FromConstantPool(class->constant_pool[cp_index].methodType_const.descriptor_index, class->constant_pool);
-										printf(" MethodType Descriptor Index:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodType_const.descriptor_index, string);
+										printf(" Descriptor:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodType_const.descriptor_index, string);
 										free_mem( (void**) &string );
 									  printf("|--------------------------------------------------------------|\n");
 										break;
+
 								case INVOKE_DYNAMIC:
 										printf("| [%-3d] CONSTANT_InvokeDynamic                              	 |\n", cp_index + 1);
 										printf("|--------------------------------------------------------------|\n");
-										string = getUtf8FromConstantPool(class->constant_pool[cp_index].invokeDynamicInfo_const.bootstrap_method_attr_index, class->constant_pool);
-										printf(" InvokeDynamic - Bootstrap Method Attr Index::  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.bootstrap_method_attr_index, string);
+										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.name_index, class->constant_pool);
+										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
+										printf(" Name and type:  cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, string, aux);
 										free_mem( (void**) &string );
-										string = getUtf8FromConstantPool(class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, class->constant_pool);
-										printf(" InvokeDynamic - Name and Type Index:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, string);
-										free_mem( (void**) &string );
+										free_mem( (void**) &aux );
+										printf(" BootstrapMethods #%-4d \n", class->constant_pool[cp_index].invokeDynamicInfo_const.bootstrap_method_attr_index);
 										printf("|--------------------------------------------------------------|\n");
 										break;
             }
@@ -857,6 +862,17 @@ void showAttribute(Attribute attrInfo) {
 					break;
 
         } else if (strcmp(name, "BootstrapMethods") == 0) {
+					BootstrapMethods_attribute* specific_info = (BootstrapMethods_attribute*) attrInfo.specific_info;
+
+					printf(" Attribute Info: \n");
+					printf(" Nr.\t\tBootstrap Method\t\tArguments\n");
+					for (int i = 0; i < specific_info->num_bootstrap_methods; i++) {
+						 printf(" %d\t\tcp_info #%d\t\t\n", i, specific_info->bootstrap_methods[i].bootstrap_method_ref);
+						 for (int j = 0; j < specific_info->bootstrap_methods[i].num_bootstrap_arguments; j++) {
+							 printf(" \t\t\t\t\t%d\n", specific_info->bootstrap_methods[i].bootstrap_arguments[j]);
+						 }
+					}
+
 					printf("|=====================================================================================|\n");
 					printf("Press ENTER to return...");
 					while(getchar() != '\n');
@@ -936,6 +952,14 @@ void showCode(uint8_t* code, int codeLength) {
 							get_instr_def((int)(instr->arguments[1]) - 1);
 							printf(" count %" PRIu8 "", instr->arguments[2]);
 							printf("\n");
+						} else if (strstr(instr->name, "invokedynamic") != NULL) {
+							uint16_t nu2 = 0;
+							nu2 = ((uint16_t)((uint8_t)instr->arguments[0] << 8 | (uint8_t)instr->arguments[1]));
+
+							char* string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[(int)(nu2) - 1].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.name_index, class->constant_pool);
+
+							printf(" %-4d %-15s cp_info #%" PRIu8 " <%s, BootstrapMethods #%d> \n", instr->pc, instr->name, instr->arguments[1], string, class->constant_pool[(int)(nu2) - 1].invokeDynamicInfo_const.bootstrap_method_attr_index);
+							free_mem( (void**) &string );
 						} else {
 							printf(" %-4d %-15s cp_info #%" PRIu8 " ", instr->pc, instr->name, instr->arguments[1]);
 							get_instr_def((int)(instr->arguments[1]) - 1);

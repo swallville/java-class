@@ -18,6 +18,35 @@ const char *names[] = {" public", " private", " protected", " static", " final",
 const char *array_types[] = {"boolean", "char", "float", "double", "byte", "short",
 "int", "long"};
 
+const char *methods_handle_types[] = {"REF_getField", "REF_getStatic", "REF_putField",
+"REF_putStatic", "REF_invokeVirtual", "REF_invokeStatic", "REF_invokeSpecial",
+"REF_newInvokeSpecial", "REF_invokeInterface"};
+
+char* map_methods_handle_types(uint8_t type){
+  switch (type) {
+    case REF_getField:
+      return ((char*)methods_handle_types[0]);
+    case REF_getStatic:
+      return ((char*)methods_handle_types[1]);
+    case REF_putField:
+      return ((char*)methods_handle_types[2]);
+    case REF_putStatic:
+      return ((char*)methods_handle_types[3]);
+    case REF_invokeVirtual:
+      return ((char*)methods_handle_types[4]);
+    case REF_invokeStatic:
+      return ((char*)methods_handle_types[5]);
+    case REF_invokeSpecial:
+      return ((char*)methods_handle_types[6]);
+    case REF_newInvokeSpecial:
+      return ((char*)methods_handle_types[7]);
+    case REF_invokeInterface:
+      return ((char*)methods_handle_types[8]);
+    default:
+      return NULL;
+  }
+}
+
  char* map_method_flags(uint16_t access_flags){
      char** tokens = (char**) malloc(12 * 15);
      char* string = (char*) set_mem(250 * sizeof(char));

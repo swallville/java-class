@@ -49,6 +49,26 @@ enum {
   T_LONG
 } ARRAY_TYPES;
 
+enum {
+  REF_getField = 1,
+  REF_getStatic,
+  REF_putField,
+  REF_putStatic,
+  REF_invokeVirtual,
+  REF_invokeStatic,
+  REF_invokeSpecial,
+  REF_newInvokeSpecial,
+  REF_invokeInterface
+} HANDLE_TYPES;
+
+/**
+ * @brief Map with strings the methods_handle types
+ *
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+char* map_methods_handle_types(uint8_t type);
 /**
  * @brief Map with strings the methods'access flags
  *
