@@ -38,6 +38,17 @@ enum {
     ACC_ENUM = 16384
 } ACC_flags;
 
+enum {
+  T_BOOLEAN = 4,
+  T_CHAR,
+  T_FLOAT,
+  T_DOUBLE,
+  T_BYTE,
+  T_SHORT,
+  T_INT,
+  T_LONG
+} ARRAY_TYPES;
+
 /**
  * @brief Map with strings the methods'access flags
  *
@@ -56,6 +67,15 @@ char* map_method_flags(uint16_t access_flags);
  * @todo Return
  */
 char* map_flags(uint16_t access_flags);
+
+/**
+ * @brief Map with strings for the array's types
+ *
+ * @todo Description
+ * @todo Parameters
+ * @todo Return
+ */
+char* map_array_type(int type);
 
 /**
  * @brief Transform a little Endian to a Big Endian in 2 bytes

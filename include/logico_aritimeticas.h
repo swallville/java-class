@@ -301,7 +301,7 @@ void i_ixor(Frame* frame);
 void i_lxor(Frame* frame);
 
 /**
-*   @fn void i_iinc(Frame* frame)
+*   @fn void i_iinc(Frame* frame, uint8_t index, uint8_t inc)
 *   @brief Incrementa a variável local com o valor da variável inc.
 *   @param frame Frame corrente.
 *   @param index Indice do elemento a ser incrementado no vetor de variáveis locais.

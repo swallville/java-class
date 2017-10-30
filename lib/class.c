@@ -51,28 +51,36 @@ void sum4(int* bytecount){
  }
 
  double decodeDouble (uint32_t high, uint32_t low){
-     double result;
-     uint64_t valor;
+    double result;
+    uint64_t valor;
+    float value;
 
-     valor = (((uint64_t)high) << 32) | (uint64_t)low;
-     result = (double) valor;
+    valor = ((uint64_t)high) << 32 | low;
 
-	int8_t s = ((valor >> 63) == 0) ? 1 : -1;
-	int16_t e = ((valor >> 52) & 0x7ffL);
-	uint64_t m = (e == 0) ? ((valor & 0xfffffffffffffL) << 1) : ((valor & 0xfffffffffffffL) | 0x10000000000000L);
-     result = (s) * (m) * (pow(2, e - 1075));
+  	 int8_t s = ((valor >> 63) == 0) ? 1 : -1;
+  	 int16_t e = ((valor >> 52) & 0x7ffL);
+  	 uint64_t m = (e == 0) ? ((valor & 0xfffffffffffffL) << 1) : ((valor & 0xfffffffffffffL) | 0x10000000000000L);
 
-     return result;
+    value = (pow(2, e - 1075) > 0 ? (m) * (pow(2, e - 1075)) : (m) / (pow(2, 1075 - e)));
+
+    result = (s) * value;
+
+    return result;
  }
 
  float decodeFloat (uint32_t bytes) {
-	float result;
-	int s = ((bytes>>31) == 0) ? 1 : -1;
-	int e = ((bytes>>23) & 0xff);
-	int m = (e == 0) ? (bytes & 0x7fffff) << 1 : (bytes & 0x7fffff) | 0x800000;
-	result = (s) * (m) * (pow(2, e - 150));
+  	float result;
+   float value;
 
-	return result;
+  	int s = ((bytes>>31) == 0) ? 1 : -1;
+  	int e = ((bytes>>23) & 0xff);
+  	int m = (e == 0) ? (bytes & 0x7fffff) << 1 : (bytes & 0x7fffff) | 0x800000;
+
+   value = ((pow(2, e - 150)) > 0 ? (m) * (pow(2, e - 150)) : (m) / (pow(2, 150 - e)));
+
+  	result = (s) * value;
+
+  	return result;
 }
 
  long decodeLong(uint32_t high, uint32_t low) {

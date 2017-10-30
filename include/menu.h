@@ -102,6 +102,12 @@ void displayOption(int userOption);
 char* getNewName();
 
 /**
+ * @brief Put some definitions for Instructions
+ * @todo Description
+ */
+void get_instr_def(int cp_index);
+
+/**
  * @brief Clear the screen.
  *
  * @todo Description

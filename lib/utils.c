@@ -15,6 +15,9 @@ const char *names[] = {" public", " private", " protected", " static", " final",
  " super", " volatile", " transient", " interface", " abstract", " synthetic",
  " annotation", " enum", " synchronized", " bridge", " varargs", " native", " strict"};
 
+const char *array_types[] = {"boolean", "char", "float", "double", "byte", "short",
+"int", "long"};
+
  char* map_method_flags(uint16_t access_flags){
      char** tokens = (char**) malloc(12 * 15);
      char* string = (char*) set_mem(250 * sizeof(char));
@@ -194,6 +197,29 @@ char* map_flags(uint16_t access_flags){
     tokens = NULL;
 
     return string;
+}
+
+char* map_array_type(int type) {
+     switch (type) {
+          case T_BOOLEAN:
+               return ((char*)array_types[0]);
+          case T_CHAR:
+               return ((char*)array_types[1]);
+          case T_FLOAT:
+               return ((char*)array_types[2]);
+          case T_DOUBLE:
+               return ((char*)array_types[3]);
+          case T_BYTE:
+               return ((char*)array_types[4]);
+          case T_SHORT:
+               return ((char*)array_types[5]);
+          case T_INT:
+               return ((char*)array_types[6]);
+          case T_LONG:
+               return ((char*)array_types[7]);
+          default:
+               return NULL;
+     }
 }
 
 uint16_t to2Bytes(uint16_t src) {
