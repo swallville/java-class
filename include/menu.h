@@ -24,6 +24,12 @@ double decoderVersion (uint16_t major);
  * @todo Brief
  * @todo Description
  */
+void printConstantPool();
+
+/**
+ * @todo Brief
+ * @todo Description
+ */
 void showConstantPool();
 
 /**

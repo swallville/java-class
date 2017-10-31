@@ -20,6 +20,12 @@
 FILE* file = NULL;
 
 /**
+ * @brief Wirte the user's selected file with General Information and
+ * the constant pool.
+ * @todo Description
+ */
+FILE* info_file = NULL;
+/**
  * @brief Stores the user's selected path.
  * @todo Description
  */
@@ -71,6 +77,179 @@ double decoderVersion (uint16_t version) {
 	return retorno;
 }
 
+void printConstantPool() {
+    if (class->constantPool_count == 0) {
+        fprintf(info_file, "Empty array.\n");
+        return;
+    }
+
+    while(true) {
+        fprintf(info_file,"|==============================================================|\n");
+        fprintf(info_file,"|                         Constant Pool                        |\n");
+        fprintf(info_file,"|==============================================================|\n");
+        int cp_index;
+				int for_method_handle = 0;
+        char* string = NULL;
+        char* aux = NULL;
+        for (cp_index = 0; cp_index < class->constantPool_count - 1; cp_index++) {
+            switch(class->constant_pool[cp_index].tag) {
+                case LARGE_NUMERIC_CONTINUED:
+                    fprintf(info_file,"| [%-3d] (large numeric continued)                              |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case UTF8:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Utf8_Info                                     |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = utf8ToString(class->constant_pool[cp_index].utf8_const.bytes, class->constant_pool[cp_index].utf8_const.length);
+                    fprintf(info_file," Length of bytes array: %-37d \n", class->constant_pool[cp_index].utf8_const.length);
+                    fprintf(info_file," Length of string:      %-37zu \n", strlen(string));
+                    fprintf(info_file," String:                %-37s \n", string);
+                    free_mem( (void**) &string );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case INTEGER:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Integer_Info                                  |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    fprintf(info_file," Bytes:   0x%.8X                                          \n", class->constant_pool[cp_index].integer_const.bytes);
+                    fprintf(info_file," Integer: %-51d \n", class->constant_pool[cp_index].integer_const.bytes);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case FLOAT:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Float_Info                                    |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    fprintf(info_file," Bytes: 0x%.8X                                            \n", class->constant_pool[cp_index].float_const.bytes);
+                    fprintf(info_file," Float: %-53f \n", decodeFloat(class->constant_pool[cp_index].float_const.bytes));
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case LONG:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Long_Info                                     |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    fprintf(info_file," High bytes: 0x%.8X                                       \n", class->constant_pool[cp_index].long_const.bytes.highBytes);
+                    fprintf(info_file," Low bytes:  0x%.8X                                       \n", class->constant_pool[cp_index].long_const.bytes.lowBytes);
+                    fprintf(info_file," Long:       %-48ld \n",decodeLong(class->constant_pool[cp_index].long_const.bytes.highBytes, class->constant_pool[cp_index].long_const.bytes.lowBytes));
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case DOUBLE:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Double_Info                                   |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    fprintf(info_file," High bytes: 0x%.8X                                       \n", class->constant_pool[cp_index].double_const.bytes.highBytes);
+                    fprintf(info_file," Low bytes:  0x%.8X                                       \n", class->constant_pool[cp_index].double_const.bytes.lowBytes);
+                    fprintf(info_file," Double:     %-48lf \n", decodeDouble(class->constant_pool[cp_index].double_const.bytes.highBytes, class->constant_pool[cp_index].double_const.bytes.lowBytes));
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case CLASS:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Class_Info                                    |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[cp_index].class_const.name_index, class->constant_pool);
+                    fprintf(info_file," Class name:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].class_const.name_index, string);
+                    free_mem( (void**) &string );
+                  	fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case STRING:
+                    fprintf(info_file,"| [%-3d] CONSTANT_String_Info                                   |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[cp_index].string_const.string_index, class->constant_pool);
+                    fprintf(info_file," String:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].string_const.string_index, string);
+                    free_mem( (void**) &string );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case FIELD_REF:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Fieldref_Info                                 |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].fieldRef_const.class_index - 1].class_const.name_index, class->constant_pool);
+                    fprintf(info_file," Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.class_index, string);
+                    free_mem( (void**) &string );
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].fieldRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
+                    fprintf(info_file," Name and type: cp_info #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.nameAndType_index, string);
+                    free_mem( (void**) &string );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case METHOD_REF:
+                    fprintf(info_file,"| [%-3d] CONSTANT_Methodref_Info                                |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
+                    fprintf(info_file," Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodRef_const.class_index, string);
+                    free_mem( (void**) &string );
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
+                    aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
+										for_method_handle = cp_index;
+                    fprintf(info_file," Name and type:  cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].methodRef_const.nameAndType_index, string, aux);
+                    free_mem( (void**) &string );
+                    free_mem( (void**) &aux );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case INTERFACE_METHOD_REF:
+                    fprintf(info_file,"| [%-3d] CONSTANT_InterfaceMethodref_Info                       |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].interfaceMethodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
+                    fprintf(info_file," Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.class_index, string);
+                    free_mem( (void**) &string );
+                    string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].interfaceMethodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
+                    fprintf(info_file," Name and type:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.nameAndType_index, string);
+                    free_mem( (void**) &string );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+                case NAME_AND_TYPE:
+                    fprintf(info_file,"| [%-3d] CONSTANT_NameAndType_Info                              |\n", cp_index + 1);
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    string = getUtf8FromConstantPool(class->constant_pool[cp_index].nameAndType_const.name_index, class->constant_pool);
+                    fprintf(info_file," Name:        cp_info #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.name_index, string);
+                    free_mem( (void**) &string );
+                    string = getUtf8FromConstantPool(class->constant_pool[cp_index].nameAndType_const.descriptor_index, class->constant_pool);
+                    fprintf(info_file," Descriptor:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.descriptor_index, string);
+                    free_mem( (void**) &string );
+                    fprintf(info_file,"|--------------------------------------------------------------|\n");
+                    break;
+
+							case METHOD_HANDLE:
+										fprintf(info_file,"| [%-3d] CONSTANT_MethodHandle                              	 |\n", cp_index + 1);
+										fprintf(info_file,"|--------------------------------------------------------------|\n");
+										fprintf(info_file," Reference Kind:  %s \n", map_methods_handle_types(class->constant_pool[cp_index].methodHandle_const.reference_kind));
+										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
+										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
+										fprintf(info_file," Reference Index:  cp_info #%-4d <%s.%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_index, string, aux);
+										free_mem( (void**) &string );
+										free_mem( (void**) &aux );
+										fprintf(info_file,"|--------------------------------------------------------------|\n");
+										break;
+
+							 case METHOD_TYPE:
+										fprintf(info_file,"| [%-3d] CONSTANT_MethodType                              	   |\n", cp_index + 1);
+										fprintf(info_file,"|--------------------------------------------------------------|\n");
+										string = getUtf8FromConstantPool(class->constant_pool[cp_index].methodType_const.descriptor_index, class->constant_pool);
+										fprintf(info_file," Descriptor:   cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodType_const.descriptor_index, string);
+										free_mem( (void**) &string );
+									  fprintf(info_file,"|--------------------------------------------------------------|\n");
+										break;
+
+								case INVOKE_DYNAMIC:
+										fprintf(info_file,"| [%-3d] CONSTANT_InvokeDynamic                              	 |\n", cp_index + 1);
+										fprintf(info_file,"|--------------------------------------------------------------|\n");
+										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.name_index, class->constant_pool);
+										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
+										fprintf(info_file," Name and type:   cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, string, aux);
+										free_mem( (void**) &string );
+										free_mem( (void**) &aux );
+										fprintf(info_file," BootstrapMethods #%-4d \n", class->constant_pool[cp_index].invokeDynamicInfo_const.bootstrap_method_attr_index);
+										fprintf(info_file,"|--------------------------------------------------------------|\n");
+										break;
+            }
+        }
+        fprintf(info_file,"|==============================================================|\n");
+        break;
+    }
+}
 
 void showConstantPool() {
     if (class->constantPool_count == 0) {
@@ -142,7 +321,7 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_Class_Info                                    |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[cp_index].class_const.name_index, class->constant_pool);
-                    printf(" Class name:  #%-4d <%s> \n", class->constant_pool[cp_index].class_const.name_index, string);
+                    printf(" Class name:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].class_const.name_index, string);
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
@@ -151,7 +330,7 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_String_Info                                   |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[cp_index].string_const.string_index, class->constant_pool);
-                    printf(" String:  #%-4d <%s> \n", class->constant_pool[cp_index].string_const.string_index, string);
+                    printf(" String:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].string_const.string_index, string);
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
@@ -160,10 +339,10 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_Fieldref_Info                                 |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].fieldRef_const.class_index - 1].class_const.name_index, class->constant_pool);
-                    printf(" Class name:     #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.class_index, string);
+                    printf(" Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.class_index, string);
                     free_mem( (void**) &string );
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].fieldRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
-                    printf(" Name and type:  #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.nameAndType_index, string);
+                    printf(" Name and type: cp_info #%-4d <%s> \n", class->constant_pool[cp_index].fieldRef_const.nameAndType_index, string);
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
@@ -172,12 +351,12 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_Methodref_Info                                |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
-                    printf(" Class name:     #%-4d <%s> \n", class->constant_pool[cp_index].methodRef_const.class_index, string);
+                    printf(" Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodRef_const.class_index, string);
                     free_mem( (void**) &string );
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
                     aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].methodRef_const.nameAndType_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
 										for_method_handle = cp_index;
-                    printf(" Name and type:  #%-4d <%s : %s> \n", class->constant_pool[cp_index].methodRef_const.nameAndType_index, string, aux);
+                    printf(" Name and type:  cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].methodRef_const.nameAndType_index, string, aux);
                     free_mem( (void**) &string );
                     free_mem( (void**) &aux );
                     printf("|--------------------------------------------------------------|\n");
@@ -187,10 +366,10 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_InterfaceMethodref_Info                       |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].interfaceMethodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
-                    printf(" Class name:     #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.class_index, string);
+                    printf(" Class name:     cp_info #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.class_index, string);
                     free_mem( (void**) &string );
                     string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].interfaceMethodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
-                    printf(" Name and type:  #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.nameAndType_index, string);
+                    printf(" Name and type:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].interfaceMethodRef_const.nameAndType_index, string);
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
@@ -199,10 +378,10 @@ void showConstantPool() {
                     printf("| [%-3d] CONSTANT_NameAndType_Info                              |\n", cp_index + 1);
                     printf("|--------------------------------------------------------------|\n");
                     string = getUtf8FromConstantPool(class->constant_pool[cp_index].nameAndType_const.name_index, class->constant_pool);
-                    printf(" Name:        #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.name_index, string);
+                    printf(" Name:        cp_info #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.name_index, string);
                     free_mem( (void**) &string );
                     string = getUtf8FromConstantPool(class->constant_pool[cp_index].nameAndType_const.descriptor_index, class->constant_pool);
-                    printf(" Descriptor:  #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.descriptor_index, string);
+                    printf(" Descriptor:  cp_info #%-4d <%s> \n", class->constant_pool[cp_index].nameAndType_const.descriptor_index, string);
                     free_mem( (void**) &string );
                     printf("|--------------------------------------------------------------|\n");
                     break;
@@ -213,7 +392,7 @@ void showConstantPool() {
 										printf(" Reference Kind:  %s \n", map_methods_handle_types(class->constant_pool[cp_index].methodHandle_const.reference_kind));
 										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.class_index - 1].class_const.name_index, class->constant_pool);
 										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[for_method_handle].methodRef_const.nameAndType_index - 1].nameAndType_const.name_index, class->constant_pool);
-										printf(" Reference Index:  #%-4d <%s.%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_index, string, aux);
+										printf(" Reference Index:  cp_info #%-4d <%s.%s> \n", class->constant_pool[cp_index].methodHandle_const.reference_index, string, aux);
 										free_mem( (void**) &string );
 										free_mem( (void**) &aux );
 										printf("|--------------------------------------------------------------|\n");
@@ -223,7 +402,7 @@ void showConstantPool() {
 										printf("| [%-3d] CONSTANT_MethodType                              	   |\n", cp_index + 1);
 										printf("|--------------------------------------------------------------|\n");
 										string = getUtf8FromConstantPool(class->constant_pool[cp_index].methodType_const.descriptor_index, class->constant_pool);
-										printf(" Descriptor:   #%-4d <%s> \n", class->constant_pool[cp_index].methodType_const.descriptor_index, string);
+										printf(" Descriptor:   cp_info #%-4d <%s> \n", class->constant_pool[cp_index].methodType_const.descriptor_index, string);
 										free_mem( (void**) &string );
 									  printf("|--------------------------------------------------------------|\n");
 										break;
@@ -233,7 +412,7 @@ void showConstantPool() {
 										printf("|--------------------------------------------------------------|\n");
 										string = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.name_index, class->constant_pool);
 										aux = getUtf8FromConstantPool(class->constant_pool[class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index - 1].nameAndType_const.descriptor_index, class->constant_pool);
-										printf(" Name and type:   #%-4d <%s : %s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, string, aux);
+										printf(" Name and type:   cp_info #%-4d <%s : %s> \n", class->constant_pool[cp_index].invokeDynamicInfo_const.name_and_type_index, string, aux);
 										free_mem( (void**) &string );
 										free_mem( (void**) &aux );
 										printf(" BootstrapMethods #%-4d \n", class->constant_pool[cp_index].invokeDynamicInfo_const.bootstrap_method_attr_index);
@@ -263,7 +442,7 @@ void showInterfaces() {
 
     for (interfaces_index = 0; interfaces_index < class->interfaces_count; interfaces_index++) {
         char* interface = getUtf8FromConstantPool(class->constant_pool[class->interfaces[interfaces_index] - 1].class_const.name_index, class->constant_pool);
-        printf("  #%-4d <%s> \n", class->interfaces[interfaces_index], interface);
+        printf("  cp_info #%-4d <%s> \n", class->interfaces[interfaces_index], interface);
         free_mem( (void**) &interface);
     }
     printf("|==============================================================|\n");
@@ -298,8 +477,8 @@ void showFields() {
 					printf("|==============================================================|\n");
 					printf("| %-60s |\n", name);
 					printf("|==============================================================|\n");
-					printf(" Name:              #%-4d <%s> \n", class->fields[i].name_index, nameRef);
-					printf(" Descriptor:        #%-4d <%s> \n", class->fields[i].descriptor_index, descriptorRef);
+					printf(" Name:              cp_info #%-4d <%s> \n", class->fields[i].name_index, nameRef);
+					printf(" Descriptor:        cp_info #%-4d <%s> \n", class->fields[i].descriptor_index, descriptorRef);
 					free_mem( (void**) &name );
 					free_mem( (void**) &nameRef );
 					free_mem( (void**) &descriptorRef );
@@ -348,8 +527,8 @@ void showMethods() {
 	        printf("|==============================================================|\n");
 	        printf("| %-60s |\n", name);
 	        printf("|==============================================================|\n");
-	        printf(" Name:              #%-4d <%s> \n", class->methods[i].name_index, nameRef);
-	        printf(" Descriptor:        #%-4d <%s> \n", class->methods[i].descriptor_index, descriptorRef);
+	        printf(" Name:              cp_info #%-4d <%s> \n", class->methods[i].name_index, nameRef);
+	        printf(" Descriptor:        cp_info #%-4d <%s> \n", class->methods[i].descriptor_index, descriptorRef);
 	        free_mem( (void**) &name );
 	        free_mem( (void**) &nameRef );
 	        free_mem( (void**) &descriptorRef );
@@ -408,12 +587,12 @@ void showAttribute(Attribute attrInfo) {
         printf("|=====================================================================================|\n");
         printf(" %-60s  \n", name);
         printf("|=====================================================================================|\n");
-        printf(" Attribute name index:  #%-4d <%s> \n", attrInfo.attributeName_index, name);
+        printf(" Attribute name index:  cp_info #%-4d <%s> \n", attrInfo.attributeName_index, name);
         printf(" Attribute length:     %-38d \n", attrInfo.attributeLength);
         printf("|=====================================================================================|\n");
         if (strcmp(name, "ConstantValue") == 0) {
             ConstantValueAttribute* specific_info = (ConstantValueAttribute*) attrInfo.specific_info;
-            printf(" Constant value index:  #%-29d \n", specific_info->constantValue_index);
+            printf(" Constant value index:  cp_info #%-29d \n", specific_info->constantValue_index);
             printf("|=====================================================================================|\n");
             printf("Press ENTER to return...");
             while(getchar() != '\n');
@@ -505,7 +684,7 @@ void showAttribute(Attribute attrInfo) {
 											printf(" \t\t\tUNINITIALIZED THIS\n");
 											break;
 										case 7:
-											printf(" \t\t\tOBJECT #%d ", ver_type->type_info.object_variable_info.cpool_index);
+											printf(" \t\t\tOBJECT cp_info #%d ", ver_type->type_info.object_variable_info.cpool_index);
 											get_instr_def((int)(ver_type->type_info.object_variable_info.cpool_index) - 1);
 											printf("\n");
 											break;
@@ -544,7 +723,7 @@ void showAttribute(Attribute attrInfo) {
 											printf(" \t\t\tUNINITIALIZED THIS\n");
 											break;
 										case 7:
-											printf(" \t\t\tOBJECT #%d ", ver_type->type_info.object_variable_info.cpool_index);
+											printf(" \t\t\tOBJECT cp_info #%d ", ver_type->type_info.object_variable_info.cpool_index);
 											get_instr_def((int)(ver_type->type_info.object_variable_info.cpool_index) - 1);
 											printf("\n");
 											break;
@@ -590,7 +769,7 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
 												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
 												printf("\n");
 												break;
@@ -629,7 +808,7 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
 												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
 												printf("\n");
 												break;
@@ -665,7 +844,7 @@ void showAttribute(Attribute attrInfo) {
 												printf(" \t\t\tUNINITIALIZED THIS\n");
 												break;
 											case 7:
-												printf(" \t\t\tOBJECT #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
+												printf(" \t\t\tOBJECT cp_info #%d ", ver_type[posicaoVTI].type_info.object_variable_info.cpool_index);
 												get_instr_def((int)(ver_type[posicaoVTI].type_info.object_variable_info.cpool_index) - 1);
 												printf("\n");
 												break;
@@ -720,7 +899,7 @@ void showAttribute(Attribute attrInfo) {
                 char* innerClass = getUtf8FromConstantPool(class->constant_pool[specific_info->classes[innerClass_index].innerClassInfo_index - 1].class_const.name_index, class->constant_pool);
                 char* outerClass = getUtf8FromConstantPool(class->constant_pool[specific_info->classes[innerClass_index].outerClassInfo_index - 1].class_const.name_index, class->constant_pool);
                 char* innerName = getUtf8FromConstantPool(specific_info->classes[innerClass_index].innerName_index, class->constant_pool);
-								printf("     |  #%-13d |  #%-13d |  #%-12d\n", specific_info->classes[innerClass_index].innerClassInfo_index - 1, specific_info->classes[innerClass_index].outerClassInfo_index - 1, specific_info->classes[innerClass_index].innerName_index);
+								printf("     |  cp_info #%-13d |  cp_info #%-13d |  cp_info #%-12d\n", specific_info->classes[innerClass_index].innerClassInfo_index - 1, specific_info->classes[innerClass_index].outerClassInfo_index - 1, specific_info->classes[innerClass_index].innerName_index);
                 printf(" %3d | %-22s | %-22s | %-31s | 0x%.4X - %s\n", innerClass_index, innerClass, outerClass, innerName, specific_info->classes[innerClass_index].innerClassAccess_flags, map_flags(specific_info->classes[innerClass_index].innerClassAccess_flags));
                 free_mem( (void**) &innerClass );
                 free_mem( (void**) &outerClass );
@@ -746,8 +925,8 @@ void showAttribute(Attribute attrInfo) {
 				} else if (strcmp(name, "EnclosingMethod") == 0) {
 					EnclosingMethod* specific_info = (EnclosingMethod*) attrInfo.specific_info;
 
-					printf(" Class index:  #%-29d \n", specific_info->class_index);
-					printf(" Method index:  #%-29d \n", specific_info->method_index);
+					printf(" Class index:  cp_info #%-29d \n", specific_info->class_index);
+					printf(" Method index:  cp_info #%-29d \n", specific_info->method_index);
   				printf("|=====================================================================================|\n");					printf("Press ENTER to return...");
 					while(getchar() != '\n');
 					clearScreen();
@@ -757,7 +936,7 @@ void showAttribute(Attribute attrInfo) {
 				} else if (strcmp(name, "SourceFile") == 0) {
             SourceFileAttribute* specific_info = (SourceFileAttribute*) attrInfo.specific_info;
             char* sourceFileName = getUtf8FromConstantPool(specific_info->sourceFile_index, class->constant_pool);
-            printf(" Source file name index:  #%-4d %-22s \n", specific_info->sourceFile_index, sourceFileName);
+            printf(" Source file name index:  cp_info #%-4d %-22s \n", specific_info->sourceFile_index, sourceFileName);
             free_mem( (void**) &sourceFileName );
   				  printf("|=====================================================================================|\n");            printf("Press ENTER to return...");
             while(getchar() != '\n');
@@ -767,7 +946,7 @@ void showAttribute(Attribute attrInfo) {
 
         } else if (strcmp(name, "SourceDebugExtension") == 0) {
             char* debugName = getUtf8FromConstantPool(attrInfo.attributeName_index, class->constant_pool);
-            printf(" Debug extension name index:  #%-4d %-22s \n", attrInfo.attributeName_index, debugName);
+            printf(" Debug extension name index:  cp_info #%-4d %-22s \n", attrInfo.attributeName_index, debugName);
             free_mem( (void**) &debugName );
   					printf("|=====================================================================================|\n");            printf("Press ENTER to return...");
             while(getchar() != '\n');
@@ -1011,6 +1190,7 @@ void chooseFile() {
         }
 
         tempPointer = openFile(tempPath, "rb");
+
         if (tempPointer == NULL) {
             clearScreen();
             printf("Please choose a valid path!\n");
@@ -1063,7 +1243,12 @@ void menu(char* nome) {
                 closeFile(&file);
             }
 
+						if(info_file != NULL){
+                closeFile(&info_file);
+            }
+
             file = openFile(nome, "rb");
+						info_file = openFile("Info.txt", "w");
             if (file != NULL) {
 
                 strcpy(path, nome);
@@ -1093,29 +1278,46 @@ void menu(char* nome) {
         printf("|                       Classfile Viewer                       |\n");
         printf("|==============================================================|\n");
 
-        if (file != NULL && path[0] != '\0') {
+        if (file != NULL && info_file != NULL && path[0] != '\0') {
 
             char* thisClass = getUtf8FromConstantPool(class->constant_pool[class->thisClass - 1].class_const.name_index, class->constant_pool);
             char* superClass = getUtf8FromConstantPool(class->constant_pool[class->superClass - 1].class_const.name_index, class->constant_pool);
             char* access_flags = map_flags(class->access_flags);
 
             printf("| Chosen file: %-47s |\n", file_name);
+						fprintf(info_file, "| Chosen file: %-47s |\n", file_name);
             printf("| Size (bytes): %-46d |\n", fileSize(file));
+						fprintf(info_file, "| Size (bytes): %-46d |\n", fileSize(file));
             printf("|--------------------------------------------------------------|\n");
+						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf("| General Information:                                         |\n");
+						fprintf(info_file, "| General Information:                                         |\n");
             printf("|--------------------------------------------------------------|\n");
+						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf(" Magic:              0x%.8X                               \n", class->magic);
+						fprintf(info_file, " Magic:              0x%.8X                               \n", class->magic);
             printf(" Minor version:      %u (%.1f) \n", class->minor_version, decoderVersion(class->minor_version));
+						fprintf(info_file, " Minor version:      %u (%.1f) \n", class->minor_version, decoderVersion(class->minor_version));
             printf(" Major version:      %u (%.1f) \n", class->major_version, decoderVersion(class->major_version));
-            printf(" Contant pool count: %-40d \n", class->constantPool_count);
+						fprintf(info_file, " Major version:      %u (%.1f) \n", class->major_version, decoderVersion(class->major_version));
+						printf(" Contant pool count: %-40d \n", class->constantPool_count);
+						fprintf(info_file, " Contant pool count: %-40d \n", class->constantPool_count);
             printf(" Access flags:       0x%.4X %-33s \n", class->access_flags, access_flags);
-            printf(" This class:         #%-4d <%s>                      \n", class->thisClass, thisClass);
-            printf(" Super class:        #%-4d <%s>                      \n", class->superClass, superClass);
+						fprintf(info_file, " Access flags:       0x%.4X %-33s \n", class->access_flags, access_flags);
+            printf(" This class:         cp_info #%-4d <%s>                      \n", class->thisClass, thisClass);
+						fprintf(info_file, " This class:         cp_info #%-4d <%s>                      \n", class->thisClass, thisClass);
+            printf(" Super class:        cp_info #%-4d <%s>                      \n", class->superClass, superClass);
+						fprintf(info_file, " Super class:        cp_info #%-4d <%s>                      \n", class->superClass, superClass);
             printf(" Interfaces count:   %-40u \n", class->interfaces_count);
+						fprintf(info_file, " Interfaces count:   %-40u \n", class->interfaces_count);
             printf(" Fields count:       %-40u \n", class->fields_count);
+						fprintf(info_file, " Fields count:       %-40u \n", class->fields_count);
             printf(" Methods count:      %-40u \n", class->methods_count);
+						fprintf(info_file, " Methods count:      %-40u \n", class->methods_count);
             printf(" Attributes count:   %-40u \n",class->attributes_count);
+						fprintf(info_file, " Attributes count:   %-40u \n",class->attributes_count);
             printf("|--------------------------------------------------------------|\n");
+						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf("| 3) Constant pool                                             |\n");
             printf("| 4) Interfaces                                                |\n");
             printf("| 5) Fields                                                    |\n");
@@ -1127,6 +1329,10 @@ void menu(char* nome) {
 						printf("| 2) Quit                                                      |\n");
 		        printf("|==============================================================|\n");
 		        printf("Enter desired option: ");
+						if (info_file != NULL) {
+								printConstantPool();
+								closeFile(&info_file);
+						}
 		        scanf("%d", &option);
 		        while(getchar() != '\n');
 		        printf("\n");
@@ -1134,7 +1340,6 @@ void menu(char* nome) {
             free_mem( (void**) &thisClass );
             free_mem( (void**) &superClass );
             free_mem( (void**) &access_flags );
-
         } else {
 
             printf("| No Chosen file                                               |\n");
@@ -1149,6 +1354,10 @@ void menu(char* nome) {
 		        printf("\n");
 
 						initial_option = option;
+
+						if (option == 1) {
+							info_file = openFile("Info.txt", "w");
+						}
         }
 
 				if (initial_option > 2) {
@@ -1160,6 +1369,9 @@ void menu(char* nome) {
             strcpy(path, "");
             if (file != NULL) {
                 closeFile(&file);
+            }
+						if (info_file != NULL) {
+                closeFile(&info_file);
             }
             freeMemManager();
             break;
