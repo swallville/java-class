@@ -222,7 +222,7 @@ enum {
     GOTO_W = 0xC8,
     JSR_W = 0xC9
 } byteCodeEnum;
-// codeIndexRef would be the frame PC
+// codeIndexRef would be the frame PC + 1 (the actual index into the CodeAttribute)
 typedef struct _frame {
   uint32_t *localVariables;
   Stack *operandStack;

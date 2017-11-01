@@ -5,10 +5,12 @@ ListaClasses* InsereListaDeClasses(ListaClasses **listadeclasses, Class *dado)
     ListaClasses *lc1;
     lc1 = (ListaClasses*) set_mem(sizeof(ListaClasses));
     lc1->dado = dado;
-    if((*listadeclasses) == NULL)
-		lc1->prox = NULL;
-	else
-		lc1->prox = *listadeclasses;
+    
+    if((*listadeclasses) == NULL){
+      lc1->prox = NULL;
+    } else {
+      lc1->prox = *listadeclasses;
+    }
     return lc1;
 }
 
@@ -22,10 +24,12 @@ void InsereListaDeFields(ListaStaticField **listadefields, staticField *dado)
     ListaStaticField *lsf1;
     lsf1 = (ListaStaticField*) set_mem(sizeof(ListaStaticField));
     lsf1->dado = dado;
-    if((*listadefields)==NULL)
-		lsf1->prox = NULL;
-	else
-		lsf1->prox = *listadefields;
+
+    if((*listadefields)==NULL){
+      lsf1->prox = NULL;
+    } else {
+      lsf1->prox = *listadefields;
+    }
 
     *listadefields = lsf1;
     return;
@@ -79,7 +83,7 @@ Heap* InicializaHeap() {
     heap->listaStaticField = NULL;
     heap->listaDeClasses = NULL;
     heap->listaDeObjetos = NULL;
-    
+
     return heap;
 }
 

@@ -52,10 +52,10 @@ void executeMethod(Method* method, Class class) {
 	frame->codeIndexRef = &codeIndex;
 
 	push(frame, &(frame->framesStack));
-	// OBS: codeIndex act as the frame PC.
+	// OBS: codeIndex act as the frame PC + 1 (the actual index into the CodeAttribute).
 	while (codeIndex < code->codeLength) {
         Instruction* instr = decode(code->code, &codeIndex, 0);
-				//printf("Name - %s\n", instr->name);
+				printf("Name - %s\n", instr->name);
         free_mem( (void**) &instr);
   }
 
@@ -74,7 +74,7 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode) {
 
 	int pc = (*offset);
 	int position = (*offset)++;
-	//printf("Position - %d\n", *(frame->codeIndexRef));
+	printf("Position - %d\n", *(frame->codeIndexRef));
 	int opcode = bytecode[position];
 
 	ConstPool *constant_pool = NULL;
