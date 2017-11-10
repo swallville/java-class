@@ -23,6 +23,21 @@ void run(Class class){
 	printf(" Program exited with CODE 0\n");
 }
 
+Method* getMethod(Class *class, char *methodName){
+	for (int i = 0; i < class->methods_count; i++) {
+		char* name = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
+
+		if (strcmp(methodName, name) == 0) {
+			free_mem((void **) &name);
+			return &class->methods[i];
+		}
+
+		free_mem((void **) &name);
+	}
+
+	return NULL;
+}
+
 CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool) {
 
 	CodeAttribute* code = NULL;
@@ -40,14 +55,13 @@ CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool) {
 }
 
 void executeMethod(Method* method, Class class) {
-
+	int codeIndex = 0;
+	
 	CodeAttribute* code = getCodeAttr(method, class.constant_pool);
 
 	Heap* heap = InicializaHeap();
 
 	frame = createFrame(&class, code, heap);
-
-	int codeIndex = 0;
 
 	frame->codeIndexRef = &codeIndex;
 
@@ -59,7 +73,7 @@ void executeMethod(Method* method, Class class) {
         free_mem( (void**) &instr);
   }
 
-	free_mem( (void**) &frame);
+	//free_mem( (void**) &frame);
 }
 
 

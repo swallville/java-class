@@ -11,15 +11,17 @@
 #include <string.h>
 #include "instruction.h"
 
-#define TipoReferencia  0
-#define TipoBoolean     4
-#define TipoChar        5
-#define TipoFloat       6
-#define TipoDouble      7
-#define TipoByte        8
-#define TipoShort       9
-#define TipoInt         10
-#define TipoLong        11
+enum {
+    TipoReferencia  =   0,
+    TipoBoolean     =   4,
+    TipoChar        =   5,
+    TipoFloat       =   6,
+    TipoDouble      =   7,
+    TipoByte        =   8,
+    TipoShort       =   9,
+    TipoInt         =   10,
+    TipoLong        =   11
+} OthersTab;
 
 /**
 *   @fn void i_nop()
