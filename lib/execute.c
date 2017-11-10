@@ -16,11 +16,28 @@
 Frame *frame;
 
 void run(Class class){
-	for (int i = (class.methods_count - 1); i != -1; i--) {
-		executeMethod(&(class.methods[i]), class);
+	Method* initMethod = getMethod(&class, "<init>");
+
+	if (initMethod != NULL) {
+		executeMethod(initMethod, class);
+	} else {
+		initMethod = getMethod(&class, "<clinit>");
+
+		if (initMethod != NULL) {
+			executeMethod(initMethod, class);
+		}
 	}
+
+	Method* mainMethod = getMethod(&class, "main");
+
+	if (mainMethod != NULL) {
+		executeMethod(mainMethod, class);
+	}
+
 	printf("|==============================================================|\n");
 	printf(" Program exited with CODE 0\n");
+
+	return;
 }
 
 Method* getMethod(Class *class, char *methodName){
@@ -56,7 +73,7 @@ CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool) {
 
 void executeMethod(Method* method, Class class) {
 	int codeIndex = 0;
-	
+
 	CodeAttribute* code = getCodeAttr(method, class.constant_pool);
 
 	Heap* heap = InicializaHeap();
@@ -74,6 +91,7 @@ void executeMethod(Method* method, Class class) {
   }
 
 	//free_mem( (void**) &frame);
+	return;
 }
 
 
