@@ -13,6 +13,7 @@
 #include "mem-manager.h"
 #include "all-instructions.h"
 
+// Main frame used through all the run
 Frame *frame;
 
 void run(Class class){
