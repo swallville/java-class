@@ -29,15 +29,15 @@ void i_ldc(Frame* frame,uint8_t index, ConstPool* constantPool)
     switch (tag)
     {
     case INTEGER:
-        push(&(frame->operandStack),&constantPool[index-1].info.integer_const.bytes);
+        push(&(frame->operandStack),&constantPool[index-1].integer_const.bytes);
         break;
     case FLOAT:
-    	dado =  constantPool[index-1].info.float_const.bytes;
+    	dado =  constantPool[index-1].float_const.bytes;
     	memcpy(&f, &dado, sizeof(uint32_t));
 		push(&(frame->operandStack),&dado);
         break;
     case STRING:
-		dado =  constantPool[index-1].info.string_const.string_index;
+		dado =  constantPool[index-1].string_const.string_index;
 		push(&(frame->operandStack),&dado);
         break;
     }
@@ -53,15 +53,15 @@ void i_ldc_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPoo
     switch (tag)
     {
     case INTEGER:
-        push(&(frame->operandStack),&constantPool[index-1].info.integer_const.bytes);
+        push(&(frame->operandStack),&constantPool[index-1].integer_const.bytes);
         break;
     case FLOAT:
-        	dado = (constantPool[index-1].info.float_const.bytes);
+        	dado = (constantPool[index-1].float_const.bytes);
         	memcpy(&f, &dado, sizeof(uint32_t));
-        push(&(frame->operandStack),&(constantPool[index-1].info.float_const.bytes));
+        push(&(frame->operandStack),&(constantPool[index-1].float_const.bytes));
         break;
     case STRING:
-		dado = constantPool[index-1].info.string_const.string_index;
+		dado = constantPool[index-1].string_const.string_index;
 		push(&(frame->operandStack),&dado);
         break;
     }
@@ -77,11 +77,11 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
     switch(tag)
     {
     case LONG:
-		dado = ((uint64_t)constantPool[indexConcat-1].info.long_const.highBytes <<32) | constantPool[indexConcat-1].info.long_const.lowBytes;
+		dado = ((uint64_t)constantPool[indexConcat-1].long_const.highBytes <<32) | constantPool[indexConcat-1].long_const.lowBytes;
 		push(&(frame->operand),&dado);
         break;
     case DOUBLE:
-        dado = ((uint64_t)constantPool[indexConcat-1].info.long_const.highBytes <<32) | constantPool[indexConcat-1].info.long_const.lowBytes;
+        dado = ((uint64_t)constantPool[indexConcat-1].long_const.highBytes <<32) | constantPool[indexConcat-1].long_const.lowBytes;
 
         //empilhando 64 bits
         uint32_t low = (uint32_t)(dado & 0x00000000FFFFFFFF);
