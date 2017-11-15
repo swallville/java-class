@@ -156,6 +156,7 @@ void i_areturn(Frame* frame)
 
 void i_return(Frame* frame)
 {
+    frame->codeIndexRef = frame->CodeAttribute->codeLength;
     return;
 }
 
