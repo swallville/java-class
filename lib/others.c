@@ -170,9 +170,9 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
     
-    nomeclasseindex = frame->runtimeConstantPool[index - 1].fieldRef_const.class_index - 1;
-    nomeclasseindex = frame->runtimeConstantPool[nomeclasseindex].class_const.name_index - 1;
-    tipoIndex = frame->runtimeConstantPool[index - 1].fieldRef_const.name_and_type_index - 1;
+    nomeClasseIndex = frame->runtimeConstantPool[index - 1].fieldRef_const.class_index - 1;
+    nomeClasseIndex = frame->runtimeConstantPool[nomeClasseIndex].class_const.name_index - 1;
+    tipoIndex = frame->runtimeConstantPool[index - 1].fieldRef_const.nameAndType_index - 1;
     nameIndex = frame->runtimeConstantPool[tipoIndex].nameAndType_const.name_index - 1;
     tipoIndex = frame->runtimeConstantPool[tipoIndex].nameAndType_const.descriptor_index - 1;
 
@@ -188,9 +188,9 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
         {
             push(&valor, &(frame->operandStack));
 
-            free(tipo);
-            free(name);
-            free(nomeClasse);
+            free_mem((void **) &tipo);
+            free_mem((void **) &name);
+            free_mem((void **) &nomeClasse);
 
             return;
         }
@@ -204,16 +204,16 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     {
         push(&valor, &(frame->operandStack));
 
-        free(tipo);
-        free(name);
-        free(nomeClasse);
+        free_mem((void **) &tipo);
+        free_mem((void **) &name);
+        free_mem((void **) &nomeClasse);
 
         return;
     }
     
     for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
     {
-        uint16_t nomeindex = classe->fields[fieldIndex].name_index - 1;
+        uint16_t nomeIndex = classe->fields[fieldIndex].name_index - 1;
 
         nome = utf8ToString(classe->constant_pool[nomeIndex].utf8_const.bytes, classe->constant_pool[nomeIndex].utf8_const.length);
         
@@ -224,10 +224,10 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     valor = field->valor[fieldIndex];
     push(&valor, &(frame->operandStack));
         
-    free(tipo);
-    free(name);
-    free(nome);
-    free(nomeClasse);
+    free_mem((void **) &tipo);
+    free_mem((void **) &name);
+    free_mem((void **) &nome);
+    free_mem((void **) &nomeClasse);
     
     return;
 }
@@ -254,11 +254,11 @@ void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     
     classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
     
-    valor = pop(&(frame->operandStack));
+    valor = (uint64_t) pop(&(frame->operandStack));
 
     for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
     {
-        uint16_t nomeindex = classe->fields[fieldIndex].name_index - 1;
+        uint16_t nomeIndex = classe->fields[fieldIndex].name_index - 1;
 
         nome = utf8ToString(classe->constant_pool[nomeIndex].utf8_const.bytes, classe->constant_pool[nomeIndex].utf8_const.length);
         
@@ -274,17 +274,17 @@ void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
         field->NomeClasse = (char *) set_mem(sizeof(char) * (strlen(nomeClasse) + 1));
         strcpy(field->NomeClasse, nomeClasse);
         field->fieldCount = classe->fields_count;
-        field->valor = (uint64_t *) set_mem(sizeof(u8) * field->fieldCount);
+        field->valor = (uint64_t *) set_mem(sizeof(uint64_t) * field->fieldCount);
         field->valor[fieldIndex] = valor;
         InsereListaDeFields(&listaDeFields, field);
     }
 
     field->valor[fieldIndex] = valor;
     
-    free(tipo);
-    free(name);
-    free(nome);
-    free(nomeClasse);
+    free_mem((void **) &tipo);
+    free_mem((void **) &name);
+    free_mem((void **) &nome);
+    free_mem((void **) &nomeClasse);
 
     return;
 }
@@ -292,7 +292,6 @@ void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
 void i_getfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 {
     uint16_t index, tipoIndex, nameIndex, fieldIndex;
-    uint64_t valor;
     char *tipo, *name, *nome;
     Objeto *obj;
 
@@ -305,11 +304,11 @@ void i_getfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     tipo = utf8ToString(frame->runtimeConstantPool[tipoIndex].utf8_const.bytes, frame->runtimeConstantPool[tipoIndex].utf8_const.length);
     name = utf8ToString(frame->runtimeConstantPool[nameIndex].utf8_const.bytes, frame->runtimeConstantPool[nameIndex].utf8_const.length);
 
-    obj = pop(&(frame->operandStack));
+    obj = (void *) (long) pop(&(frame->operandStack));
 
     for (fieldIndex = 0; fieldIndex < obj->tamanhotipoField; fieldIndex++)
     {
-        uint16_t nomeindex = obj->classe->fields[fieldIndex].name_index - 1;
+        uint16_t nomeIndex = obj->classe->fields[fieldIndex].name_index - 1;
 
         nome = utf8ToString(obj->classe->constant_pool[nomeIndex].utf8_const.bytes, obj->classe->constant_pool[nomeIndex].utf8_const.length);
 
@@ -317,11 +316,11 @@ void i_getfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
             break;
     }
 
-    push(obj->tipofield[fieldIndex], &(frame->operandStack));
+    push((void *) obj->tipofield[fieldIndex], &(frame->operandStack));
     
-    free(tipo);
-    free(name);
-    free(nome);
+    free_mem((void **) &tipo);
+    free_mem((void **) &name);
+    free_mem((void **) &nome);
 
     return;
 }
@@ -342,8 +341,8 @@ void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     tipo = utf8ToString(frame->runtimeConstantPool[tipoIndex].utf8_const.bytes, frame->runtimeConstantPool[tipoIndex].utf8_const.length);
     name = utf8ToString(frame->runtimeConstantPool[nameIndex].utf8_const.bytes, frame->runtimeConstantPool[nameIndex].utf8_const.length);
 
-    valor = pop(&(frame->operandStack));
-    obj = pop(&(frame->operandStack));
+    valor = (uint64_t) pop(&(frame->operandStack));
+    obj = (void *) (long) pop(&(frame->operandStack));
     
     for (fieldIndex = 0; fieldIndex < obj->classe->fields_count; fieldIndex++)
     {
@@ -357,94 +356,94 @@ void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 
     obj->tipofield[fieldIndex] = valor;
     
-    free(tipo);
-    free(name);
-    free(nome);
+    free_mem((void **) &tipo);
+    free_mem((void **) &name);
+    free_mem((void **) &nome);
 
     return;
 }
 
-void i_invokevirtual(Frame *frame, Stack *pilhadeframes, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     return;
 }
 
-void i_invokespecial(Frame *frame, Stack *pilhadeframes, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokespecial(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     return;
 }
 
-void i_invokestatic(Frame *frame, Stack *pilhadeframes, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokestatic(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     return;
 }
 
-void i_invokeinterface(Frame *frame, Stack *pilhadeframes, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t contagem, uint8_t zero, Heap *heap)
+void i_invokeinterface(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t contagem, uint8_t zero, Heap *heap)
 {
-    uint32_t *argumentos;
-    uint16_t index = 0, classeindex = 0, descriptorindex = 0;
+    uint64_t *argumentos;
+    uint16_t index = 0, classeIndex = 0, descriptorIndex = 0;
     int i = 0;
-    char *nome = NULL, *nomemetodo = NULL, *nomeclasse = NULL, *nomedesc = NULL, *metododesc = NULL;
+    char *nome = NULL, *nomeMetodo = NULL, *nomeClasse = NULL, *nomeDesc = NULL, *metodoDesc = NULL;
     Class *classe;
     Objeto *obj = (Objeto *) set_mem(sizeof(Objeto));
     
-    argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (contagem + 1));
+    argumentos = (uint64_t *) set_mem(sizeof(uint64_t) * (contagem + 1));
     
-    index = (uint16_t) indexbyte1 << 8 | (uint16_t) indexbyte2;
-    classeindex = index;
-    nomeClasse = utf8ToString(frame->runtimeConstantPool[classeindex].utf8_const.bytes, frame->runtimeConstantPool[classeindex].utf8_const.length);
-    obj->classe = RecuperaClassePorNome(nomeclasse, &listadeclasses);
+    index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
+    classeIndex = index;
+    nomeClasse = utf8ToString(frame->runtimeConstantPool[classeIndex].utf8_const.bytes, frame->runtimeConstantPool[classeIndex].utf8_const.length);
+    obj->classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
     
     for (i = contagem; i >= 0; i--)
-        argumentos[i] = pop(&frame->operandStack);
+        argumentos[i] = (uint64_t) pop(&frame->operandStack);
     
-    index = frame->runtimeConstantPool[index - 1].interfaceMethodRef_const.name_and_type_index - 1;
-    descriptorindex = frame->runtimeConstantPool[index].nameAndType_const.descriptor_index - 1;
+    index = frame->runtimeConstantPool[index - 1].interfaceMethodRef_const.nameAndType_index - 1;
+    descriptorIndex = frame->runtimeConstantPool[index].nameAndType_const.descriptor_index - 1;
     index = frame->runtimeConstantPool[index].nameAndType_const.name_index - 1;
-    classeindex = frame->runtimeConstantPool[classeindex - 1].interfaceMethodRef_const.class_index - 1;
-    classeindex = frame->runtimeConstantPool[classeindex].class_const.name_index - 1;
+    classeIndex = frame->runtimeConstantPool[classeIndex - 1].interfaceMethodRef_const.class_index - 1;
+    classeIndex = frame->runtimeConstantPool[classeIndex].class_const.name_index - 1;
     
-    nomeClasse = utf8ToString(frame->runtimeConstantPool[classeindex].utf8_const.bytes, frame->runtimeConstantPool[classeindex].utf8_const.length);
-    metododesc = utf8ToString(frame->runtimeConstantPool[descriptorindex].utf8_const.bytes, frame->runtimeConstantPool[descriptorindex].utf8_const.length);
-    nomemetodo = utf8ToString(frame->runtimeConstantPool[index].utf8_const.bytes, frame->runtimeConstantPool[index].utf8_const.length);
+    nomeClasse = utf8ToString(frame->runtimeConstantPool[classeIndex].utf8_const.bytes, frame->runtimeConstantPool[classeIndex].utf8_const.length);
+    metodoDesc = utf8ToString(frame->runtimeConstantPool[descriptorIndex].utf8_const.bytes, frame->runtimeConstantPool[descriptorIndex].utf8_const.length);
+    nomeMetodo = utf8ToString(frame->runtimeConstantPool[index].utf8_const.bytes, frame->runtimeConstantPool[index].utf8_const.length);
     
-    classe = RecuperaClassePorNome(nomeclasse, &listadeclasses);
+    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
     
     for(i = 0; i < classe->methods_count; i++)
     {
         uint16_t index1 = classe->methods[i].descriptor_index - 1;
         
-        nomedesc = utf8ToString(classe->constant_pool[index1].utf8_const.bytes, classe->constant_pool[index1].utf8_const.length);
+        nomeDesc = utf8ToString(classe->constant_pool[index1].utf8_const.bytes, classe->constant_pool[index1].utf8_const.length);
         
         index = classe->methods[i].name_index - 1;
         nome = utf8ToString(classe->constant_pool[index].utf8_const.bytes, classe->constant_pool[index].utf8_const.length);
 
-        if(!strcmp(nomemetodo, nome) && !strcmp(metododesc, nomedesc))
+        if(!strcmp(nomeMetodo, nome) && !strcmp(metodoDesc, nomeDesc))
             break;
     }
     
     if (i != obj->classe->methods_count)
     {
         // ATENCAO
-        prepara_metodo(&obj->classe->methods[i], obj->classe, &pilhadeframes, &heap);
+        prepara_metodo(&obj->classe->methods[i], obj->classe, &pilhaDeFrames, &heap);
         
-        Frame *frame1 = pop(&pilhadeframes);
+        Frame *frame1 = (void *) (long) pop(&pilhaDeFrames);
         
         for (int j = contagem; j >= 0; j--)
             frame1->localVariables[j] = argumentos[j];
         
-        pilhadeframes = push(frame1, &pilhadeframes);
+        push(frame1, &pilhaDeFrames);
         // ATENCAO
-        executa_metodo(&obj->classe->methods[i], obj->classe, pilhadeframes);
+        executa_metodo(&obj->classe->methods[i], obj->classe, pilhaDeFrames);
     }
     else
         printf("Metodo não encontrado");
 
-    free(nome);
-    free(nomemetodo);
-    free(nomedesc);
-    free(nomeClasse);
-    free(metododesc);
+    free_mem((void **) &nome);
+    free_mem((void **) &nomeMetodo);
+    free_mem((void **) &nomeDesc);
+    free_mem((void **) &nomeClasse);
+    free_mem((void **) &metodoDesc);
     free_mem((void **) &argumentos);
 
     return;
@@ -465,7 +464,7 @@ void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *l
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
     index = frame->runtimeConstantPool[index - 1].class_const.name_index - 1;
     
-    nomeClasse = dereferencia_instrucao(index, frame->runtimeConstantPool);
+    nomeClasse = utf8ToString(frame->runtimeConstantPool[index].utf8_const.bytes, frame->runtimeConstantPool[index].utf8_const.length);
     
     obj = (Objeto *) set_mem(sizeof(Objeto));
     obj->classe = RecuperaClassePorNome(nomeClasse,&listaDeClasses);
@@ -483,7 +482,7 @@ void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *l
         
         // ATENCAO
         carrega_classe(nomeArquivo, classe);
-        obj->classe = getClassfile();
+        // obj->classe = getClassfile();
         
         listaDeClasses = InsereListaDeClasses(&listaDeClasses, classe);
         frame->heap->listaDeClasses = listaDeClasses;
@@ -494,6 +493,8 @@ void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *l
     
     valor = (uint32_t) (long) obj;
     push(&valor, &(frame->operandStack));
+
+    free_mem((void **) &nomeClasse);
 
     return;
 }
@@ -512,7 +513,7 @@ void i_arraylength(Frame *frame)
 {
     tArray *array;
     
-    array = pop(&(frame->operandStack));
+    array = (void *) (long) pop(&(frame->operandStack));
     push(&(array->tamanho1), &(frame->operandStack));
 
     return;
@@ -530,7 +531,7 @@ void i_checkcast(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     Objeto *obj;
     
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
-    obj = pop(&(frame->operandStack));
+    obj = (void *) (long) pop(&(frame->operandStack));
     
     if(obj != NULL)
     {
@@ -542,14 +543,14 @@ void i_checkcast(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
         
         if(!strcmp(nomeClasse, nomeClasseObjeto))
             printf("Erro: Objeto do tipo errado\n");
+
+        free_mem((void **) &nomeClasse);
+        free_mem((void **) &nomeClasseObjeto);
     }
     else
         printf("Erro: Referencia nula\n");
     
     push((uint32_t *) obj, &(frame->operandStack));
-    
-    free(nomeClasse);
-    free(nomeClasseObjeto);
 
     return;
 }
@@ -562,24 +563,24 @@ void i_instanceof(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     Objeto *obj;
     
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
-    obj = pop(&(frame->operandStack));
+    obj = (void *) (long) pop(&(frame->operandStack));
 
     if(obj != NULL)
     {
-        index = frame->constant_pool[index - 1].info.Class.name_index - 1;
+        index = frame->runtimeConstantPool[index - 1].class_const.name_index - 1;
         indexObjeto = obj->classe->constant_pool[obj->classe->thisClass - 1].class_const.name_index - 1;
         
-        nomeClasse = utf8ToString(frame->runtimeConstantPool[index].utf8_const.bytes, frame->runtimeConstantPool[index].utf8_const.length);
-        nomeClasseObjeto = utf8ToString(obj->classe->constant_pool[indexObjeto].utf8_const.bytes, obj->classe->constant_pool[indexObjeto].utf8_const.length);
+        nomeClasse = (char *) utf8ToString(frame->runtimeConstantPool[index].utf8_const.bytes, frame->runtimeConstantPool[index].utf8_const.length);
+        nomeClasseObjeto = (char *) utf8ToString(obj->classe->constant_pool[indexObjeto].utf8_const.bytes, obj->classe->constant_pool[indexObjeto].utf8_const.length);
         
         if(!strcmp(nomeClasse, nomeClasseObjeto))
             valor = 1;
+        
+        free_mem((void **) &nomeClasse);
+        free_mem((void **) &nomeClasseObjeto);
     }
     
     push(&valor, &(frame->operandStack));
-
-    free(nomeClasse);
-    free(nomeClasseObjeto);
 
     return;
 }
@@ -606,9 +607,9 @@ void i_multianewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, uint
 
 void i_ifnull(Frame *frame, uint8_t branchByte1, uint8_t branchByte2)
 {
-    uint32_t objRef = 0;
+    uint64_t objRef = 0;
     
-    objRef = pop(&(frame->operandStack));
+    objRef = (uint64_t) pop(&(frame->operandStack));
     
     if (objRef == 0x0)
     {
@@ -622,9 +623,9 @@ void i_ifnull(Frame *frame, uint8_t branchByte1, uint8_t branchByte2)
 
 void i_ifnonnull(Frame *frame, uint8_t branchByte1, uint8_t branchByte2)
 {
-    uint32_t objRef;
+    uint64_t objRef;
 
-    objRef = pop(&(frame->operandStack));
+    objRef = (uint64_t) pop(&(frame->operandStack));
     
     if (objRef != 0x0)
     {
@@ -648,18 +649,19 @@ void i_goto_w(Frame *frame, uint8_t branchByte1, uint8_t branchByte2, uint8_t br
 
 void i_jsr_w(Frame *frame, uint8_t branchByte1, uint8_t branchByte2, uint8_t branchByte3, uint8_t branchByte4)
 {
-    uint32_t branchOffset, pc;
+    uint32_t branchOffset;
+    uint64_t pc;
 
     branchOffset = ((uint32_t) branchByte1 << 24) | ((uint32_t) branchByte2 << 16) | ((uint32_t) branchByte3 << 8) | ((uint32_t) branchByte4);
-    pc = frame->codeIndexRef + 5;
-    push(&pc, &(frame->pilhaDeOperandos));
+    pc = (uint64_t) frame->codeIndexRef + 5;
+    push(&pc, &(frame->operandStack));
     frame->codeIndexRef = frame->codeIndexRef + branchOffset - 3;
     
     return;
 }
 
 staticField *recupera_field(char *nome, ListaStaticField **listadefields)
-{
+{   
     ListaStaticField *lsf1;
     lsf1 = *listadefields;
     while (lsf1 != NULL)
