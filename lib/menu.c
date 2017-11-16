@@ -1083,6 +1083,7 @@ void showCode(uint8_t* code, int codeLength) {
     int code_index = 0;
     while(code_index < codeLength) {
         Instruction* instr = decode(code, &code_index, 1);
+
         if (instr->arguments_count == 0) {
             printf(" %-4d %-55s \n", instr->pc, instr->name);
         } else if (instr->arguments_count == 1) {
@@ -1139,12 +1140,37 @@ void showCode(uint8_t* code, int codeLength) {
 
 							printf(" %-4d %-15s  #%" PRIu8 " <%s, BootstrapMethods #%d> \n", instr->pc, instr->name, instr->arguments[1], string, class->constant_pool[(int)(nu2) - 1].invokeDynamicInfo_const.bootstrap_method_attr_index);
 							free_mem( (void**) &string );
+						} else if (strstr(instr->name, "tableswitch") != NULL) {
+							printf(" %-4d %-15s 0 to %d\n", instr->pc, instr->name, instr->arguments_count - 2);
+
+							for (int i = 0; i < instr->arguments_count; i++) {
+								if (i == instr->arguments_count - 1) {
+									printf("\tdefault: %d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+								} else {
+									printf("\t%d: %d +(%d)\n", i, instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+								}
+							}
 						} else {
 							printf(" %-4d %-15s  #%" PRIu8 " ", instr->pc, instr->name, instr->arguments[1]);
 							get_instr_def((int)(instr->arguments[1]) - 1);
 							printf("\n");
 						}
-        }
+        } else if (strstr(instr->name, "lookupswitch") != NULL) {
+					int real_argscount = (instr->arguments_count - 1) / 2;
+
+					printf(" %-4d %-15s %d\n", instr->pc, instr->name, real_argscount);
+
+					for (int i = 0; i < instr->arguments_count; i++) {
+						if (i == instr->arguments_count - 1) {
+							printf("\tdefault: %d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+						} else {
+							printf("\t%d: ", instr->dynamic_arguments[i]);
+							i++;
+							printf("%d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+						}
+					}
+				}
+
         free_mem( (void**) &instr);
     }
     printf("|==============================================================|\n");
@@ -1336,7 +1362,7 @@ void menu(char* nome) {
 								printConstantPool();
 								closeFile(&info_file);
 						}
-						
+
 		        scanf("%d", &option);
 		        while(getchar() != '\n');
 		        printf("\n");
@@ -1348,7 +1374,7 @@ void menu(char* nome) {
 
             printf("| No Chosen file                                               |\n");
             printf("|--------------------------------------------------------------|\n");
-						printf("| 0) Run JVM 						                                       |\n");
+						printf("| 0) Run JVM                                                   |\n");
             printf("| 1) Open .class Viewer                                        |\n");
 						printf("| 2) Quit                                                      |\n");
 		        printf("|==============================================================|\n");

@@ -244,6 +244,7 @@ typedef struct _instruction {
     char* name;
     int arguments_count;
     int8_t* arguments;
+    int32_t* dynamic_arguments;
 }Instruction;
 
 Frame* createFrame(Class* currentClass, CodeAttribute* codeAttribute, Heap* heap);
