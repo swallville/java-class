@@ -55,8 +55,8 @@ void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t l
     uint32_t offset = tableswitch[index - low];
     target = enderecotable + offset;
   }
-  // check if is really target + 1 or just target
-  (*frame->codeIndexRef) = target + 1;
+
+  (*frame->codeIndexRef) = target;
 
   return;
 }
@@ -82,8 +82,8 @@ void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int3
 	} else {
 		target = defaultbyte + enderecolookup;
 	}
-  // check if is really target + 1 or just target
-	(*frame->codeIndexRef) = target + 1;
+
+	(*frame->codeIndexRef) = target;
 
   return;
 }
