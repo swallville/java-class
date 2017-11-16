@@ -1,18 +1,18 @@
-| Chosen file: lookupSwitch.class                              |
-| Size (bytes): 658                                            |
-| Size (bytes): 658                                            |
+| Chosen file: static_test.class                               |
+| Size (bytes): 549                                            |
+| Size (bytes): 549                                            |
 |--------------------------------------------------------------|
 | General Information:                                         |
 |--------------------------------------------------------------|
  Magic:              0xCAFEBABE                               
  Minor version:      0 (0.0) 
- Major version:      53 (1.9) 
- Contant pool count: 37                                       
- Access flags:       0x0021  public super                     
- This class:         cp_info #7    <lookupSwitch>                      
- Super class:        cp_info #8    <java/lang/Object>                      
+ Major version:      46 (1.2) 
+ Contant pool count: 41                                       
+ Access flags:       0x0020  super                            
+ This class:         cp_info #9    <static_test>                      
+ Super class:        cp_info #10   <java/lang/Object>                      
  Interfaces count:   0                                        
- Fields count:       0                                        
+ Fields count:       2                                        
  Methods count:      3                                        
  Attributes count:   1                                        
 |--------------------------------------------------------------|
@@ -21,198 +21,218 @@
 |==============================================================|
 | [1  ] CONSTANT_Methodref_Info                                |
 |--------------------------------------------------------------|
- Class name:     cp_info #8    <java/lang/Object> 
- Name and type:  cp_info #20   <<init> : ()V> 
+ Class name:     cp_info #10   <java/lang/Object> 
+ Name and type:  cp_info #24   <<init> : ()V> 
 |--------------------------------------------------------------|
 | [2  ] CONSTANT_Fieldref_Info                                 |
 |--------------------------------------------------------------|
- Class name:     cp_info #21   <java/lang/System> 
- Name and type: cp_info #22   <out> 
+ Class name:     cp_info #25   <java/lang/System> 
+ Name and type: cp_info #26   <out> 
 |--------------------------------------------------------------|
-| [3  ] CONSTANT_String_Info                                   |
+| [3  ] CONSTANT_Fieldref_Info                                 |
 |--------------------------------------------------------------|
- String:  cp_info #23   <Ops!> 
+ Class name:     cp_info #9    <static_test> 
+ Name and type: cp_info #27   <a> 
 |--------------------------------------------------------------|
 | [4  ] CONSTANT_Methodref_Info                                |
 |--------------------------------------------------------------|
- Class name:     cp_info #24   <java/io/PrintStream> 
- Name and type:  cp_info #25   <println : (Ljava/lang/String;)V> 
+ Class name:     cp_info #28   <java/io/PrintStream> 
+ Name and type:  cp_info #29   <println : (I)V> 
 |--------------------------------------------------------------|
-| [5  ] CONSTANT_Methodref_Info                                |
+| [5  ] CONSTANT_Fieldref_Info                                 |
 |--------------------------------------------------------------|
- Class name:     cp_info #7    <lookupSwitch> 
- Name and type:  cp_info #26   <chooseNear : (I)I> 
+ Class name:     cp_info #9    <static_test> 
+ Name and type: cp_info #30   <b> 
 |--------------------------------------------------------------|
 | [6  ] CONSTANT_Methodref_Info                                |
 |--------------------------------------------------------------|
- Class name:     cp_info #24   <java/io/PrintStream> 
- Name and type:  cp_info #27   <println : (I)V> 
+ Class name:     cp_info #28   <java/io/PrintStream> 
+ Name and type:  cp_info #31   <println : (D)V> 
 |--------------------------------------------------------------|
-| [7  ] CONSTANT_Class_Info                                    |
+| [7  ] CONSTANT_Double_Info                                   |
 |--------------------------------------------------------------|
- Class name:  cp_info #28   <lookupSwitch> 
+ High bytes: 0xC0000000                                       
+ Low bytes:  0x00000000                                       
+ Double:     -2.000000                                        
 |--------------------------------------------------------------|
-| [8  ] CONSTANT_Class_Info                                    |
+| [8  ] (large numeric continued)                              |
 |--------------------------------------------------------------|
- Class name:  cp_info #29   <java/lang/Object> 
+| [9  ] CONSTANT_Class_Info                                    |
 |--------------------------------------------------------------|
-| [9  ] CONSTANT_Utf8_Info                                     |
+ Class name:  cp_info #32   <static_test> 
 |--------------------------------------------------------------|
- Length of bytes array: 10                                    
- Length of string:      10                                    
- String:                chooseNear                            
+| [10 ] CONSTANT_Class_Info                                    |
 |--------------------------------------------------------------|
-| [10 ] CONSTANT_Utf8_Info                                     |
-|--------------------------------------------------------------|
- Length of bytes array: 4                                     
- Length of string:      4                                     
- String:                (I)I                                  
+ Class name:  cp_info #33   <java/lang/Object> 
 |--------------------------------------------------------------|
 | [11 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
- Length of bytes array: 4                                     
- Length of string:      4                                     
- String:                Code                                  
+ Length of bytes array: 1                                     
+ Length of string:      1                                     
+ String:                a                                     
 |--------------------------------------------------------------|
 | [12 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
- Length of bytes array: 15                                    
- Length of string:      15                                    
- String:                LineNumberTable                       
+ Length of bytes array: 1                                     
+ Length of string:      1                                     
+ String:                I                                     
 |--------------------------------------------------------------|
 | [13 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
- Length of bytes array: 13                                    
- Length of string:      13                                    
- String:                StackMapTable                         
+ Length of bytes array: 1                                     
+ Length of string:      1                                     
+ String:                b                                     
 |--------------------------------------------------------------|
 | [14 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 1                                     
+ Length of string:      1                                     
+ String:                D                                     
+|--------------------------------------------------------------|
+| [15 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 6                                     
  Length of string:      6                                     
  String:                <init>                                
 |--------------------------------------------------------------|
-| [15 ] CONSTANT_Utf8_Info                                     |
+| [16 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 3                                     
  Length of string:      3                                     
  String:                ()V                                   
 |--------------------------------------------------------------|
-| [16 ] CONSTANT_Utf8_Info                                     |
+| [17 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 4                                     
+ Length of string:      4                                     
+ String:                Code                                  
+|--------------------------------------------------------------|
+| [18 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 15                                    
+ Length of string:      15                                    
+ String:                LineNumberTable                       
+|--------------------------------------------------------------|
+| [19 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 4                                     
  Length of string:      4                                     
  String:                main                                  
 |--------------------------------------------------------------|
-| [17 ] CONSTANT_Utf8_Info                                     |
+| [20 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 22                                    
  Length of string:      22                                    
  String:                ([Ljava/lang/String;)V                
 |--------------------------------------------------------------|
-| [18 ] CONSTANT_Utf8_Info                                     |
+| [21 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 8                                     
+ Length of string:      8                                     
+ String:                <clinit>                              
+|--------------------------------------------------------------|
+| [22 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 10                                    
  Length of string:      10                                    
  String:                SourceFile                            
 |--------------------------------------------------------------|
-| [19 ] CONSTANT_Utf8_Info                                     |
-|--------------------------------------------------------------|
- Length of bytes array: 17                                    
- Length of string:      17                                    
- String:                lookupSwitch.java                     
-|--------------------------------------------------------------|
-| [20 ] CONSTANT_NameAndType_Info                              |
-|--------------------------------------------------------------|
- Name:        cp_info #14   <<init>> 
- Descriptor:  cp_info #15   <()V> 
-|--------------------------------------------------------------|
-| [21 ] CONSTANT_Class_Info                                    |
-|--------------------------------------------------------------|
- Class name:  cp_info #30   <java/lang/System> 
-|--------------------------------------------------------------|
-| [22 ] CONSTANT_NameAndType_Info                              |
-|--------------------------------------------------------------|
- Name:        cp_info #31   <out> 
- Descriptor:  cp_info #32   <Ljava/io/PrintStream;> 
-|--------------------------------------------------------------|
 | [23 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
- Length of bytes array: 4                                     
- Length of string:      4                                     
- String:                Ops!                                  
+ Length of bytes array: 16                                    
+ Length of string:      16                                    
+ String:                static_test.java                      
 |--------------------------------------------------------------|
-| [24 ] CONSTANT_Class_Info                                    |
+| [24 ] CONSTANT_NameAndType_Info                              |
 |--------------------------------------------------------------|
- Class name:  cp_info #33   <java/io/PrintStream> 
+ Name:        cp_info #15   <<init>> 
+ Descriptor:  cp_info #16   <()V> 
 |--------------------------------------------------------------|
-| [25 ] CONSTANT_NameAndType_Info                              |
+| [25 ] CONSTANT_Class_Info                                    |
 |--------------------------------------------------------------|
- Name:        cp_info #34   <println> 
- Descriptor:  cp_info #35   <(Ljava/lang/String;)V> 
+ Class name:  cp_info #34   <java/lang/System> 
 |--------------------------------------------------------------|
 | [26 ] CONSTANT_NameAndType_Info                              |
 |--------------------------------------------------------------|
- Name:        cp_info #9    <chooseNear> 
- Descriptor:  cp_info #10   <(I)I> 
+ Name:        cp_info #35   <out> 
+ Descriptor:  cp_info #36   <Ljava/io/PrintStream;> 
 |--------------------------------------------------------------|
 | [27 ] CONSTANT_NameAndType_Info                              |
 |--------------------------------------------------------------|
- Name:        cp_info #34   <println> 
- Descriptor:  cp_info #36   <(I)V> 
+ Name:        cp_info #11   <a> 
+ Descriptor:  cp_info #12   <I> 
 |--------------------------------------------------------------|
-| [28 ] CONSTANT_Utf8_Info                                     |
+| [28 ] CONSTANT_Class_Info                                    |
 |--------------------------------------------------------------|
- Length of bytes array: 12                                    
- Length of string:      12                                    
- String:                lookupSwitch                          
+ Class name:  cp_info #37   <java/io/PrintStream> 
 |--------------------------------------------------------------|
-| [29 ] CONSTANT_Utf8_Info                                     |
+| [29 ] CONSTANT_NameAndType_Info                              |
+|--------------------------------------------------------------|
+ Name:        cp_info #38   <println> 
+ Descriptor:  cp_info #39   <(I)V> 
+|--------------------------------------------------------------|
+| [30 ] CONSTANT_NameAndType_Info                              |
+|--------------------------------------------------------------|
+ Name:        cp_info #13   <b> 
+ Descriptor:  cp_info #14   <D> 
+|--------------------------------------------------------------|
+| [31 ] CONSTANT_NameAndType_Info                              |
+|--------------------------------------------------------------|
+ Name:        cp_info #38   <println> 
+ Descriptor:  cp_info #40   <(D)V> 
+|--------------------------------------------------------------|
+| [32 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 11                                    
+ Length of string:      11                                    
+ String:                static_test                           
+|--------------------------------------------------------------|
+| [33 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 16                                    
  Length of string:      16                                    
  String:                java/lang/Object                      
 |--------------------------------------------------------------|
-| [30 ] CONSTANT_Utf8_Info                                     |
+| [34 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 16                                    
  Length of string:      16                                    
  String:                java/lang/System                      
 |--------------------------------------------------------------|
-| [31 ] CONSTANT_Utf8_Info                                     |
+| [35 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 3                                     
  Length of string:      3                                     
  String:                out                                   
 |--------------------------------------------------------------|
-| [32 ] CONSTANT_Utf8_Info                                     |
+| [36 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 21                                    
  Length of string:      21                                    
  String:                Ljava/io/PrintStream;                 
 |--------------------------------------------------------------|
-| [33 ] CONSTANT_Utf8_Info                                     |
+| [37 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 19                                    
  Length of string:      19                                    
  String:                java/io/PrintStream                   
 |--------------------------------------------------------------|
-| [34 ] CONSTANT_Utf8_Info                                     |
+| [38 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 7                                     
  Length of string:      7                                     
  String:                println                               
 |--------------------------------------------------------------|
-| [35 ] CONSTANT_Utf8_Info                                     |
-|--------------------------------------------------------------|
- Length of bytes array: 21                                    
- Length of string:      21                                    
- String:                (Ljava/lang/String;)V                 
-|--------------------------------------------------------------|
-| [36 ] CONSTANT_Utf8_Info                                     |
+| [39 ] CONSTANT_Utf8_Info                                     |
 |--------------------------------------------------------------|
  Length of bytes array: 4                                     
  Length of string:      4                                     
  String:                (I)V                                  
+|--------------------------------------------------------------|
+| [40 ] CONSTANT_Utf8_Info                                     |
+|--------------------------------------------------------------|
+ Length of bytes array: 4                                     
+ Length of string:      4                                     
+ String:                (D)V                                  
 |--------------------------------------------------------------|
 |==============================================================|
