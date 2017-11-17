@@ -13,7 +13,7 @@ void i_bipush(Frame* frame,uint32_t* n){
 
 void i_sipush(Frame* frame,uint16_t* n)
 {
-	uint32_t dado = *n;
+    uint32_t dado = *n;
     push(&(frame->operandStack),&dado);
     return;
 
@@ -46,7 +46,7 @@ void i_ldc(Frame* frame,uint8_t index, ConstPool* constantPool)
 
 void i_ldc_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPool)
 {
-	uint32_t dado=0;
+    uint32_t dado=0;
     uint8_t tag = constantPool[index-1].tag;
     float f=0;
 
@@ -77,11 +77,12 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
     switch(tag)
     {
     case LONG:
-		dado = ((uint64_t)constantPool[indexConcat-1].long_const.highBytes <<32) | constantPool[indexConcat-1].long_const.lowBytes;
-		push(&(frame->operand),&dado);
+
+		dado = ((uint64_t)constantPool[indexConcat-1].long_const.bytes.highBytes <<32) | constantPool[indexConcat-1].long_const.bytes.lowBytes;
+		push(&(frame->operandStack),&dado);
         break;
     case DOUBLE:
-        dado = ((uint64_t)constantPool[indexConcat-1].long_const.highBytes <<32) | constantPool[indexConcat-1].long_const.lowBytes;
+        dado = ((uint64_t)constantPool[indexConcat-1].long_const.bytes.highBytes <<32) | constantPool[indexConcat-1].long_const.bytes.lowBytes;
 
         //empilhando 64 bits
         uint32_t low = (uint32_t)(dado & 0x00000000FFFFFFFF);
@@ -93,7 +94,7 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
 
         break;
     }
-    return;
+    	return;
 }
 
 void i_goto(Frame* frame, uint8_t index1, uint8_t index2)
@@ -118,45 +119,170 @@ void i_ret(Frame* frame, uint8_t index)
     return;
 }
 
-void i_tableswitch(Frame *frame)
+void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch)
 {
+  uint32_t target;
+  int32_t index = *((int32_t*)pop(&(frame->operandStack))->value);
 
-    return;
+  if(index < low || index > high) {
+    target = enderecotable + defaultbyte;
+  } else {
+    uint32_t offset = tableswitch[index - low];
+    target = enderecotable + offset;
+  }
+
+  (*frame->codeIndexRef) = target;
+
+  return;
 }
 
-void i_lookupswitch(Frame *frame)
+void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table)
 {
-    return;
-}
+  int32_t key = *((int32_t*)pop(&(frame->operandStack))->value);
 
+  uint32_t target;
+  uint32_t i = 0;
+	uint8_t found = 0;
+
+	while((i < npairs) &&(!found)) {
+		if(match[i] == key){
+      found = 1;
+    }
+		i++;
+	}
+	i--;
+
+	if(found) {
+		target = offset_table[i] + enderecolookup;
+	} else {
+		target = defaultbyte + enderecolookup;
+	}
+
+	(*frame->codeIndexRef) = target;
+
+  return;
+}
 void i_ireturn(Frame *frame)
 {
+    Frame *frame1;
+    uint32_t valor;
+    valor = *((uint32_t*)pop(&(frame->operandStack))->value);
+    frame1 = frame;
+
+    if (frame->framesStack != NULL)
+    {
+        frame = *((uint32_t*)pop(&((frame->framesStack)->value)));
+        push(&(frame->operandStack), &(valor));
+        push(&(frame->framesStack), &(frame));
+    }
+    else
+    {
+        frame->codeIndexRef = frame->codeAttribute->codeLength;
+    }
     return;
 }
 
 void i_lreturn(Frame *frame)
 {
+    Frame *frame1;
+    uint64_t valor;
+    valor = *((uint64_t*)pop(&(frame->operandStack))->value);
+    frame1 = frame;
+    if (frame->framesStack != NULL)
+    {
+        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+
+            //empilha 64 bits
+            uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
+            push(&(low), &(frame->operandStack));
+            uint32_t high = (uint32_t)(valor >> 32);
+            push(&(high), &(frame->operandStack));
+
+        push(&frame->framesStack, &frame);
+
+    }
+    else
+    {
+        frame->codeIndexRef = frame->codeAttribute->codeLength;
+    }
+
     return;
 }
 
 void i_freturn(Frame *frame)
 {
+    Frame *frame1;
+    uint32_t valor;
+    valor = *((uint32_t*)pop(&(frame->operandStack))->value);
+    frame1 = frame;
+
+
+    if (frame->framesStack != NULL)
+    {
+        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+        push(&(frame->operandStack), &valor);
+        push(&frame->framesStack, &frame);
+
+    }
+    else
+    {
+        frame->codeIndexRef = frame->codeAttribute->codeLength;
+    }
+
     return;
 }
 
 void i_dreturn(Frame* frame)
 {
+    Frame *frame1;
+    uint64_t valor;
+    valor = *((uint64_t*)pop(&(frame->operandStack))->value);
+    frame1 = frame;
+
+    if (frame->framesStack != NULL)
+    {
+        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+
+        //empilha 64 bits
+            uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
+            push(&(low), &(frame->operandStack));
+            uint32_t high = (uint32_t)(valor >> 32);
+            push(&(high), &(frame->operandStack));
+
+        push(&frame->framesStack, &frame);
+
+    }
+    else
+    {
+         frame->codeIndexRef = frame->codeAttribute->codeLength;
+    }
     return;
 }
 
 void i_areturn(Frame* frame)
 {
+    Frame *frame1;
+    uint32_t valor;
+    valor = *((uint32_t*)pop(&(frame->operandStack))->value);
+    frame1 = frame;
+
+    if (frame->framesStack != NULL)
+    {
+        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+        push(&(frame->operandStack), &valor);
+        push(&frame->framesStack, &frame);
+
+    }
+    else
+    {
+        frame->codeIndexRef = frame->codeAttribute->codeLength;
+    }
     return;
 }
 
 void i_return(Frame* frame)
 {
-    frame->codeIndexRef = frame->CodeAttribute->codeLength;
+    frame->codeIndexRef = frame->codeAttribute->codeLength;
     return;
 }
 
