@@ -10,6 +10,8 @@
 #include <math.h>
 #include <string.h>
 #include "instruction.h"
+#include "execute.h"
+#include "utils.h"
 
 #define TipoReferencia  0
 #define TipoBoolean     4
