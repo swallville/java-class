@@ -6,14 +6,14 @@ void i_nop()
 };
 
 void i_bipush(Frame* frame,uint32_t* n){
-    push(&(frame->operandStack),n);
+    push(n,&(frame->operandStack));
     return;
 }
 
 void i_sipush(Frame* frame,uint16_t* n)
 {
     uint32_t dado = *n;
-    push(&(frame->operandStack),&dado);
+    push(&dado,&(frame->operandStack));
     return;
 
 }
@@ -28,16 +28,16 @@ void i_ldc(Frame* frame,uint8_t index, ConstPool* constantPool)
     switch (tag)
     {
     case INTEGER:
-        push(&(frame->operandStack),&constantPool[index-1].integer_const.bytes);
+        push(&constantPool[index-1].integer_const.bytes,&(frame->operandStack));
         break;
     case FLOAT:
     	dado =  constantPool[index-1].float_const.bytes;
     	memcpy(&f, &dado, sizeof(uint32_t));
-		push(&(frame->operandStack),&dado);
+		push(&dado,&(frame->operandStack));
         break;
     case STRING:
 		dado =  constantPool[index-1].string_const.string_index;
-		push(&(frame->operandStack),&dado);
+		push(&dado,&(frame->operandStack));
         break;
     }
     return;
@@ -52,16 +52,16 @@ void i_ldc_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPoo
     switch (tag)
     {
     case INTEGER:
-        push(&(frame->operandStack),&constantPool[index-1].integer_const.bytes);
+        push(&constantPool[index-1].integer_const.bytes,&(frame->operandStack));
         break;
     case FLOAT:
         	dado = (constantPool[index-1].float_const.bytes);
         	memcpy(&f, &dado, sizeof(uint32_t));
-        push(&(frame->operandStack),&(constantPool[index-1].float_const.bytes));
+        push(&(constantPool[index-1].float_const.bytes),&(frame->operandStack));
         break;
     case STRING:
 		dado = constantPool[index-1].string_const.string_index;
-		push(&(frame->operandStack),&dado);
+		push(&dado,&(frame->operandStack));
         break;
     }
 	return;
@@ -78,7 +78,7 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
     case LONG:
 
 		dado = ((uint64_t)constantPool[indexConcat-1].long_const.bytes.highBytes <<32) | constantPool[indexConcat-1].long_const.bytes.lowBytes;
-		push(&(frame->operandStack),&dado);
+		push(&dado,&(frame->operandStack));
         break;
     case DOUBLE:
         dado = ((uint64_t)constantPool[indexConcat-1].long_const.bytes.highBytes <<32) | constantPool[indexConcat-1].long_const.bytes.lowBytes;
@@ -93,7 +93,7 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
 
         break;
     }
-    	return;
+    return;
 }
 
 void i_goto(Frame* frame, uint8_t index1, uint8_t index2)
@@ -105,7 +105,7 @@ void i_goto(Frame* frame, uint8_t index1, uint8_t index2)
 }
 
 void i_jsr(Frame* frame, uint8_t index, uint8_t index2){
-	push(&(frame->operandStack), &(frame->codeIndexRef));
+	push(&(frame->codeIndexRef),&(frame->operandStack));
 	int16_t offset16 = (((uint16_t)index)<<8)+index2;
 		frame->codeIndexRef += (offset16 - 3);
 
@@ -114,7 +114,7 @@ void i_jsr(Frame* frame, uint8_t index, uint8_t index2){
 
 void i_ret(Frame* frame, uint8_t index)
 {
-    frame->codeIndexRef = frame->localVariables[index];
+    (*frame->codeIndexRef) = frame->localVariables[index];
     return;
 }
 
@@ -161,6 +161,7 @@ void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int3
 
   return;
 }
+
 void i_ireturn(Frame *frame)
 {
     Frame *frame1;
@@ -170,13 +171,14 @@ void i_ireturn(Frame *frame)
 
     if (frame->framesStack != NULL)
     {
-        frame = *((uint32_t*)pop(&((frame->framesStack)->value)));
-        push(&(frame->operandStack), &(valor));
-        push(&(frame->framesStack), &(frame));
+        frame = (Frame*)(pop(&(frame->framesStack))->value);
+        push(&(valor),&(frame->operandStack));
+        push(&(frame),&(frame->framesStack));
+        free_mem((void**)&frame1);
     }
     else
     {
-        frame->codeIndexRef = frame->codeAttribute->codeLength;
+        (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     }
     return;
 }
@@ -189,7 +191,7 @@ void i_lreturn(Frame *frame)
     frame1 = frame;
     if (frame->framesStack != NULL)
     {
-        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+        frame = (Frame*)(pop(&(frame->framesStack))->value);
 
             //empilha 64 bits
             uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
@@ -197,12 +199,13 @@ void i_lreturn(Frame *frame)
             uint32_t high = (uint32_t)(valor >> 32);
             push(&(high), &(frame->operandStack));
 
-        push(&frame->framesStack, &frame);
+        push((&frame),&(frame->framesStack));
+        free_mem((void**)&frame1);
 
     }
     else
     {
-        frame->codeIndexRef = frame->codeAttribute->codeLength;
+        (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     }
 
     return;
@@ -218,14 +221,15 @@ void i_freturn(Frame *frame)
 
     if (frame->framesStack != NULL)
     {
-        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
-        push(&(frame->operandStack), &valor);
-        push(&frame->framesStack, &frame);
+        frame = (Frame*)(pop(&(frame->framesStack))->value);
+        push(&valor,&(frame->operandStack));
+        push((&frame),&(frame->framesStack));
+        free_mem((void**)&frame1);
 
     }
     else
     {
-        frame->codeIndexRef = frame->codeAttribute->codeLength;
+        (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     }
 
     return;
@@ -240,7 +244,7 @@ void i_dreturn(Frame* frame)
 
     if (frame->framesStack != NULL)
     {
-        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
+        frame = (Frame*)(pop(&(frame->framesStack))->value);
 
         //empilha 64 bits
             uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
@@ -248,12 +252,12 @@ void i_dreturn(Frame* frame)
             uint32_t high = (uint32_t)(valor >> 32);
             push(&(high), &(frame->operandStack));
 
-        push(&frame->framesStack, &frame);
-
+        push(&frame,&frame->framesStack);
+        free_mem((void**)&frame1);
     }
     else
     {
-         frame->codeIndexRef = frame->codeAttribute->codeLength;
+         (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     }
     return;
 }
@@ -267,21 +271,21 @@ void i_areturn(Frame* frame)
 
     if (frame->framesStack != NULL)
     {
-        frame = *((uint32_t*)pop(&(frame->framesStack))->value);
-        push(&(frame->operandStack), &valor);
-        push(&frame->framesStack, &frame);
-
+        frame = (Frame*)(pop(&(frame->framesStack))->value);
+        push(&(valor),&(frame->operandStack));
+        push(&(frame),&(frame->framesStack));
+        free_mem((void**)&frame1);
     }
     else
     {
-        frame->codeIndexRef = frame->codeAttribute->codeLength;
+        (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     }
     return;
 }
 
 void i_return(Frame* frame)
 {
-    frame->codeIndexRef = frame->codeAttribute->codeLength;
+    (*frame->codeIndexRef) = frame->codeAttribute->codeLength;
     return;
 }
 
