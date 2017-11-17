@@ -1,4 +1,3 @@
-
 #include "others.h"
 
 void i_nop()
@@ -992,13 +991,134 @@ void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *l
     return;
 }
 
-void i_newarray(Frame *frame, uint8_t atype)
+void i_newarray(Frame *frame, uint8_t aType)
 {
+    tArray *array;
+    uint32_t valor, referencia;
+    
+    array = (tArray *) set_mem(sizeof(tArray));
+    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    
+    switch (aType)
+    {
+    case TipoByte:
+        array->tag = TipoByte;
+        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    case TipoChar:
+        array->tag = TipoChar;
+        array->info.tipoChar = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case TipoDouble:
+        array->tag = TipoDouble;
+        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case TipoFloat:
+        array->tag = TipoFloat;
+        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case TipoInt:
+        array->tag = TipoInt;
+        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case TipoLong:
+        array->tag = TipoLong;
+        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case TipoReferencia:
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case TipoShort:
+        array->tag = TipoShort;
+        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case TipoBoolean:
+        array->tag = TipoBoolean;
+        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    default:
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    }
+
+    referencia = (int) (long) array;
+    push(&referencia, &(frame->operandStack));
+
+    free_mem((void **) &array);
+    
     return;
 }
 
 void i_anewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 {
+    tArray *array;
+    uint16_t index;
+    uint32_t i = 0, valor, referencia;
+    char *tipo;
+
+    array = (tArray *) set_mem(sizeof(tArray));
+    
+    index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
+    index = frame->runtimeConstantPool[index - 1].class_const.name_index - 1;
+    tipo = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
+    
+    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    
+    while (tipo[i] == '[')
+        i++;
+
+    switch (tipo[i])
+    {
+    case 'B':
+        array->tag = TipoByte;
+        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    case 'C':
+        array->tag = TipoChar;
+        array->info.tipoChar = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case 'D':
+        array->tag = TipoDouble;
+        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case 'F':
+        array->tag = TipoFloat;
+        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'I':
+        array->tag = TipoInt;
+        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'J':
+        array->tag = TipoLong;
+        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case 'L':
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'S':
+        array->tag = TipoShort;
+        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case 'Z':
+        array->tag = TipoBoolean;
+        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    default:
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    }
+
+    referencia = (int) (long) array;
+    push(&referencia, &(frame->operandStack));
+    
+    free_mem((void **) &array);
+    free_mem((void **) &tipo);
+    
     return;
 }
 
@@ -1088,13 +1208,143 @@ void i_monitorexit(Frame *frame)
     return;
 }
 
-void i_wide(Frame *frame, uint8_t opcode, uint8_t index, uint8_t index2, uint8_t constbyte1, uint8_t constbyte2)
+void i_wide(Frame *frame, uint8_t opcode, uint8_t index1, uint8_t index2, uint8_t constByte1, uint8_t constByte2)
 {
+    int16_t valor;
+    uint16_t indexConcat = 0;
+    uint32_t value = 0;
+    
+    indexConcat = (uint16_t) (index1 << 8) | (uint16_t) (index2);
+    
+    switch (opcode)
+    {
+        case 0x15:
+            push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
+            break;
+        case 0x16:
+            push(&(frame->localVariables[indexConcat + 1]), &(frame->operandStack));
+            push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
+            break;
+        case 0x17:
+            push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
+            break;
+        case 0x18:
+            push(&(frame->localVariables[indexConcat + 1]), &(frame->operandStack));
+            push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
+            break;
+        case 0x19:
+            push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
+            break;
+        case 0x36:
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat] = value;
+            break;
+        case 0x37:
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat] = value;
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat + 1] = value;
+            break;
+        case 0x38:
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat] = value;
+            break;
+        case 0x39:
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat] = value;
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat + 1] = value;
+            break;
+        case 0x3a:
+            value = (uint32_t) (long) pop(&(frame->operandStack));
+            frame->localVariables[indexConcat] = value;
+            break;
+        case 0x84:
+            valor = (int16_t) (constByte1 << 8) | (int16_t) (constByte2);
+            frame->localVariables[indexConcat] += valor;
+            break;
+    }
+    
     return;
 }
 
 void i_multianewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, uint8_t dimensions)
 {
+    tArray *array;
+    uint16_t index;
+    uint32_t valor,referencia;
+    int i;
+    char *tipo;
+    
+    array = (tArray *) set_mem(sizeof(tArray));
+    
+    index = (uint16_t) (indexByte1 << 8 | indexByte2);
+    index = ((frame->runtimeConstantPool[index - 1].class_const.name_index) - 1);
+    tipo = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
+    
+    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    array->tamanho1 = valor;
+    
+    for (i = 1; i < dimensions; i++)
+        valor *= (uint32_t) (long) pop(&(frame->operandStack));
+    
+    i = 0;
+
+    while (tipo[i] == '[')
+        i++;
+
+    array->tamanho = valor;
+
+    switch (tipo[i])
+    {
+    case 'B':
+        array->tag = TipoByte;
+        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    case 'C':
+        array->tag = TipoChar;
+        array->info.tipoChar = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case 'D':
+        array->tag = TipoDouble;
+        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case 'F':
+        array->tag = TipoFloat;
+        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'I':
+        array->tag = TipoInt;
+        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'J':
+        array->tag = TipoLong;
+        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        break;
+    case 'L':
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    case 'S':
+        array->tag = TipoShort;
+        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        break;
+    case 'Z':
+        array->tag = TipoBoolean;
+        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        break;
+    default:
+        array->tag = TipoReferencia;
+        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        break;
+    }
+
+    referencia = (int) (long) array;
+    push(&referencia, &(frame->operandStack));
+    
+    free_mem((void **) &array);
+    free_mem((void **) &tipo);
+    
     return;
 }
 
