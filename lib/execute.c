@@ -86,11 +86,11 @@ void executeMethod(Method* method, Class class) {
 	push(frame, &(frame->framesStack));
 	// OBS: codeIndex act as the frame PC + 1 (the actual index into the CodeAttribute).
 	while (codeIndex < code->codeLength) {
-        Instruction* instr = decode(code->code, &codeIndex, 0);
+        Instruction* instr = decode(code->code, frame->codeIndexRef, 0);
 				//printf("Name - %s\n", instr->name);
         free_mem( (void**) &instr);
   }
-
+	// need to be checked
 	//free_mem( (void**) &frame);
 	return;
 }

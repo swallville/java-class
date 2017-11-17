@@ -1342,7 +1342,6 @@ void menu(char* nome) {
 						if (info_file != NULL) {
 								fprintf(info_file, "| Chosen file: %-47s |\n", file_name);
 								fprintf(info_file, "| Size (bytes): %-46d |\n", fileSize(file));
-								fprintf(info_file, "| Size (bytes): %-46d |\n", fileSize(file));
 								fprintf(info_file, "|--------------------------------------------------------------|\n");
 								fprintf(info_file, "| General Information:                                         |\n");
 								fprintf(info_file, "|--------------------------------------------------------------|\n");
