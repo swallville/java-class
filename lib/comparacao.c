@@ -66,7 +66,7 @@ void i_dcmpl(Frame* frame)
 	uint64_t double1 = *((uint64_t*)pop(&(frame->operandStack))->value);
   uint64_t double2 = *((uint64_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
-  float number1, number2;
+  double number1, number2;
 
   memcpy(&number1, &double1, sizeof(uint64_t));
   memcpy(&number2, &double2, sizeof(uint64_t));
@@ -88,7 +88,8 @@ void i_dcmpg(Frame* frame)
 	uint64_t double1 = *((uint64_t*)pop(&(frame->operandStack))->value);
   uint64_t double2 = *((uint64_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
-  float number1, number2;
+  double number1, number2;
+  
   memcpy(&number1, &double1, sizeof(uint64_t));
   memcpy(&number2, &double2, sizeof(uint64_t));
 
