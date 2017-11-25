@@ -397,14 +397,14 @@ void i_jsr_w(Frame *frame, uint8_t branchbyte1, uint8_t branchbyte2, uint8_t bra
 *   @brief
 *	@param frame
 */
-void i_tableswitch(Frame *frame);
+void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch);
 
 /**
 *   @fn void i_lookupswitch(Frame *frame)
 *   @brief
 *	@param frame
 */
-void i_lookupswitch(Frame *frame);
+void i_lookupswitch(Frame *frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table);
 
 /**
 *   @fn staticField *recupera_field(char *nome, ListaStaticField **listadefields)

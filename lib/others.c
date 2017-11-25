@@ -120,45 +120,12 @@ void i_ret(Frame* frame, uint8_t index)
 
 void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch)
 {
-  uint32_t target;
-  int32_t index = *((int32_t*)pop(&(frame->operandStack))->value);
-
-  if(index < low || index > high) {
-    target = enderecotable + defaultbyte;
-  } else {
-    uint32_t offset = tableswitch[index - low];
-    target = enderecotable + offset;
-  }
-
-  (*frame->codeIndexRef) = target;
-
   return;
 }
 
 void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table)
 {
-  int32_t key = *((int32_t*)pop(&(frame->operandStack))->value);
-
-  uint32_t target;
-  uint32_t i = 0;
-	uint8_t found = 0;
-
-	while((i < npairs) &&(!found)) {
-		if(match[i] == key){
-      found = 1;
-    }
-		i++;
-	}
-	i--;
-
-	if(found) {
-		target = offset_table[i] + enderecolookup;
-	} else {
-		target = defaultbyte + enderecolookup;
-	}
-
-	(*frame->codeIndexRef) = target;
-
+  
   return;
 }
 
