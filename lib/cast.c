@@ -1,6 +1,5 @@
 #include "cast.h"
 
-
 void i_i2l(Frame* frame)
 {
   uint64_t result = *((uint32_t*)pop(&(frame->operandStack))->value);
@@ -135,12 +134,12 @@ void i_d2i(Frame* frame)
   uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
-  
+
   double d;
   memcpy(&d, &resultd, sizeof(uint64_t));
-  
+
   uint32_t result = d;
-  
+
   push(&(result), &(frame->operandStack));
 
   return;
@@ -202,6 +201,7 @@ void i_i2b(Frame* frame)
   uint8_t highb = (uint8_t)(result & 0x000000000000FFFF);
   uint32_t high = highb;
   push(&(high), &(frame->operandStack));
+  
   return;
 }
 
@@ -217,6 +217,7 @@ void i_i2c(Frame* frame)
   uint16_t highc = (uint16_t)(result >> 16);
   uint32_t high = highc;
   push(&(high), &(frame->operandStack));
+
   return;
 }
 
@@ -232,5 +233,6 @@ void i_i2s(Frame* frame)
   uint16_t highc = (uint16_t)(result >> 16);
   uint32_t high = highc;
   push(&(high), &(frame->operandStack));
+
   return;
 }
