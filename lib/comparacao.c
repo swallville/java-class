@@ -2,9 +2,14 @@
 
 void i_lcmp(Frame* frame)
 {
-  uint64_t long1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-  uint64_t long2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+  uint32_t long1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t long1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t long2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t long2l = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
+
+  uint64_t long1 = (((uint64_t)long1h) << 32) | long1l;
+  uint64_t long2 = (((uint64_t)long2h) << 32) | long2l;
 
   if (long1 == long2){
   	push(&(result), &(frame->operandStack));
@@ -63,9 +68,14 @@ void i_fcmpg(Frame* frame)
 
 void i_dcmpl(Frame* frame)
 {
-	uint64_t double1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-  uint64_t double2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t double1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double2l = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
+
+  uint64_t double1 = (((uint64_t)double1h) << 32) | double1l;
+  uint64_t double2 = (((uint64_t)double2h) << 32) | double2l;
   double number1, number2;
 
   memcpy(&number1, &double1, sizeof(uint64_t));
@@ -85,11 +95,16 @@ void i_dcmpl(Frame* frame)
 
 void i_dcmpg(Frame* frame)
 {
-	uint64_t double1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-  uint64_t double2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t double1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t double2l = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
+
+  uint64_t double1 = (((uint64_t)double1h) << 32) | double1l;
+  uint64_t double2 = (((uint64_t)double2h) << 32) | double2l;
   double number1, number2;
-  
+
   memcpy(&number1, &double1, sizeof(uint64_t));
   memcpy(&number2, &double2, sizeof(uint64_t));
 
