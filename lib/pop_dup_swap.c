@@ -3,15 +3,15 @@
 
 void i_pop(Frame* frame)
 {
-    (uint32_t*)pop(&(frame->operandStack));
+  (void)pop(&(frame->operandStack));
 
   return;
 }
 
 void i_pop2(Frame* frame)
 {
-    (uint32_t*)pop(&(frame->operandStack));
-    (uint32_t*)pop(&(frame->operandStack));
+    (void)pop(&(frame->operandStack));
+    (void)pop(&(frame->operandStack));
 
   return;
 }

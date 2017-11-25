@@ -14,10 +14,42 @@
 #include "class.h"
 #include "instruction.h"
 
+/**
+ * @Brief Run the JVM
+ * @Description
+ * Through a loop, execute all the methods into the .class
+ * @Parameters the .class class
+ * @Return
+ */
 void run(Class class);
 
+/**
+ * @Brief Return a method into the constant pool by its name
+ * @Description
+ * Through a loop, get the methods into the .class constant pool if exists, else
+ * returns NULL
+ * @Parameters Class* class, char* methodName
+ * @Return Method* representing the method
+ */
+Method* getMethod(Class *class, char *methodName);
+
+/**
+ * @Brief Return the code of a method
+ * @Description
+ * Through a loop, get the method's code into the .class constant pool if exists, else
+ * returns NULL
+ * @Parameters Method* method, ConstPool* constantPool
+ * @Return CodeAttribute* representing the method's code
+ */
 CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool);
 
+/**
+ * @Brief Execute a method
+ * @Description
+ * Through a loop, execute all the instructions of the method
+ * @Parameters Method *method and the .class class
+ * @Return
+ */
 void executeMethod(Method* method, Class class);
 
 /**

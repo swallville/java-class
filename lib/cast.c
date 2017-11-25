@@ -41,12 +41,12 @@ void i_i2d(Frame* frame)
 
 void i_l2i(Frame* frame)
 {
-  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
-  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
-  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
+  uint32_t high_bytes = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t low_bytes = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t result = (((uint64_t)high_bytes) << 32) | low_bytes;
 
-  uint32_t result = (uint32_t) resultd;
   push(&(result), &(frame->operandStack));
+  return;
 }
 
 void i_l2f(Frame* frame)
