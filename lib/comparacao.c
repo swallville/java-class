@@ -21,7 +21,7 @@ void i_lcmp(Frame* frame)
 void i_fcmpl(Frame* frame)
 {
 
-uint32_t float1 = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t float1 = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t float2 = *((uint32_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
   float number1, number2;
@@ -67,6 +67,7 @@ void i_dcmpl(Frame* frame)
   uint64_t double2 = *((uint64_t*)pop(&(frame->operandStack))->value);
   uint32_t result = 0;
   float number1, number2;
+
   memcpy(&number1, &double1, sizeof(uint64_t));
   memcpy(&number2, &double2, sizeof(uint64_t));
 
