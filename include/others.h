@@ -13,15 +13,17 @@
 #include "execute.h"
 #include "utils.h"
 
-#define TipoReferencia  0
-#define TipoBoolean     4
-#define TipoChar        5
-#define TipoFloat       6
-#define TipoDouble      7
-#define TipoByte        8
-#define TipoShort       9
-#define TipoInt         10
-#define TipoLong        11
+enum {
+    TipoReferencia  =   0,
+    TipoBoolean     =   4,
+    TipoChar        =   5,
+    TipoFloat       =   6,
+    TipoDouble      =   7,
+    TipoByte        =   8,
+    TipoShort       =   9,
+    TipoInt         =   10,
+    TipoLong        =   11
+} OthersTab;
 
 /**
 *   @fn void i_nop()
@@ -393,18 +395,30 @@ void i_goto_w(Frame *frame, uint8_t branchbyte1, uint8_t branchbyte2, uint8_t br
 void i_jsr_w(Frame *frame, uint8_t branchbyte1, uint8_t branchbyte2, uint8_t branchbyte3, uint8_t branchbyte4);
 
 /**
-*   @fn void i_tableswitch(Frame *frame)
+*   @fn void i_tableswitch(Frame *frame, uint32_t enderecotable,  int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch)
 *   @brief
 *	@param frame
+*   @param enderecotable
+*   @param high
+*   @param low
+*   @param defaultbyte
+*   @param tableswitch
+*   @return
 */
-void i_tableswitch(Frame *frame);
+void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch);
 
 /**
-*   @fn void i_lookupswitch(Frame *frame)
+*   @fn void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table)
 *   @brief
 *	@param frame
+*	@param npairs
+*	@param enderecolookup
+*	@param defaultbyte
+*	@param match
+*	@param offset_table
+*	@return
 */
-void i_lookupswitch(Frame *frame);
+void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table);
 
 /**
 *   @fn staticField *recupera_field(char *nome, ListaStaticField **listadefields)

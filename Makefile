@@ -47,5 +47,5 @@ $(PROG_OBJ) :
 $(PROG_BIN) : $(PROG_OBJ) $(LIBS_OBJS)
 	@echo -n Generating program executable.....
 	$(MKDIR) $(BIN_DIR)
-	$(GCC) -o $(PROG_BIN) $(PROG_OBJ) $(LIBS_OBJS)
+	$(GCC) -o $(PROG_BIN) $(PROG_OBJ) $(LIBS_OBJS) -lm
 	@echo Done

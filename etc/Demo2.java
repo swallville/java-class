@@ -1,4 +1,4 @@
-interface MyInterface
+interface MyInterface2
 {
    /* compiler will treat them as:
     * public abstract void method1();
@@ -7,7 +7,7 @@ interface MyInterface
    public void method1();
    public void method2();
 }
-class Demo implements MyInterface
+class Demo2 implements MyInterface2
 {
    /* This class must have to implement both the abstract methods
     * else you will get compilation error
