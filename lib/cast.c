@@ -39,39 +39,38 @@ void i_i2d(Frame* frame)
   return;
 }
 
-// Duvida
 void i_l2i(Frame* frame)
 {
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
 
-  uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
-  push(&(low), &(frame->operandStack));
-
-  uint32_t high = (uint32_t)(result >> 32);
-  push(&(high), &(frame->operandStack));
-  return;
+  uint32_t result = (uint32_t) resultd;
+  push(&(result), &(frame->operandStack));
 }
 
 void i_l2f(Frame* frame)
 {
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
 
-  uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
-  float f = (float) low;
-  uint32_t result2 = f;
-  push(&(result2), &(frame->operandStack));
+  double d;
+  memcpy(&d, &resultd, sizeof(uint64_t));
+  float f = (float) d;
+  uint32_t result;
+  memcpy(&result, &f, sizeof(uint32_t));
 
-  uint32_t high = (uint32_t)(result >> 32);
-  float f2 = (float) high;
-  uint32_t result3 = f2;
-  push(&(result3), &(frame->operandStack));
+  push(&(result), &(frame->operandStack));
   return;
 }
 
 void i_l2d(Frame* frame)
 {
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
-  double d = (double) result;
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
+  double d = (double) resultd;
   uint64_t result2;
   memcpy(&result2,&d,sizeof(uint64_t));
 
@@ -95,7 +94,12 @@ void i_f2i(Frame* frame)
 
 void i_f2l(Frame* frame)
 {
-  uint32_t result = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t temp = *((uint32_t*)pop(&(frame->operandStack))->value);
+
+  float temp2;
+  memcpy(&temp2, &temp, sizeof(uint32_t));
+
+  uint64_t result = temp2;
 
   uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
   push(&(low), &(frame->operandStack));
@@ -107,61 +111,72 @@ void i_f2l(Frame* frame)
 
 void i_f2d(Frame* frame)
 {
-  uint32_t result = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t temp = *((uint32_t*)pop(&(frame->operandStack))->value);
+  float temp2;
 
-  uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
-  double d = (double) low;
-  uint32_t result2 = d;
-  push(&(result2), &(frame->operandStack));
+  memcpy(&temp2, &temp, sizeof(uint32_t));
 
-  uint32_t high = (uint32_t)(result >> 32);
-  double d2 = (double) high;
-  uint32_t result3 = d2;
-  push(&(result3), &(frame->operandStack));
-  return;
-}
+  double temp3 = temp2;
 
-void i_d2i(Frame* frame)
-{
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
+  uint64_t result;
+  memcpy(&result, &temp3, sizeof(uint64_t));
 
   uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
   push(&(low), &(frame->operandStack));
 
   uint32_t high = (uint32_t)(result >> 32);
   push(&(high), &(frame->operandStack));
-  return;
 
+  return;
+}
+
+void i_d2i(Frame* frame)
+{
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
+  
+  double d;
+  memcpy(&d, &resultd, sizeof(uint64_t));
+  
+  uint32_t result = d;
+  
+  push(&(result), &(frame->operandStack));
+
+  return;
 }
 
 void i_d2l(Frame* frame)
 {
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
-  long l = (long) result;
-  uint64_t result2;
-  memcpy(&result2,&l,sizeof(uint64_t));
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
+  double d;
+  memcpy(&d, &resultd, sizeof(uint64_t));
+  uint64_t result2 = d;
 
   uint32_t low = (uint32_t)(result2 & 0x00000000FFFFFFFF);
   push(&(low), &(frame->operandStack));
 
   uint32_t high = (uint32_t)(result2 >> 32);
   push(&(high), &(frame->operandStack));
+
   return;
 }
 
 void i_d2f(Frame* frame)
 {
-  uint64_t result = *((uint64_t*)pop(&(frame->operandStack))->value);
+  uint32_t resulth = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint32_t resultl = *((uint32_t*)pop(&(frame->operandStack))->value);
+  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
 
-  uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
-  float f = (float) low;
-  uint32_t result2 = f;
-  push(&(result2), &(frame->operandStack));
+  double d;
+  memcpy(&d, &resultd, sizeof(uint64_t));
+  float f = d;
+  uint32_t result;
+  memcpy(&result, &f, sizeof(uint32_t));
+  push(&(result), &(frame->operandStack));
 
-  uint32_t high = (uint32_t)(result >> 32);
-  float f2 = (float) high;
-  uint32_t result3 = f2;
-  push(&(result3), &(frame->operandStack));
   return;
 }
 

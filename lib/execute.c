@@ -13,14 +13,47 @@
 #include "mem-manager.h"
 #include "all-instructions.h"
 
+// Main frame used through all the run
 Frame *frame;
 
 void run(Class class){
-	for (int i = (class.methods_count - 1); i != -1; i--) {
-		executeMethod(&(class.methods[i]), class);
+	Method* initMethod = getMethod(&class, "<init>");
+
+	if (initMethod != NULL) {
+		executeMethod(initMethod, class);
 	}
+
+	initMethod = getMethod(&class, "<clinit>");
+
+	if(initMethod != NULL){
+		executeMethod(initMethod, class);
+	}
+
+	Method* mainMethod = getMethod(&class, "main");
+
+	if (mainMethod != NULL) {
+		executeMethod(mainMethod, class);
+	}
+
 	printf("|==============================================================|\n");
 	printf(" Program exited with CODE 0\n");
+
+	return;
+}
+
+Method* getMethod(Class *class, char *methodName){
+	for (int i = 0; i < class->methods_count; i++) {
+		char* name = getUtf8FromConstantPool(class->methods[i].name_index, class->constant_pool);
+
+		if (strcmp(methodName, name) == 0) {
+			free_mem((void **) &name);
+			return &class->methods[i];
+		}
+
+		free_mem((void **) &name);
+	}
+
+	return NULL;
 }
 
 CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool) {
@@ -40,6 +73,7 @@ CodeAttribute* getCodeAttr(Method* method, ConstPool* constantPool) {
 }
 
 void executeMethod(Method* method, Class class) {
+	int codeIndex = 0;
 
 	CodeAttribute* code = getCodeAttr(method, class.constant_pool);
 
@@ -47,30 +81,32 @@ void executeMethod(Method* method, Class class) {
 
 	frame = createFrame(&class, code, heap);
 
-	int codeIndex = 0;
-
 	frame->codeIndexRef = &codeIndex;
 
 	push(frame, &(frame->framesStack));
 	// OBS: codeIndex act as the frame PC + 1 (the actual index into the CodeAttribute).
 	while (codeIndex < code->codeLength) {
-        Instruction* instr = decode(code->code, &codeIndex, 0);
+        Instruction* instr = decode(code->code, frame->codeIndexRef, 0);
 				//printf("Name - %s\n", instr->name);
         free_mem( (void**) &instr);
   }
-
-	free_mem( (void**) &frame);
+	// need to be checked
+	//free_mem( (void**) &frame);
+	return;
 }
 
 
 Instruction* decode(uint8_t* bytecode, int* offset, int mode) {
 	Instruction* runtime_instr = NULL;
 
-	uint32_t nu4 = 0;
+	uint32_t nuint32_t = 0;
   uint16_t nu2 = 0;
   uint8_t index = 0, index2 = 0, inc = 0, type = 0, constbyte1 = 0, constbyte2 = 0;
   uint8_t branch1 = 0, branch2 = 0, branch3 = 0, branch4 = 0, dimensions = 0;
   int contagem = 0, zero = 0, zero_1 = 0, zero_2 = 0, opcode1 = 0;
+
+	int32_t defaultbyte;
+	uint32_t i, byte1, byte2, byte3, byte4;
 
 	int pc = (*offset);
 	int position = (*offset)++;
@@ -201,9 +237,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode) {
 
 			if (mode == 0) {
 				index = runtime_instr->arguments[0];
-				nu4 = (uint32_t) (index);
+				nuint32_t = (uint32_t) (index);
 
-				i_bipush(frame, &nu4);
+				i_bipush(frame, &nuint32_t);
 			}
 
 			return runtime_instr;
@@ -1429,18 +1465,130 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode) {
 			return runtime_instr;
 
 		case TABLESWITCH:
+			runtime_instr = (Instruction*) set_mem(sizeof(Instruction));
+			runtime_instr->pc = pc;
+			runtime_instr->opcode = opcode;
+			runtime_instr->name = "tableswitch";
+
+			int32_t high, low, index;
+		  int32_t *tableswitch;
+			uint32_t enderecotable = (*offset);
+		  uint32_t tableSize;
+
+		  while(((*offset) + 1) % 4 != 0) {
+			 (*offset)++;
+		  }
+
+		 	(*offset)++;
+
+		 	byte1 = bytecode[(*offset)++];
+		 	byte2 = bytecode[(*offset)++];
+		 	byte3 = bytecode[(*offset)++];
+		 	byte4 = bytecode[(*offset)++];
+		 	defaultbyte = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+
+		 	byte1 = bytecode[(*offset)++];
+		 	byte2 = bytecode[(*offset)++];
+		 	byte3 = bytecode[(*offset)++];
+		 	byte4 = bytecode[(*offset)++];
+		 	low = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+
+		 	byte1 = bytecode[(*offset)++];
+		 	byte2 = bytecode[(*offset)++];
+		 	byte3 = bytecode[(*offset)++];
+		 	byte4 = bytecode[(*offset)++];
+		 	high = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+
+		 	tableSize = high - low + 1;
+		 	tableswitch = calloc(sizeof(uint32_t), tableSize);
+
+			runtime_instr->arguments_count = tableSize + 1;
+			runtime_instr->arguments = NULL;
+			runtime_instr->dynamic_arguments = (int32_t*) set_mem((tableSize + 1) * sizeof(int32_t));
+
+			runtime_instr->dynamic_arguments[tableSize] = defaultbyte;
+
+		 	for(i = 0; i < tableSize; i++) 	{
+			 	byte1 = bytecode[(*offset)++];
+			 	byte2 = bytecode[(*offset)++];
+			 	byte3 = bytecode[(*offset)++];
+			 	byte4 = bytecode[(*offset)++];
+
+			 	tableswitch[i] = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+				runtime_instr->dynamic_arguments[i] = tableswitch[i];
+		 	}
+
 			if (mode == 0) {
-				i_tableswitch(frame);
+				i_tableswitch(frame, enderecotable, high, low, defaultbyte, tableswitch);
 			}
 
-			return readNoArgs(bytecode, offset, pc, opcode, "tableswitch");
+			free(tableswitch);
+
+			return runtime_instr;
 
 		case LOOKUPSWITCH:
+			runtime_instr = (Instruction*) set_mem(sizeof(Instruction));
+			runtime_instr->pc = pc;
+			runtime_instr->opcode = opcode;
+			runtime_instr->name = "lookupswitch";
+
+			int32_t npairs;
+		  int32_t *match, *offset_table;
+			uint32_t enderecolookup = (*offset);
+
+		  while(((*offset) + 1) % 4 != 0) {
+			  (*offset)++;
+		  }
+		  (*offset)++;
+
+		  byte1 = bytecode[(*offset)++];
+		  byte2 = bytecode[(*offset)++];
+		  byte3 = bytecode[(*offset)++];
+		  byte4 = bytecode[(*offset)++];
+		  defaultbyte = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+
+		  byte1 = bytecode[(*offset)++];
+		  byte2 = bytecode[(*offset)++];
+		  byte3 = bytecode[(*offset)++];
+		  byte4 = bytecode[(*offset)++];
+		  npairs = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+
+		  match = calloc(sizeof(int32_t), npairs);
+		  offset_table = calloc(sizeof(int32_t), npairs);
+
+			runtime_instr->arguments_count = (2 * npairs) + 1;
+			runtime_instr->arguments = NULL;
+			runtime_instr->dynamic_arguments = (int32_t*) set_mem(((2 * npairs) + 1) * sizeof(int32_t));
+
+			runtime_instr->dynamic_arguments[(2 * npairs)] = defaultbyte;
+
+			int j = 0;
+
+		  for(i = 0; i < npairs; i++, j++) {
+			  byte1 = bytecode[(*offset)++];
+			  byte2 = bytecode[(*offset)++];
+			  byte3 = bytecode[(*offset)++];
+			  byte4 = bytecode[(*offset)++];
+			  match[i] = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+				runtime_instr->dynamic_arguments[j] = match[i];
+
+			  byte1 = bytecode[(*offset)++];
+			  byte2 = bytecode[(*offset)++];
+			  byte3 = bytecode[(*offset)++];
+			  byte4 = bytecode[(*offset)++];
+			  offset_table[i] = (int32_t)(((byte1) << 24) |((byte2) << 16) |((byte3) << 8) |(byte4));
+				j++;
+				runtime_instr->dynamic_arguments[j] = offset_table[i];
+		  }
+
 			if (mode == 0) {
-				i_lookupswitch(frame);
+				i_lookupswitch(frame, npairs, enderecolookup, defaultbyte, match, offset_table);
 			}
 
-			return readNoArgs(bytecode, offset, pc, opcode, "lookupswitch");
+			free(match);
+			free(offset_table);
+
+			return runtime_instr;
 
 		case IRETURN:
 			if (mode == 0) {
@@ -1772,6 +1920,7 @@ Instruction* readNoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, char
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 0;
+	instr->dynamic_arguments = NULL;
 	instr->arguments = NULL;
 	return instr;
 }
@@ -1782,6 +1931,7 @@ Instruction* readOneArg(uint8_t* bytecode, int* offset, int pc, int opcode, char
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 1;
+	instr->dynamic_arguments = NULL;
 	instr->arguments = (int8_t*) set_mem(1 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	return instr;
@@ -1793,6 +1943,7 @@ Instruction* readTwoArgs(uint8_t* bytecode, int* offset, int pc, int opcode, cha
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 2;
+	instr->dynamic_arguments = NULL;
 	instr->arguments = (int8_t*) set_mem(2 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	instr->arguments[1] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
@@ -1805,6 +1956,7 @@ Instruction* readThreeArgs(uint8_t* bytecode, int* offset, int pc, int opcode, c
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 3;
+	instr->dynamic_arguments = NULL;
 	instr->arguments = (int8_t*) set_mem(3 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	instr->arguments[1] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
@@ -1818,6 +1970,7 @@ Instruction* readFourArgs(uint8_t* bytecode, int* offset, int pc, int opcode, ch
 	instr->opcode = opcode;
 	instr->name = name;
 	instr->arguments_count = 4;
+	instr->dynamic_arguments = NULL;
 	instr->arguments = (int8_t*) set_mem(4 * sizeof(int8_t));
 	instr->arguments[0] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);
 	instr->arguments[1] = (int8_t)get1bytesFromByteArray(bytecode, (*offset)++);

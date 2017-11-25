@@ -1083,6 +1083,7 @@ void showCode(uint8_t* code, int codeLength) {
     int code_index = 0;
     while(code_index < codeLength) {
         Instruction* instr = decode(code, &code_index, 1);
+
         if (instr->arguments_count == 0) {
             printf(" %-4d %-55s \n", instr->pc, instr->name);
         } else if (instr->arguments_count == 1) {
@@ -1139,12 +1140,37 @@ void showCode(uint8_t* code, int codeLength) {
 
 							printf(" %-4d %-15s  #%" PRIu8 " <%s, BootstrapMethods #%d> \n", instr->pc, instr->name, instr->arguments[1], string, class->constant_pool[(int)(nu2) - 1].invokeDynamicInfo_const.bootstrap_method_attr_index);
 							free_mem( (void**) &string );
+						} else if (strstr(instr->name, "tableswitch") != NULL) {
+							printf(" %-4d %-15s 0 to %d\n", instr->pc, instr->name, instr->arguments_count - 2);
+
+							for (int i = 0; i < instr->arguments_count; i++) {
+								if (i == instr->arguments_count - 1) {
+									printf("\tdefault: %d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+								} else {
+									printf("\t%d: %d +(%d)\n", i, instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+								}
+							}
 						} else {
 							printf(" %-4d %-15s  #%" PRIu8 " ", instr->pc, instr->name, instr->arguments[1]);
 							get_instr_def((int)(instr->arguments[1]) - 1);
 							printf("\n");
 						}
-        }
+        } else if (strstr(instr->name, "lookupswitch") != NULL) {
+					int real_argscount = (instr->arguments_count - 1) / 2;
+
+					printf(" %-4d %-15s %d\n", instr->pc, instr->name, real_argscount);
+
+					for (int i = 0; i < instr->arguments_count; i++) {
+						if (i == instr->arguments_count - 1) {
+							printf("\tdefault: %d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+						} else {
+							printf("\t%d: ", instr->dynamic_arguments[i]);
+							i++;
+							printf("%d +(%d)\n", instr->dynamic_arguments[i] + 1, instr->dynamic_arguments[i]);
+						}
+					}
+				}
+
         free_mem( (void**) &instr);
     }
     printf("|==============================================================|\n");
@@ -1278,46 +1304,29 @@ void menu(char* nome) {
         printf("|                       Classfile Viewer                       |\n");
         printf("|==============================================================|\n");
 
-        if (file != NULL && info_file != NULL && path[0] != '\0') {
+        if (file != NULL && path[0] != '\0') {
 
             char* thisClass = getUtf8FromConstantPool(class->constant_pool[class->thisClass - 1].class_const.name_index, class->constant_pool);
             char* superClass = getUtf8FromConstantPool(class->constant_pool[class->superClass - 1].class_const.name_index, class->constant_pool);
             char* access_flags = map_flags(class->access_flags);
 
             printf("| Chosen file: %-47s |\n", file_name);
-						fprintf(info_file, "| Chosen file: %-47s |\n", file_name);
             printf("| Size (bytes): %-46d |\n", fileSize(file));
-						fprintf(info_file, "| Size (bytes): %-46d |\n", fileSize(file));
             printf("|--------------------------------------------------------------|\n");
-						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf("| General Information:                                         |\n");
-						fprintf(info_file, "| General Information:                                         |\n");
             printf("|--------------------------------------------------------------|\n");
-						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf(" Magic:              0x%.8X                               \n", class->magic);
-						fprintf(info_file, " Magic:              0x%.8X                               \n", class->magic);
             printf(" Minor version:      %u (%.1f) \n", class->minor_version, decoderVersion(class->minor_version));
-						fprintf(info_file, " Minor version:      %u (%.1f) \n", class->minor_version, decoderVersion(class->minor_version));
             printf(" Major version:      %u (%.1f) \n", class->major_version, decoderVersion(class->major_version));
-						fprintf(info_file, " Major version:      %u (%.1f) \n", class->major_version, decoderVersion(class->major_version));
 						printf(" Contant pool count: %-40d \n", class->constantPool_count);
-						fprintf(info_file, " Contant pool count: %-40d \n", class->constantPool_count);
             printf(" Access flags:       0x%.4X %-33s \n", class->access_flags, access_flags);
-						fprintf(info_file, " Access flags:       0x%.4X %-33s \n", class->access_flags, access_flags);
             printf(" This class:         cp_info #%-4d <%s>                      \n", class->thisClass, thisClass);
-						fprintf(info_file, " This class:         cp_info #%-4d <%s>                      \n", class->thisClass, thisClass);
             printf(" Super class:        cp_info #%-4d <%s>                      \n", class->superClass, superClass);
-						fprintf(info_file, " Super class:        cp_info #%-4d <%s>                      \n", class->superClass, superClass);
             printf(" Interfaces count:   %-40u \n", class->interfaces_count);
-						fprintf(info_file, " Interfaces count:   %-40u \n", class->interfaces_count);
             printf(" Fields count:       %-40u \n", class->fields_count);
-						fprintf(info_file, " Fields count:       %-40u \n", class->fields_count);
             printf(" Methods count:      %-40u \n", class->methods_count);
-						fprintf(info_file, " Methods count:      %-40u \n", class->methods_count);
             printf(" Attributes count:   %-40u \n",class->attributes_count);
-						fprintf(info_file, " Attributes count:   %-40u \n",class->attributes_count);
             printf("|--------------------------------------------------------------|\n");
-						fprintf(info_file, "|--------------------------------------------------------------|\n");
             printf("| 3) Constant pool                                             |\n");
             printf("| 4) Interfaces                                                |\n");
             printf("| 5) Fields                                                    |\n");
@@ -1329,10 +1338,30 @@ void menu(char* nome) {
 						printf("| 2) Quit                                                      |\n");
 		        printf("|==============================================================|\n");
 		        printf("Enter desired option: ");
+
 						if (info_file != NULL) {
+								fprintf(info_file, "| Chosen file: %-47s |\n", file_name);
+								fprintf(info_file, "| Size (bytes): %-46d |\n", fileSize(file));
+								fprintf(info_file, "|--------------------------------------------------------------|\n");
+								fprintf(info_file, "| General Information:                                         |\n");
+								fprintf(info_file, "|--------------------------------------------------------------|\n");
+								fprintf(info_file, " Magic:              0x%.8X                               \n", class->magic);
+								fprintf(info_file, " Minor version:      %u (%.1f) \n", class->minor_version, decoderVersion(class->minor_version));
+								fprintf(info_file, " Major version:      %u (%.1f) \n", class->major_version, decoderVersion(class->major_version));
+								fprintf(info_file, " Contant pool count: %-40d \n", class->constantPool_count);
+								fprintf(info_file, " Access flags:       0x%.4X %-33s \n", class->access_flags, access_flags);
+								fprintf(info_file, " This class:         cp_info #%-4d <%s>                      \n", class->thisClass, thisClass);
+								fprintf(info_file, " Super class:        cp_info #%-4d <%s>                      \n", class->superClass, superClass);
+								fprintf(info_file, " Interfaces count:   %-40u \n", class->interfaces_count);
+								fprintf(info_file, " Fields count:       %-40u \n", class->fields_count);
+								fprintf(info_file, " Methods count:      %-40u \n", class->methods_count);
+								fprintf(info_file, " Attributes count:   %-40u \n",class->attributes_count);
+								fprintf(info_file, "|--------------------------------------------------------------|\n");
+
 								printConstantPool();
 								closeFile(&info_file);
 						}
+
 		        scanf("%d", &option);
 		        while(getchar() != '\n');
 		        printf("\n");
@@ -1344,7 +1373,7 @@ void menu(char* nome) {
 
             printf("| No Chosen file                                               |\n");
             printf("|--------------------------------------------------------------|\n");
-						printf("| 0) Run JVM 						                                       |\n");
+						printf("| 0) Run JVM                                                   |\n");
             printf("| 1) Open .class Viewer                                        |\n");
 						printf("| 2) Quit                                                      |\n");
 		        printf("|==============================================================|\n");

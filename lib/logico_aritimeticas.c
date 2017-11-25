@@ -10,8 +10,12 @@ void i_iadd(Frame* frame){
 }
 
 void i_ladd(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	int64_t sresult = elem1 + elem2;
 	uint64_t result;
 	memcpy(&result, &sresult, sizeof(uint64_t));
@@ -36,8 +40,12 @@ void i_fadd(Frame* frame){
 }
 
 void i_dadd(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1, d2;
 	memcpy(&d1, &elem1, sizeof(int64_t));
 	memcpy(&d2, &elem2, sizeof(int64_t));
@@ -62,8 +70,12 @@ void i_isub(Frame* frame){
 }
 
 void i_lsub(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	int64_t sresult = elem1 - elem2;
 	uint64_t result;
 	memcpy(&result, &sresult, sizeof(uint64_t));
@@ -88,8 +100,12 @@ void i_fsub(Frame* frame){
 }
 
 void i_dsub(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1, d2;
 	memcpy(&d1, &elem1, sizeof(int64_t));
 	memcpy(&d2, &elem2, sizeof(int64_t));
@@ -114,8 +130,12 @@ void i_imul(Frame* frame){
 }
 
 void i_lmul(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	int64_t sresult = elem1 * elem2;
 	uint64_t result;
 	memcpy(&result, &sresult, sizeof(uint64_t));
@@ -140,8 +160,12 @@ void i_fmul(Frame* frame){
 }
 
 void i_dmul(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1, d2;
 	memcpy(&d1, &elem1, sizeof(int64_t));
 	memcpy(&d2, &elem2, sizeof(int64_t));
@@ -166,8 +190,12 @@ void i_idiv(Frame* frame){
 }
 
 void i_ldiv(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	int64_t sresult = elem1 / elem2;
 	uint64_t result;
 	memcpy(&result, &sresult, sizeof(uint64_t));
@@ -193,8 +221,12 @@ void i_fdiv(Frame* frame){
 }
 
 void i_ddiv(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1, d2;
 	memcpy(&d1, &elem1, sizeof(int64_t));
 	memcpy(&d2, &elem2, sizeof(int64_t));
@@ -219,8 +251,12 @@ void i_irem(Frame* frame){
 }
 
 void i_lrem(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	int64_t sresult = elem1 % elem2;
 	uint64_t result;
 	memcpy(&result, &sresult, sizeof(uint64_t));
@@ -245,8 +281,12 @@ void i_frem(Frame* frame){
 }
 
 void i_drem(Frame* frame){
-	int64_t elem1 = *((int64_t*)pop(&(frame->operandStack))->value);
-	int64_t elem2 = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem2l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1, d2;
 	memcpy(&d1, &elem1, sizeof(int64_t));
 	memcpy(&d2, &elem2, sizeof(int64_t));
@@ -270,7 +310,9 @@ void i_ineg(Frame* frame){
 }
 
 void i_lneg(Frame* frame){
-	int64_t elem = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem = (((int64_t)elem1h) << 32) | elem1l;
 	int64_t nelem = ~elem;
 	uint64_t result;
 	memcpy(&result, &nelem, sizeof(uint64_t));
@@ -293,7 +335,9 @@ void i_fneg(Frame* frame){
 }
 
 void i_dneg(Frame* frame){
-	int64_t elem = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem = (((int64_t)elem1h) << 32) | elem1l;
 	double d;
 	memcpy(&d, &elem, sizeof(int64_t));
 	double nelem = d*(-1);
@@ -318,7 +362,9 @@ void i_ishl(Frame* frame){
 }
 
 void i_lshl(Frame* frame){
-	int64_t elem = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem = (((int64_t)elem1h) << 32) | elem1l;
 	uint64_t shift = *((uint64_t*)pop(&(frame->operandStack))->value);
 	shift &= 0x1F;
 	elem = (elem << shift);
@@ -343,7 +389,9 @@ void i_ishr(Frame* frame){
 }
 
 void i_lshr(Frame* frame){
-	int64_t elem = *((int64_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1h = *((int32_t*)pop(&(frame->operandStack))->value);
+	int32_t elem1l = *((int32_t*)pop(&(frame->operandStack))->value);
+	int64_t elem = (((int64_t)elem1h) << 32) | elem1l;
 	uint64_t shift = *((uint64_t*)pop(&(frame->operandStack))->value);
 	shift &= 0x1F;
 	elem = (elem >> shift);
@@ -366,8 +414,10 @@ void i_iushr(Frame* frame){
 }
 
 void i_lushr(Frame* frame){
-	uint64_t elem = *((uint64_t*)pop(&(frame->operandStack))->value);
-	uint64_t shift = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t elemh = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t eleml = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint64_t elem = (((uint64_t)elemh) << 32) | eleml;
+	uint32_t shift = *((uint32_t*)pop(&(frame->operandStack))->value);
 	shift &= 0x1F;
 	elem = (elem >> shift);
 
@@ -386,8 +436,12 @@ void i_iand(Frame* frame){
 }
 
 void i_land(Frame* frame){
-	uint64_t elem1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-	uint64_t elem2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint64_t elem1 = (((uint64_t)elem1h) << 32) | elem1l;
+	uint64_t elem2 = (((uint64_t)elem2h) << 32) | elem2l;
 	uint64_t result = (elem1 & elem2);
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
@@ -405,8 +459,12 @@ void i_ior(Frame* frame){
 }
 
 void i_lor(Frame* frame){
-	uint64_t elem1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-	uint64_t elem2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint64_t elem1 = (((uint64_t)elem1h) << 32) | elem1l;
+	uint64_t elem2 = (((uint64_t)elem2h) << 32) | elem2l;
 	uint64_t result = (elem1 | elem2);
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
@@ -424,8 +482,12 @@ void i_ixor(Frame* frame){
 }
 
 void i_lxor(Frame* frame){
-	uint64_t elem1 = *((uint64_t*)pop(&(frame->operandStack))->value);
-	uint64_t elem2 = *((uint64_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem1l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2h = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint32_t elem2l = *((uint32_t*)pop(&(frame->operandStack))->value);
+	uint64_t elem1 = (((uint64_t)elem1h) << 32) | elem1l;
+	uint64_t elem2 = (((uint64_t)elem2h) << 32) | elem2l;
 	uint64_t result = (elem1 ^ elem2);
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);

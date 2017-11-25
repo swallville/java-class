@@ -3,14 +3,15 @@
 
 void i_pop(Frame* frame)
 {
-    *((uint32_t*)pop(&(frame->operandStack))->value);
+    (uint32_t*)pop(&(frame->operandStack));
 
   return;
 }
 
 void i_pop2(Frame* frame)
 {
-    *((uint64_t*)pop(&(frame->operandStack))->value);
+    (uint32_t*)pop(&(frame->operandStack));
+    (uint32_t*)pop(&(frame->operandStack));
 
   return;
 }
@@ -80,7 +81,7 @@ void i_dup2_x2(Frame* frame)
 {
     uint32_t value1 =  *((uint32_t*)pop(&(frame->operandStack))->value);
     uint32_t value2 =  *((uint32_t*)pop(&(frame->operandStack))->value);
-    uint32_t value3 = *((uint32_t*)pop(&(frame->operandStack))->value);
+    uint32_t value3 =  *((uint32_t*)pop(&(frame->operandStack))->value);
     uint32_t value4 =  *((uint32_t*)pop(&(frame->operandStack))->value);
     push(&value4,&(frame->operandStack));
     push(&value3,&(frame->operandStack));
@@ -88,8 +89,6 @@ void i_dup2_x2(Frame* frame)
     push(&value1,&(frame->operandStack));
     push(&value4,&(frame->operandStack));
     push(&value3,&(frame->operandStack));
-
-
 
   return;
 }
