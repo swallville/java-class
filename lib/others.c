@@ -118,12 +118,12 @@ void i_ret(Frame* frame, uint8_t index)
     return;
 }
 
-void i_tableswitch(Frame *frame, uint32_t enderecotable, int32_t high, int32_t low, int32_t defaultbyte, int32_t *tableswitch)
+void i_tableswitch(Frame *frame)
 {
   return;
 }
 
-void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table)
+void i_lookupswitch(Frame * frame)
 {
   
   return;
