@@ -364,7 +364,7 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
 void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2)
 {
     uint16_t index, tipoIndex, nameIndex, fieldIndex, nomeClasseIndex;
-    uint64_t valor;
+    uint32_t valor;
     char *tipo, *name, *nomeClasse, *nome;
     Class *classe;
     staticField *field;
@@ -383,7 +383,7 @@ void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
 
     classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
-    valor = (uint64_t) pop(&(frame->operandStack));
+    valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
     {
@@ -433,7 +433,7 @@ void i_getfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     tipo = getUtf8FromConstantPool(tipoIndex, frame->runtimeConstantPool);
     name = getUtf8FromConstantPool(nameIndex, frame->runtimeConstantPool);
 
-    obj = (void *) (long) pop(&(frame->operandStack));
+    obj =  (Objeto *) pop(&(frame->operandStack))->value;
 
     for (fieldIndex = 0; fieldIndex < obj->tamanhotipoField; fieldIndex++)
     {
@@ -457,7 +457,7 @@ void i_getfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 {
     uint16_t index, tipoIndex, nameIndex, fieldIndex;
-    uint64_t valor;
+    uint32_t valor;
     char *tipo, *name, *nome;
     Objeto *obj;
 
@@ -470,8 +470,8 @@ void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     tipo = getUtf8FromConstantPool(tipoIndex, frame->runtimeConstantPool);
     name = getUtf8FromConstantPool(nameIndex, frame->runtimeConstantPool);
 
-    valor = (uint64_t) pop(&(frame->operandStack));
-    obj = (void *) (long) pop(&(frame->operandStack));
+    valor = *((uint32_t *) pop(&(frame->operandStack))->value);
+    obj = (Objeto *) pop(&(frame->operandStack));
 
     for (fieldIndex = 0; fieldIndex < obj->classe->fields_count; fieldIndex++)
     {
@@ -495,8 +495,7 @@ void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
 void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0;
-    uint32_t valor32 = 0, *argumentos = NULL;
-    uint64_t valor64 = 0;
+    uint32_t valor = 0, *argumentos = NULL;
     char *nomeClasse = NULL, *nomeMetodo = NULL, *metodoDesc = NULL, *nome = NULL, *nomeDesc = NULL;
     float valorF = 0;
     int i = 0;
@@ -506,6 +505,7 @@ void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
     classIndex = frame->runtimeConstantPool[index - 1].methodRef_const.class_index - 1;
     classIndex = frame->runtimeConstantPool[classIndex].class_const.name_index - 1;
     nomeClasse = getUtf8FromConstantPool(classIndex, frame->runtimeConstantPool);
+    
     descriptorIndex = frame->runtimeConstantPool[index - 1].methodRef_const.nameAndType_index - 1;
     metodoIndex = frame->runtimeConstantPool[descriptorIndex].nameAndType_const.name_index - 1;
     descriptorIndex = frame->runtimeConstantPool[descriptorIndex].nameAndType_const.descriptor_index - 1;
@@ -517,20 +517,18 @@ void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
         //Long
         if (strstr(metodoDesc, "J") != NULL)
         {
-            valor64 = (uint64_t) pop(&(frame->operandStack));
+            valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
-            int64_t value = valor64;
-
-            printf("%lld", value);
+            printf("%lld", (long long) valor);
         }
         //Double
         else if (strstr(metodoDesc, "D") != NULL)
         {
-            valor64 = (uint64_t) pop(&(frame->operandStack));
+            valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
             double value;
 
-            memcpy(&value, &valor64, sizeof(uint64_t));
+            memcpy(&value, &valor, sizeof(uint64_t));
             printf("%f", value);
 
         }
@@ -548,45 +546,45 @@ void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
             //Array
             if (strstr(metodoDesc, "[C") != NULL)
             {
-                tArray *array1 = (void*) (long) pop(&(frame->operandStack));
+                tArray *array1 = (tArray *) pop(&(frame->operandStack))->value;
 
                 for (i = 0; i < array1->tamanho1; i++)
                     printf("%c", array1->info.tipoChar[i]);
             }
             //Char
             else
-                printf("%c", (int) (long) pop(&(frame->operandStack)));
+                printf("%c", *((int *) pop(&(frame->operandStack))->value));
         }
         //Inteiro
         else if (strstr(metodoDesc, "I") != NULL)
-            printf("%d", (int32_t) (long) pop(&(frame->operandStack)));
+            printf("%d", *((int32_t *) pop(&(frame->operandStack))->value));
         //Float
         else if (strstr(metodoDesc, "F") != NULL)
         {
-            valor32 = (uint32_t) (long) pop(&(frame->operandStack));
-            memcpy(&valorF, &valor32, sizeof(uint32_t));
+            valor = *((uint32_t *) pop(&(frame->operandStack))->value);
+            memcpy(&valorF, &valor, sizeof(uint32_t));
             printf("%f", valorF);
 
         }
         //String
         else if (strstr(metodoDesc, "Ljava/lang/String") != NULL)
         {
-            valor32 = (uint32_t) (long) pop(&(frame->operandStack));
+            valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
-            if (valor32 != 0)
+            if (valor != 0)
             {
-                char *cPointer = getUtf8FromConstantPool((uint16_t) valor32 - 1, frame->currentClass->constant_pool);
+                char *cPointer = getUtf8FromConstantPool((uint16_t) valor - 1, frame->currentClass->constant_pool);
                 printf("%s", cPointer);
             }
             else
-                printf("%s", (char *) (long) valor32);
+                printf("%s", (char *) (long) valor);
         }
         //Object
         else if (strstr(metodoDesc, "Ljava/lang/Object") != NULL)
         {
-            valor32 = (uint32_t) (long) pop(&(frame->operandStack));
+            valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
-            void *pPointer = (void*) (long) valor32;
+            void *pPointer = (void*) (long) valor;
             printf("%p",pPointer);
         }
 
@@ -635,7 +633,7 @@ void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
         argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (numparam + 1));
 
         for (i = numparam; i >= 0; i--)
-            argumentos[i] = (uint32_t) (long) pop(&(frame->operandStack));
+            argumentos[i] = *((uint32_t *) pop(&(frame->operandStack))->value);
 
         nomeMetodo = getUtf8FromConstantPool(metodoIndex, frame->runtimeConstantPool);
 
@@ -665,7 +663,7 @@ void i_invokevirtual(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
             }
             else
             {
-                Frame *frame1 = (Frame *) pop(&pilhaDeFrames);
+                Frame *frame1 = (Frame *) pop(&pilhaDeFrames)->value;
 
                 for (int j = numparam; j >= 0; j--)
                     frame1->localVariables[j] = argumentos[j];
@@ -745,7 +743,7 @@ void i_invokespecial(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
     argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (numParam + 1));
 
     for (i = numParam; i >= 0; i--)
-        argumentos[i] = (uint32_t) (long) pop(&(frame->operandStack));
+        argumentos[i] = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     for(i = 0; i < classe->methods_count; i++)
     {
@@ -771,7 +769,7 @@ void i_invokespecial(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCl
     }
     else
     {
-        Frame *frame1 = (Frame *) pop(&pilhaDeFrames);
+        Frame *frame1 = (Frame *) pop(&pilhaDeFrames)->value;
 
         for (int j = numParam; j >= 0; j--)
             frame1->localVariables[j] = argumentos[j];
@@ -831,7 +829,7 @@ void i_invokestatic(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCla
     argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * numParam);
 
     for (i = (numParam - 1); i >= 0; i--)
-        argumentos[i] = (uint32_t) (long) pop(&(frame->operandStack));
+        argumentos[i] = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     nomeMetodo = getUtf8FromConstantPool(metodoIndex, frame->runtimeConstantPool);
 
@@ -861,7 +859,7 @@ void i_invokestatic(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDeCla
         }
         else
         {
-            Frame *frame1 = (Frame *) pop(&pilhaDeFrames);
+            Frame *frame1 = (Frame *) pop(&pilhaDeFrames)->value;
 
             for (int j = (numParam - 1); j >= 0; j--)
                 frame1->localVariables[j] = argumentos[j];
@@ -900,7 +898,7 @@ void i_invokeinterface(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDe
     obj->classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
     for (i = contagem; i >= 0; i--)
-        argumentos[i] = (uint32_t) (long) pop(&frame->operandStack);
+        argumentos[i] = *((uint32_t *) pop(&frame->operandStack)->value);
 
     index = frame->runtimeConstantPool[index - 1].interfaceMethodRef_const.nameAndType_index - 1;
     descriptorIndex = frame->runtimeConstantPool[index].nameAndType_const.descriptor_index - 1;
@@ -929,7 +927,7 @@ void i_invokeinterface(Frame *frame, Stack *pilhaDeFrames, ListaClasses *listaDe
 
     if (i != obj->classe->methods_count)
     {
-        Frame *frame1 = (void *) (long) pop(&pilhaDeFrames);
+        Frame *frame1 = (Frame *) pop(&pilhaDeFrames)->value;
 
         for (int j = contagem; j >= 0; j--)
             frame1->localVariables[j] = argumentos[j];
@@ -1001,7 +999,7 @@ void i_newarray(Frame *frame, uint8_t aType)
     uint32_t valor, referencia;
 
     array = (tArray *) set_mem(sizeof(tArray));
-    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     switch (aType)
     {
@@ -1068,7 +1066,7 @@ void i_anewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     index = frame->runtimeConstantPool[index - 1].class_const.name_index - 1;
     tipo = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
 
-    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    valor = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     while (tipo[i] == '[')
         i++;
@@ -1130,7 +1128,7 @@ void i_arraylength(Frame *frame)
 {
     tArray *array;
 
-    array = (void *) (long) pop(&(frame->operandStack));
+    array = (tArray *) pop(&(frame->operandStack))->value;
     push(&(array->tamanho1), &(frame->operandStack));
 
     return;
@@ -1148,7 +1146,7 @@ void i_checkcast(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     Objeto *obj;
 
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
-    obj = (void *) (long) pop(&(frame->operandStack));
+    obj = (Objeto *) pop(&(frame->operandStack))->value;
 
     if(obj != NULL)
     {
@@ -1180,7 +1178,7 @@ void i_instanceof(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     Objeto *obj;
 
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
-    obj = (void *) (long) pop(&(frame->operandStack));
+    obj = (Objeto *) pop(&(frame->operandStack))->value;
 
     if(obj != NULL)
     {
@@ -1240,27 +1238,27 @@ void i_wide(Frame *frame, uint8_t opcode, uint8_t index1, uint8_t index2, uint8_
             push(&(frame->localVariables[indexConcat]), &(frame->operandStack));
             break;
         case 0x36:
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat] = value;
             break;
         case 0x37:
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat] = value;
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat + 1] = value;
             break;
         case 0x38:
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat] = value;
             break;
         case 0x39:
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat] = value;
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat + 1] = value;
             break;
         case 0x3a:
-            value = (uint32_t) (long) pop(&(frame->operandStack));
+            value = *((uint32_t *) pop(&(frame->operandStack))->value);
             frame->localVariables[indexConcat] = value;
             break;
         case 0x84:
@@ -1286,11 +1284,11 @@ void i_multianewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, uint
     index = ((frame->runtimeConstantPool[index - 1].class_const.name_index) - 1);
     tipo = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
 
-    valor = (uint32_t) (long) pop(&(frame->operandStack));
+    valor = *((uint32_t *) pop(&(frame->operandStack))->value);
     array->tamanho1 = valor;
 
     for (i = 1; i < dimensions; i++)
-        valor *= (uint32_t) (long) pop(&(frame->operandStack));
+        valor *= *((uint32_t *) pop(&(frame->operandStack))->value);
 
     i = 0;
 
@@ -1356,7 +1354,7 @@ void i_ifnull(Frame *frame, uint8_t branchByte1, uint8_t branchByte2)
 {
     uint32_t objRef = 0;
 
-    objRef = (uint32_t) (long) pop(&(frame->operandStack));
+    objRef = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     if (objRef == 0x0)
     {
@@ -1372,7 +1370,7 @@ void i_ifnonnull(Frame *frame, uint8_t branchByte1, uint8_t branchByte2)
 {
     uint32_t objRef;
 
-    objRef = (uint32_t) (long) pop(&(frame->operandStack));
+    objRef = *((uint32_t *) pop(&(frame->operandStack))->value);
 
     if (objRef != 0x0)
     {
