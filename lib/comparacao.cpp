@@ -19,15 +19,9 @@ void i_lcmp(Frame* frame)
   uint64_t long1 = (((uint64_t)long1h) << 32) | long1l;
   uint64_t long2 = (((uint64_t)long2h) << 32) | long2l;
 
-<<<<<<< HEAD
   if (long2 == long1){
   	frame->operandStack.push(result);
   } else if (long2 > long1){
-=======
-  if (long1 == long2){
-  	frame->operandStack.push(result);
-  } else if (long1 > long2){
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861
   	result = 1;
   	frame->operandStack.push(result);
   } else {
@@ -51,15 +45,9 @@ void i_fcmpl(Frame* frame)
   memcpy(&number1, &float1, sizeof(uint32_t));
   memcpy(&number2, &float2, sizeof(uint32_t));
 
-<<<<<<< HEAD
   if (number2 == number1){
   	frame->operandStack.push(result);
   } else if (number2 > number1){
-=======
-  if (number1 == number2){
-  	frame->operandStack.push(result);
-  } else if (number1 > number2){
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861
   	result = 1;
   	frame->operandStack.push(result);
   } else {
@@ -82,15 +70,9 @@ void i_fcmpg(Frame* frame)
   memcpy(&number1, &float1, sizeof(uint32_t));
   memcpy(&number2, &float2, sizeof(uint32_t));
 
-<<<<<<< HEAD
   if (number2 == number1){
   	frame->operandStack.push(result);
   } else if (number2 > number1){
-=======
-  if (number1 == number2){
-  	frame->operandStack.push(result);
-  } else if (number1 > number2){
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861
   	result = 1;
   	frame->operandStack.push(result);
   } else {
@@ -118,7 +100,6 @@ void i_dcmpl(Frame* frame)
 
   uint64_t double1 = (((uint64_t)double1h) << 32) | double1l;
   uint64_t double2 = (((uint64_t)double2h) << 32) | double2l;
-<<<<<<< HEAD
   //double number1, number2;
 
   //memcpy(&number1, &double1, sizeof(uint64_t));
@@ -130,16 +111,6 @@ void i_dcmpl(Frame* frame)
   if (double2 == double1){
   	frame->operandStack.push(result);
   } else if (double2 > double1){
-=======
-  double number1, number2;
-
-  memcpy(&number1, &double1, sizeof(uint64_t));
-  memcpy(&number2, &double2, sizeof(uint64_t));
-
-  if (number1 == number2){
-  	frame->operandStack.push(result);
-  } else if (number1 > number2){
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861
   	result = 1;
   	frame->operandStack.push(result);
   } else {
@@ -167,7 +138,7 @@ void i_dcmpg(Frame* frame)
 
   uint64_t double1 = (((uint64_t)double1h) << 32) | double1l;
   uint64_t double2 = (((uint64_t)double2h) << 32) | double2l;
-<<<<<<< HEAD
+
   //double number1, number2;
 
   //memcpy(&number1, &double1, sizeof(uint64_t));
@@ -176,16 +147,6 @@ void i_dcmpg(Frame* frame)
   if (double2 == double1){
   	frame->operandStack.push(result);
   } else if (double2 > double1){
-=======
-  double number1, number2;
-
-  memcpy(&number1, &double1, sizeof(uint64_t));
-  memcpy(&number2, &double2, sizeof(uint64_t));
-
-  if (number1 == number2){
-  	frame->operandStack.push(result);
-  } else if (number1 > number2){
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861
   	result = 1;
   	frame->operandStack.push(result);
   } else {

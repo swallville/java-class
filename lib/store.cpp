@@ -320,8 +320,6 @@ void i_dstore_1(Frame* frame)
     uint32_t valorl = frame->operandStack.top();
     frame->operandStack.pop();
 
-
-
     uint64_t valor = (uint64_t)decodeDouble(valorh, valorl);
     double d = (double) valor;
     uint64_t ud = d;
@@ -368,9 +366,11 @@ void i_dstore_3(Frame* frame)
     uint32_t valorl = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint64_t valor = (uint64_t)decodeDouble(valorh, valorl);
+    uint64_t valor = ((uint64_t)valorh) << 32 | valorl;
     double d = (double) valor;
     uint64_t ud = d;
+
+    //printf("valor em dstore_3 - %llu\n", ud);
 
     if (frame->localVariables.size() < 5) {
         frame->localVariables.resize(5);

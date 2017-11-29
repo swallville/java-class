@@ -15,14 +15,7 @@
 #include "all-instructions.hpp"
 
 void run(Class classe){
-<<<<<<< HEAD:lib/execute.cpp
-	Heap* heap = NULL;
-	std::stack<Frame*> frames_stack;
 	/*Method* initMethod = getMethod(&classe, (char*)"<init>");
-=======
-	/*Method* initMethod = getMethod(&class, "<init>");
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861:lib/execute.cpp
-
 	if (initMethod != NULL) {
 		heap = InicializaHeap();
 		(void)InsereListaDeClasses(&heap->listaDeClasses, &classe);
@@ -66,20 +59,9 @@ void run(Class classe){
 	Method* mainMethod = getMethod(&classe, (char*)"main");
 
 	if (mainMethod != NULL) {
-		heap = InicializaHeap();
-=======
-		executeMethod(initMethod, class);
-	}*/
-
-	Method* mainMethod = getMethod(&classe, (char*)"main");
-
-	if (mainMethod != NULL) {
 		Heap* heap = InicializaHeap();
 
-		//Stack* frames_stack = (Stack*) set_mem(sizeof(Stack));; /// Pilha de frames do programa
-
 		std::stack<Frame*> frames_stack;
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861:lib/execute.cpp
 
 		(void)InsereListaDeClasses(&heap->listaDeClasses, &classe);
 
@@ -88,14 +70,11 @@ void run(Class classe){
 		if (!frames_stack.empty()) {
 			executeMethod(mainMethod, classe, frames_stack);
 		}
-<<<<<<< HEAD:lib/execute.cpp
 
 		while (!frames_stack.empty())
 	  {
 	     frames_stack.pop();
 	  }
-=======
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861:lib/execute.cpp
 	}
 
 	printf("|==============================================================|\n");
@@ -940,11 +919,7 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 				i_dstore_1(frame);
 			}
 
-<<<<<<< HEAD:lib/execute.cpp
 			return readNoArgs(bytecode, offset, pc, opcode, (char*)"dstore_1");
-=======
-			return readNoArgs(bytecode, offset, pc, opcode, (char*)"dsotre_1");
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861:lib/execute.cpp
 		}
 
 		case DSTORE_2:
@@ -980,11 +955,7 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 				i_astore_1(frame);
 			}
 
-<<<<<<< HEAD:lib/execute.cpp
 			return readNoArgs(bytecode, offset, pc, opcode, (char*)"astore_1");
-=======
-			return readNoArgs(bytecode, offset, pc, opcode, (char*)"asotre_1");
->>>>>>> 10ff1a779176f4f5c0055bd6de39ba66a18fc861:lib/execute.cpp
 		}
 
 		case ASTORE_2:
