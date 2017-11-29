@@ -37,13 +37,13 @@ void i_ldc(Frame* frame,uint8_t index, ConstPool* constantPool)
       {
         dado = constantPool[index-1].float_const.bytes;
       	memcpy(&f, &dado, sizeof(uint32_t));
-  		  frame->operandStack.push(dado);
+  		frame->operandStack.push(dado);
         break;
       }
       case STRING:
       {
         dado = constantPool[index-1].string_const.string_index;
-    		frame->operandStack.push(dado);
+    	frame->operandStack.push(dado);
         break;
       }
     }
@@ -553,13 +553,13 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
     classIndex = frame->runtimeConstantPool[classIndex].class_const.name_index;
     nomeClasse = getUtf8FromConstantPool(classIndex, frame->runtimeConstantPool);
 
+    //printf("nomeClasse - %s\n", nomeClasse);
+
     descriptorIndex = frame->runtimeConstantPool[index - 1].methodRef_const.nameAndType_index - 1;
     metodoIndex = frame->runtimeConstantPool[descriptorIndex].nameAndType_const.name_index;
     descriptorIndex = frame->runtimeConstantPool[descriptorIndex].nameAndType_const.descriptor_index;
     nomeMetodo = getUtf8FromConstantPool(metodoIndex, frame->runtimeConstantPool);
     metodoDesc = getUtf8FromConstantPool(descriptorIndex, frame->runtimeConstantPool);
-
-    //printf("nomeClasse - %s\n", nomeClasse);
 
     //printf("metodoDesc - %s\n", metodoDesc);
     //printf("bytes - %s\n", bytes);
@@ -652,9 +652,11 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
             valor = frame->operandStack.top();
             frame->operandStack.pop();
 
+            //printf("valor - %d\n", valor);
+
             if (valor != 0)
             {
-                char *cPointer = getUtf8FromConstantPool((uint16_t) valor - 1, frame->currentClass->constant_pool);
+                char *cPointer = getUtf8FromConstantPool(valor, frame->runtimeConstantPool);
                 //printf("String\n");
                 printf("%s", cPointer);
             }
