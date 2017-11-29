@@ -1,7 +1,7 @@
 PROG_NAME = main
 PROG_OBJ = $(OBJ_DIR)/$(PROG_NAME).o
 PROG_BIN = $(BIN_DIR)/$(PROG_NAME)
-PROG_SRC = $(SRC_DIR)/$(PROG_NAME).c
+PROG_SRC = $(SRC_DIR)/$(PROG_NAME).cpp
 
 SRC_DIR = src
 INCLUDE_DIR = include
@@ -9,11 +9,11 @@ LIB_DIR = lib
 BIN_DIR = bin
 OBJ_DIR = $(SRC_DIR)/obj
 
-GCC = @gcc -g -Wall -std=c99 -I include
+GCC = @g++ -g -Wall -std=c++11 -I include
 RM = @rm -rf
 MKDIR = @mkdir -p
 
-LIBS_OBJS = $(patsubst $(INCLUDE_DIR)/%.h, $(OBJ_DIR)/%.o, $(wildcard $(INCLUDE_DIR)/*.h))
+LIBS_OBJS = $(patsubst $(INCLUDE_DIR)/%.hpp, $(OBJ_DIR)/%.o, $(wildcard $(INCLUDE_DIR)/*.hpp))
 
 all : clean $(PROG_BIN)
 
@@ -33,9 +33,9 @@ clean :
 
 $(OBJ_DIR)/%.o :
 	$(eval LIB_NAME := $(patsubst $(OBJ_DIR)/%.o, %, $@))
-	@echo -n Compiling library: $(LIB_NAME).h.....
+	@echo -n Compiling library: $(LIB_NAME).hpp.....
 	$(MKDIR) $(OBJ_DIR)
-	$(GCC) -o $(OBJ_DIR)/$(LIB_NAME).o -c $(LIB_DIR)/$(LIB_NAME).c
+	$(GCC) -o $(OBJ_DIR)/$(LIB_NAME).o -c $(LIB_DIR)/$(LIB_NAME).cpp
 	@echo Done
 
 $(PROG_OBJ) :
