@@ -10,7 +10,6 @@
 #define _HEAP_H
 
 #include <string.h>
-#include "heap.hpp"
 #include "class.hpp"
 #include "mem-manager.hpp"
 

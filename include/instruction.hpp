@@ -223,12 +223,18 @@ enum {
     GOTO_W = 0xC8,
     JSR_W = 0xC9
 } byteCodeEnum;
+
+typedef struct data{
+	uint32_t operand;   /**< Caso o operando seja um valor, é armazenado nesta variável */
+	void* reference;    /**< Caso o operando seja uma referência, é armazenado nesta variável */
+    int tag;            /**< Caso o operando seja uma referência, é armazenado o tipo da mesma nesta variável */
+} Data;
 // codeIndexRef would be the frame PC + 1 (the actual index into the CodeAttribute)
 typedef struct _frame {
-  std::vector<uint32_t> localVariables;
+  std::vector<Data> localVariables;
   //uint32_t *localVariables;
-  std::stack<uint32_t> operandStack;
-  std::stack<Objeto*> objectStack;
+  std::stack<Data> operandStack;
+  //std::stack<Objeto*> objectStack;
   //Stack *operandStack;
   //std::stack<struct _frame*> framesStack;
   //Stack *framesStack;

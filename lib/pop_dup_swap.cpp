@@ -18,21 +18,17 @@ void i_pop2(Frame* frame)
 
 void i_dup(Frame* frame)
 {
-    uint32_t valor = frame->operandStack.top();
-    frame->operandStack.pop();
-
-    frame->operandStack.push(valor);
-    frame->operandStack.push(valor);
+    frame->operandStack.push(frame->operandStack.top());
 
   return;
 }
 
 void i_dup_x1(Frame* frame)
 {
-    uint32_t valueTop = frame->operandStack.top();
+    Data valueTop = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valor = frame->operandStack.top();
+    Data valor = frame->operandStack.top();
     frame->operandStack.pop();
 
     frame->operandStack.push(valor);
@@ -44,13 +40,13 @@ void i_dup_x1(Frame* frame)
 
 void i_dup_x2(Frame* frame)
 {
-    uint32_t valueTop = frame->operandStack.top();
+    Data valueTop = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valor = frame->operandStack.top();
+    Data valor = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valuefloor = frame->operandStack.top();
+    Data valuefloor = frame->operandStack.top();
     frame->operandStack.pop();
 
     frame->operandStack.push(valuefloor);
@@ -63,10 +59,10 @@ void i_dup_x2(Frame* frame)
 
 void i_dup2(Frame* frame)
 {
-    uint32_t valueTop = frame->operandStack.top();
+    Data valueTop = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valor = frame->operandStack.top();
+    Data valor = frame->operandStack.top();
     frame->operandStack.pop();
 
     frame->operandStack.push(valor);
@@ -79,13 +75,13 @@ void i_dup2(Frame* frame)
 
 void i_dup2_x1(Frame* frame)
 {
-    uint32_t valueTop = frame->operandStack.top();
+    Data valueTop = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valor = frame->operandStack.top();
+    Data valor = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t valuefloor = frame->operandStack.top();
+    Data valuefloor = frame->operandStack.top();
     frame->operandStack.pop();
 
     frame->operandStack.push(valuefloor);
@@ -100,16 +96,16 @@ void i_dup2_x1(Frame* frame)
 
 void i_dup2_x2(Frame* frame)
 {
-    uint32_t value1 = frame->operandStack.top();
+    Data value1 = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t value2 = frame->operandStack.top();
+    Data value2 = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t value3 = frame->operandStack.top();
+    Data value3 = frame->operandStack.top();
     frame->operandStack.pop();
 
-    uint32_t value4 = frame->operandStack.top();
+    Data value4 = frame->operandStack.top();
     frame->operandStack.pop();
 
     frame->operandStack.push(value4);
@@ -124,10 +120,10 @@ void i_dup2_x2(Frame* frame)
 
 void i_swap(Frame* frame)
 {
-     uint32_t value1 =  frame->operandStack.top();
+     Data value1 =  frame->operandStack.top();
      frame->operandStack.pop();
 
-     uint32_t value2 =  frame->operandStack.top();
+     Data value2 =  frame->operandStack.top();
      frame->operandStack.pop();
 
      frame->operandStack.push(value1);

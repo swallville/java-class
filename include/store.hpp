@@ -9,6 +9,7 @@
 
 #include "instruction.hpp"
 #include "class.hpp"
+#include "others.hpp"
 #include <math.h>
 
 /**
