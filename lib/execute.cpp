@@ -121,9 +121,9 @@ void prepareMethod(Method* method, Class *classe, std::stack<Frame*> &framesStac
 
 	if (frame != NULL) {
 		framesStack.push(frame);
-
-		//printf("Frame created with codeIndexRef %d\n", framesStack.top()->codeIndexRef);
+		//printf("Frame created CURRENT STACK SIZE - %lu\n", frame->operandStack.size());
 	}
+	return;
 }
 
 void executeMethod(Method* method, Class classe, std::stack<Frame*> &frames_stack) {
@@ -147,6 +147,7 @@ void executeMethod(Method* method, Class classe, std::stack<Frame*> &frames_stac
 				//printf("Pushing back into stack\n");
       } else {
 				free_mem( (void**) &current);
+				current = NULL;
 				//printf("destroying the frame\n");
       }
 
@@ -177,9 +178,10 @@ int run_instr(uint8_t* code, int* offset, Frame *frame, std::stack<Frame*> &fram
 Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std::stack<Frame*> &framesStack) {
 	Instruction* runtime_instr = NULL;
 
-	uint32_t nuint32_t = 0;
-  uint16_t nu2 = 0;
-  uint8_t index = 0, index2 = 0, inc = 0, type = 0, constbyte1 = 0, constbyte2 = 0;
+	int32_t numint32 = 0;
+  int16_t numint16 = 0;
+	int8_t push_num = 0;
+  uint8_t index = 0, index2 = 0, /*inc = 0,*/ type = 0, constbyte1 = 0, constbyte2 = 0;
   uint8_t branch1 = 0, branch2 = 0, branch3 = 0, branch4 = 0, dimensions = 0;
   int contagem = 0, zero = 0, zero_1 = 0, zero_2 = 0, opcode1 = 0;
 
@@ -349,10 +351,11 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"bipush");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
-				nuint32_t = (uint32_t) (index);
+				push_num = runtime_instr->arguments[0];
+				//printf("value index at bipush call - %d\n", push_num);
+				numint32 = (int32_t) (push_num);
 
-				i_bipush(frame, &nuint32_t);
+				i_bipush(frame, &numint32);
 			}
 
 			return runtime_instr;
@@ -365,9 +368,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			if (mode == 0) {
 				index = runtime_instr->arguments[0];
 				index2 = runtime_instr->arguments[1];
-				nu2 = ((uint8_t)index << 8 | (uint8_t)index2);
+				numint16 = (int16_t)((uint8_t)index << 8 | (uint8_t)index2);
 
-				i_sipush(frame, &nu2);
+				i_sipush(frame, &numint16);
 			}
 
 			return runtime_instr;
@@ -419,9 +422,10 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"iload");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
+				//printf("push_num at iload call - %d\n", push_num);
 
-				i_iload(frame, index);
+				i_iload(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -432,9 +436,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"lload");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_lload(frame, index);
+				i_lload(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -445,9 +449,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"fload");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_fload(frame, index);
+				i_fload(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -458,9 +462,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"dload");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_dload(frame, index);
+				i_dload(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -471,9 +475,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"aload");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_aload(frame, index);
+				i_aload(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -736,9 +740,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"istore");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_istore(frame, index);
+				i_istore(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -749,9 +753,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"lstore");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_lstore(frame, index);
+				i_lstore(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -762,9 +766,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"fstore");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_fstore(frame, index);
+				i_fstore(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -775,9 +779,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"dstore");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_dstore(frame, index);
+				i_dstore(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -788,9 +792,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 			runtime_instr = readOneArg(bytecode, offset, pc, opcode, (char*)"astore");
 
 			if (mode == 0) {
-				index = runtime_instr->arguments[0];
+				push_num = runtime_instr->arguments[0];
 
-				i_astore(frame, index);
+				i_astore(frame, push_num);
 			}
 
 			return runtime_instr;
@@ -1458,9 +1462,9 @@ Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std:
 
 			if (mode == 0) {
 				index = runtime_instr->arguments[0];
-				inc = runtime_instr->arguments[1];
+				push_num = runtime_instr->arguments[1];
 
-				i_iinc(frame, index, inc);
+				i_iinc(frame, index, push_num);
 			}
 
 			return runtime_instr;

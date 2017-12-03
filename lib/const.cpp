@@ -4,10 +4,13 @@ void i_aconst_null(Frame* frame)
 {
 	uint32_t value = 0;
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -19,10 +22,13 @@ void i_iconst_m1(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 	//printf("value m1 - %d\n", frame->operandStack.top());
 
   return;
@@ -35,10 +41,13 @@ void i_iconst_0(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
 	//printf("value iconst_0 - %d\n", frame->operandStack.top());
 
@@ -52,10 +61,13 @@ void i_iconst_1(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -67,10 +79,13 @@ void i_iconst_2(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -82,10 +97,13 @@ void i_iconst_3(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -97,10 +115,13 @@ void i_iconst_4(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -112,10 +133,13 @@ void i_iconst_5(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&f,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -125,17 +149,23 @@ void i_lconst_0(Frame* frame)
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = low;
 
 	frame->operandStack.push((*data1));
 
+	free(data1);
+  data1 = NULL;
+
 	uint32_t high = (uint32_t)(result >> 32);
 
-	Data * data2 = (Data*) set_mem(sizeof(Data));
+	Data * data2 = (Data*) malloc(sizeof(Data));
 	data2->operand = high;
 
 	frame->operandStack.push((*data2));
+
+	free(data2);
+	data2 = NULL;
 
   return;
 }
@@ -146,17 +176,23 @@ void i_lconst_1(Frame* frame)
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = low;
 
 	frame->operandStack.push((*data1));
 
+	free(data1);
+  data1 = NULL;
+
 	uint32_t high = (uint32_t)(result >> 32);
 
-	Data * data2 = (Data*) set_mem(sizeof(Data));
+	Data * data2 = (Data*) malloc(sizeof(Data));
 	data2->operand = high;
 
 	frame->operandStack.push((*data2));
+
+	free(data2);
+	data2 = NULL;
 
   return;
 }
@@ -167,10 +203,13 @@ void i_fconst_0(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&value1,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -181,10 +220,13 @@ void i_fconst_1(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&value1,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -195,10 +237,13 @@ void i_fconst_2(Frame* frame)
 	uint32_t value;
 	memcpy(&value,&value1,sizeof(uint32_t));
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = value;
 
 	frame->operandStack.push((*data1));
+
+	free(data1);
+  data1 = NULL;
 
   return;
 }
@@ -211,17 +256,23 @@ void i_dconst_0(Frame* frame)
 
 	uint32_t low = (uint32_t)(value & 0x00000000FFFFFFFF);
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = low;
 
 	frame->operandStack.push((*data1));
 
+	free(data1);
+  data1 = NULL;
+
 	uint32_t high = (uint32_t)(value >> 32);
 
-	Data * data2 = (Data*) set_mem(sizeof(Data));
+	Data * data2 = (Data*) malloc(sizeof(Data));
 	data2->operand = high;
 
 	frame->operandStack.push((*data2));
+
+	free(data2);
+	data2 = NULL;
 
   return;
 }
@@ -234,17 +285,23 @@ void i_dconst_1(Frame* frame)
 
 	uint32_t low = (uint32_t)(value & 0x00000000FFFFFFFF);
 
-	Data * data1 = (Data*) set_mem(sizeof(Data));
+	Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = low;
 
 	frame->operandStack.push((*data1));
 
+	free(data1);
+  data1 = NULL;
+
 	uint32_t high = (uint32_t)(value >> 32);
 
-	Data * data2 = (Data*) set_mem(sizeof(Data));
+	Data * data2 = (Data*) malloc(sizeof(Data));
 	data2->operand = high;
 
 	frame->operandStack.push((*data2));
+
+	free(data2);
+	data2 = NULL;
 
   return;
 }

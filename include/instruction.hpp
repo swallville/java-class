@@ -225,7 +225,10 @@ enum {
 } byteCodeEnum;
 
 typedef struct data{
-	uint32_t operand;   /**< Caso o operando seja um valor, é armazenado nesta variável */
+	int32_t operand;    /**< Caso o operando seja um valor, é armazenado nesta variável */
+    double operand_double;
+    float operand_float;
+    long operand_long;
 	void* reference;    /**< Caso o operando seja uma referência, é armazenado nesta variável */
     int tag;            /**< Caso o operando seja uma referência, é armazenado o tipo da mesma nesta variável */
 } Data;

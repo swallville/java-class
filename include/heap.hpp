@@ -15,9 +15,13 @@
 
 typedef struct tipoarray
 {
-    uint8_t tag;
+    int8_t tag;
     uint32_t tamanho;
     uint32_t tamanho1;
+    void* reference_helper;
+    int array_pos;
+    int base_array_pos;
+    bool is_multarray;
     union
     {
         uint8_t *tipoBoolean;

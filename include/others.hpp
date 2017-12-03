@@ -34,20 +34,20 @@ enum {
 void i_nop();
 
 /**
-*   @fn void i_bipush(Frame*, uint32_t* n)
+*   @fn void i_bipush(Frame*, int32_t* n)
 *   @brief Empilha um byte, como inteiro.
 *	@param n Byte a ser empilhado.
 *   @return
 */
-void i_bipush(Frame*, uint32_t* n);
+void i_bipush(Frame*, int32_t* n);
 
 /**
-*   @fn void i_sipush(Frame*, uint16_t* n)
+*   @fn void i_sipush(Frame*, int16_t* n)
 *   @brief Empilha um short.
 *	@param n Short a ser empilhado.
 *   @return
 */
-void i_sipush(Frame*, uint16_t* n);
+void i_sipush(Frame*, int16_t* n);
 
 /**
 *   @fn void i_ldc(Frame*, uint8_t index)

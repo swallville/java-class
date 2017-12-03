@@ -300,13 +300,13 @@ void i_ixor(Frame*);
 void i_lxor(Frame*);
 
 /**
-*   @fn void i_iinc(Frame*, uint8_t, uint8_t)
+*   @fn void i_iinc(Frame*, uint8_t, int8_t)
 *   @brief Incrementa a variável local com o valor da variável inc.
 *   @param frame Frame corrente.
 *   @param index Indice do elemento a ser incrementado no vetor de variáveis locais.
 *   @param inc Incremento que será dado a variável local.
 *   @return
 */
-void i_iinc(Frame*, uint8_t, uint8_t);
+void i_iinc(Frame*, uint8_t, int8_t);
 
 #endif // LOGICO_ARITIMETICAS_H

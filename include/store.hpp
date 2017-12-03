@@ -13,40 +13,40 @@
 #include <math.h>
 
 /**
-*   @fn void i_istore(Frame*, uint8_t)
+*   @fn void i_istore(Frame*, int8_t)
 *   @brief Desempilha o inteiro e salva na variável indicada pelo index.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_istore(Frame*, uint8_t);
+void i_istore(Frame*, int8_t);
 
 /**
-*   @fn void i_istore(Frame*, uint8_t)
+*   @fn void i_istore(Frame*, int8_t)
 *   @brief Desempilha o long e salva na variável indicada pelo index.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do long no vetor de variáveis locais.
 *   @return
 */
-void i_lstore(Frame*, uint8_t);
+void i_lstore(Frame*, int8_t);
 
 /**
-*   @fn void i_fstore(Frame*, uint8_t)
+*   @fn void i_fstore(Frame*, int8_t)
 *   @brief Desempilha o float e salva na variável indicada pelo index.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do float no vetor de variáveis locais.
 *   @return
 */
-void i_fstore(Frame*, uint8_t);
+void i_fstore(Frame*, int8_t);
 
 /**
-*   @fn void i_dstore(Frame*, uint8_t)
+*   @fn void i_dstore(Frame*, int8_t)
 *   @brief Desempilha o double e salva na variável indicada pelo index.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do double no vetor de variáveis locais.
 *   @return
 */
-void i_dstore(Frame*, uint8_t);
+void i_dstore(Frame*, int8_t);
 
 /**
 *   @fn void i_astore(Frame*, uint8_t)
@@ -55,7 +55,7 @@ void i_dstore(Frame*, uint8_t);
 *   @param index Indice para localização do da referencia no vetor de variáveis locais.
 *   @return
 */
-void i_astore(Frame*, uint8_t);
+void i_astore(Frame*, int8_t);
 
 /**
 *   @fn void i_istore_0(Frame*)

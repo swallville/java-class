@@ -50,7 +50,7 @@ void sum4(int* bytecount){
      return ((uint32_t) byteArr[bytecount + 3] << 24) | ((uint32_t) byteArr[bytecount + 2] << 16) | ((uint32_t) byteArr[bytecount + 1] << 8) | (uint32_t) byteArr[bytecount + 0];
  }
 
- double decodeDouble (uint32_t high, uint32_t low){
+ double decodeDouble(uint32_t high, uint32_t low){
     double result;
     uint64_t valor;
     float value;
@@ -68,7 +68,7 @@ void sum4(int* bytecount){
     return result;
  }
 
- float decodeFloat (uint32_t bytes) {
+ float decodeFloat(uint32_t bytes) {
   	float result;
    float value;
 

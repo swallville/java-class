@@ -182,8 +182,8 @@ void i_if_acmpeq(Frame* frame, uint8_t index1, uint8_t index2)
 
   void* elem2 = frame->operandStack.top().reference;
   frame->operandStack.pop();
-
-  if ((&elem2) == (&elem1)) {
+  // we can maybe change to & instead of std::addressof()
+  if (std::addressof(elem2) == std::addressof(elem1)) {
     int16_t offset16 = (((int16_t)index1) << 8) + index2;
     //int32_t
     frame->codeIndexRef += (offset16 - 3);
@@ -198,8 +198,8 @@ void i_if_acmpne(Frame* frame, uint8_t index1, uint8_t index2)
 
   void* elem2 = frame->operandStack.top().reference;
   frame->operandStack.pop();
-
-  if ((&elem2) != (&elem1)) {
+  // we can maybe change to & instead of std::addressof()
+  if (std::addressof(elem2) != std::addressof(elem1)) {
     int16_t offset16 = (((int16_t)index1) << 8) + index2;
     //int32_t
     frame->codeIndexRef += (offset16 - 3);

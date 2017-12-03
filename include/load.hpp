@@ -13,49 +13,49 @@
 #include <math.h>
 
 /**
-*   @fn void i_iload(Frame*, uint8_t)
+*   @fn void i_iload(Frame*, int8_t)
 *   @brief Empilha o inteiro localizado no indice do vetor de variáveis locais.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_iload(Frame*, uint8_t);
+void i_iload(Frame*, int8_t);
 
 /**
-*   @fn void i_lload(Frame*, uint8_t)
+*   @fn void i_lload(Frame*, int8_t)
 *   @brief Empilha o long localizado no indice do vetor de variáveis locais.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_lload(Frame*, uint8_t);
+void i_lload(Frame*, int8_t);
 
 /**
-*   @fn void i_fload(Frame*, uint8_t)
+*   @fn void i_fload(Frame*, int8_t)
 *   @brief Empilha o float localizado no indice do vetor de variáveis locais.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_fload(Frame*, uint8_t);
+void i_fload(Frame*, int8_t);
 
 /**
-*   @fn void i_dload(Frame*, uint8_t)
+*   @fn void i_dload(Frame*, int8_t)
 *   @brief Empilha o double localizado no indice do vetor de variáveis locais.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_dload(Frame*, uint8_t);
+void i_dload(Frame*, int8_t);
 
 /**
-*   @fn void i_aload(Frame*, uint8_t)
+*   @fn void i_aload(Frame*, int8_t)
 *   @brief Empilha a referência ao objeto localizado no indice do vetor de variáveis locais.
 *   @param frame Frame corrente.
 *   @param index Indice para localização do inteiro no vetor de variáveis locais.
 *   @return
 */
-void i_aload(Frame*, uint8_t);
+void i_aload(Frame*, int8_t);
 
 /**
 *   @fn void i_iload_0(Frame*)
