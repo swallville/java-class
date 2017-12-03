@@ -112,7 +112,6 @@ void i_iload_1(Frame* frame)
   free(data1);
   data1 = NULL;
 
-
   return;
 }
 

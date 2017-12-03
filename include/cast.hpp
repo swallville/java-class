@@ -10,6 +10,8 @@
 #include "instruction.hpp"
 #include "class.hpp"
 #include <math.h>
+//#include <stdlib.h>
+//#include <string>
 /**
 *   @fn void i_i2l(Frame*)
 *   @brief Função que desempilha um inteiro, converte para long e empilha novamente.

@@ -696,13 +696,7 @@ void i_ineg(Frame* frame){
 	int32_t elem = (int32_t)frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-	int32_t nelem = ~elem;
-
-	if (nelem < 0) {
-		nelem++;
-	} else if (nelem > 0){
-		nelem--;
-	}
+	int32_t nelem = ((~elem) + 1);
 
 	uint32_t result;
 	memcpy(&result, &nelem, sizeof(uint32_t));
@@ -726,13 +720,8 @@ void i_lneg(Frame* frame){
   frame->operandStack.pop();
 
 	int64_t elem = (((int64_t)elem1h) << 32) | elem1l;
-	int64_t nelem = ~elem;
-
-	if (nelem < 0) {
-		nelem++;
-	} else if (nelem > 0){
-		nelem--;
-	}
+	int64_t nelem = ((~elem) + 1);
+	//printf("nelem at lneg - %lld\n", nelem);
 
 	uint64_t result;
 	memcpy(&result, &nelem, sizeof(uint64_t));

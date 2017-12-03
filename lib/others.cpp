@@ -26,7 +26,7 @@ void i_sipush(Frame* frame, int16_t* n)
 
     Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->operand = dado;
-    printf("value into sipush - %d\n", data1->operand);
+    //printf("value into sipush - %d\n", data1->operand);
 
 	frame->operandStack.push((*data1));
 
@@ -873,13 +873,60 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
                 tArray* array1 = (tArray*)frame->operandStack.top().reference;
                 frame->operandStack.pop();
                 //printf("Array of char\n");
+                // std::locale()   is the "global" locale
+                // std::locale("") is the locale configured through the locale system
+                // At startup, the global locale is set to std::locale("C"), so we need
+                // to change that if we want locale-aware functions to use the configured
+                // locale.
+                // This sets the global" locale to the default locale.
+                std::locale::global(std::locale(""));
+
+                // The various standard io streams were initialized before main started,
+                // so they are all configured with the default global locale, std::locale("C").
+                // If we want them to behave in a locale-aware manner, including using the
+                // hopefully correct encoding for output, we need to "imbue" each iostream
+                // with the default locale.
+                // We don't have to do all of these in this simple example,
+                // but it's probably a good idea.
+                std::cin.imbue(std::locale());
+                std::cout.imbue(std::locale());
+                std::cerr.imbue(std::locale());
+                std::wcin.imbue(std::locale());
+                std::wcout.imbue(std::locale());
+                std::wcerr.imbue(std::locale());
+
+                std::wcout << wchar_t(frame->operandStack.top().operand);
                 for (i = 0; i < array1->tamanho1; i++) {
-                    printf("%c", array1->info.tipoChar[i]);
+                    std::wcout << wchar_t(array1->info.tipoChar[i]);
+                    //printf("%c", array1->info.tipoChar[i]);
                 }
             }
             //Char
             else{
-                printf("%c", frame->operandStack.top().operand);
+                // std::locale()   is the "global" locale
+                // std::locale("") is the locale configured through the locale system
+                // At startup, the global locale is set to std::locale("C"), so we need
+                // to change that if we want locale-aware functions to use the configured
+                // locale.
+                // This sets the global" locale to the default locale.
+                std::locale::global(std::locale(""));
+
+                // The various standard io streams were initialized before main started,
+                // so they are all configured with the default global locale, std::locale("C").
+                // If we want them to behave in a locale-aware manner, including using the
+                // hopefully correct encoding for output, we need to "imbue" each iostream
+                // with the default locale.
+                // We don't have to do all of these in this simple example,
+                // but it's probably a good idea.
+                std::cin.imbue(std::locale());
+                std::cout.imbue(std::locale());
+                std::cerr.imbue(std::locale());
+                std::wcin.imbue(std::locale());
+                std::wcout.imbue(std::locale());
+                std::wcerr.imbue(std::locale());
+
+                std::wcout << wchar_t(frame->operandStack.top().operand);
+                //printf("%c", frame->operandStack.top().operand);
                 //printf("char\n");
                 frame->operandStack.pop();
             }

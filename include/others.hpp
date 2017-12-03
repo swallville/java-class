@@ -10,6 +10,8 @@
 #include <math.h>
 #include <string.h>
 #include <stack>
+#include <iostream>
+#include <locale>
 #include "instruction.hpp"
 #include "execute.hpp"
 #include "utils.hpp"

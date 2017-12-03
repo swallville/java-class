@@ -2,7 +2,7 @@
 
 void i_i2l(Frame* frame)
 {
-  uint64_t result = (uint64_t)frame->operandStack.top().operand;
+  int64_t result = (int64_t)frame->operandStack.top().operand;
   frame->operandStack.pop();
 
   uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
@@ -28,7 +28,7 @@ void i_i2l(Frame* frame)
 
 void i_i2f(Frame* frame)
 {
-  uint32_t i = frame->operandStack.top().operand;
+  int32_t i = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
   float f = (float) i;
@@ -48,15 +48,21 @@ void i_i2f(Frame* frame)
 
 void i_i2d(Frame* frame)
 {
-  uint64_t result = (uint64_t)frame->operandStack.top().operand;
+  int32_t temp = frame->operandStack.top().operand;
   frame->operandStack.pop();
+  //printf("value into i2d - %d\n", temp);
+
+  double dresult = (double)temp;
+  //printf("dresult into i2d - %f\n", dresult);
+
+  uint64_t result;
+	memcpy(&result, &dresult, sizeof(uint64_t));
+  //printf("result into i2d - %llu\n", result);
 
   uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
-  double d = (double) low;
-  uint32_t result2 = d;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = result2;
+  data1->operand = low;
 
   frame->operandStack.push((*data1));
 
@@ -64,13 +70,13 @@ void i_i2d(Frame* frame)
   data1 = NULL;
 
   uint32_t high = (uint32_t)(result >> 32);
-  double d2 = (double) high;
-  uint32_t result3 = d2;
 
   Data * data2 = (Data*) malloc(sizeof(Data));
-  data2->operand = result3;
+  data2->operand = high;
 
   frame->operandStack.push((*data2));
+
+  //printf("double value at i2d - %f\n", decodeDouble(high, low));
 
   free(data2);
   data2 = NULL;
@@ -86,7 +92,7 @@ void i_l2i(Frame* frame)
   uint32_t low_bytes = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-  uint32_t result = (((uint64_t)high_bytes) << 32) | low_bytes;
+  int32_t result = (((int64_t)high_bytes) << 32) | low_bytes;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
   data1->operand = result;
@@ -107,13 +113,16 @@ void i_l2f(Frame* frame)
   uint32_t resultl = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-  uint64_t resultd = (((uint64_t)resulth) << 32) | resultl;
+  int64_t resultd = (((int64_t)resulth) << 32) | resultl;
 
-  double d;
-  memcpy(&d, &resultd, sizeof(uint64_t));
-  float f = (float) d;
-  uint32_t result;
+  //printf("resultd at l2f - %lld\n", resultd);
+
+  float f = (float) resultd;
+  //printf("f at l2f - %f\n", f);
+
+  int32_t result;
   memcpy(&result, &f, sizeof(uint32_t));
+  //printf("result at l2f - %d\n", result);
 
   Data * data1 = (Data*) malloc(sizeof(Data));
   data1->operand = result;
@@ -166,15 +175,16 @@ void i_l2d(Frame* frame)
 
 void i_f2i(Frame* frame)
 {
-  uint32_t f = frame->operandStack.top().operand;
+  float f = frame->operandStack.top().operand_float;
   frame->operandStack.pop();
 
-  int i = (int) f;
-  uint32_t result;
-  memcpy(&result, &i, sizeof(uint32_t));
+  int32_t i = (int32_t)f;
+  //memcpy(&i, &f, sizeof(uint32_t));
+
+  //uint32_t result = i;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = result;
+  data1->operand = i;
 
   frame->operandStack.push((*data1));
 
@@ -351,115 +361,77 @@ void i_d2f(Frame* frame)
 
 void i_i2b(Frame* frame)
 {
-  uint32_t result = frame->operandStack.top().operand;
+  int32_t result = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-  uint8_t lowlowb = (uint8_t)(result & 0x00000000000FFFF);
-  uint32_t lowlow = lowlowb;
+  /*std::string str = std::to_string(result);
+
+  char * cstr = new char [str.length() + 1];
+  std::strcpy (cstr, str.c_str());
+
+  int32_t value = atoi(cstr);*/
+
+  char c = static_cast<char>(result);
+  int32_t value = c;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = lowlow;
+  data1->operand = value;
+
+  //printf("value at i2b - %d\n", value);
 
   frame->operandStack.push((*data1));
 
   free(data1);
   data1 = NULL;
 
-  result = (uint32_t)(result >> 8);
-  uint8_t lowb = (uint8_t)(result & 0x00000000000FFFF);
-  uint32_t low = lowb;
-
-  Data * data2 = (Data*) malloc(sizeof(Data));
-  data2->operand = low;
-
-  frame->operandStack.push((*data2));
-
-  free(data2);
-  data2 = NULL;
-
-  result = (uint32_t)(result >> 8);
-  uint8_t highlowb = (uint8_t)(result & 0x00000000000FFFF);
-  uint32_t highlow = highlowb;
-
-  Data * data3 = (Data*) malloc(sizeof(Data));
-  data3->operand = highlow;
-
-  frame->operandStack.push((*data3));
-
-  free(data3);
-  data3 = NULL;
-
-  result = (uint32_t)(result >> 8);
-  uint8_t highb = (uint8_t)(result & 0x000000000000FFFF);
-  uint32_t high = highb;
-
-  Data * data4 = (Data*) malloc(sizeof(Data));
-  data4->operand = high;
-
-  frame->operandStack.push((*data4));
-
-  free(data4);
-  data4 = NULL;
+  //delete[] cstr;
 
   return;
 }
 
 void i_i2c(Frame* frame)
 {
-  uint32_t result = frame->operandStack.top().operand;
+  int32_t result = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-  uint16_t lowc = (uint16_t)(result & 0x00000000FFFFFFFF);
-  uint32_t low = lowc;
+  //printf("result at i2c - %d\n", result);
+
+  wchar_t c = static_cast<wchar_t>(result);
+  //unsigned char c = static_cast<char>(result);
+  int32_t value = c;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = low;
+  data1->operand = value;
+
+  //printf("value at i2c - %c\n", value);
 
   frame->operandStack.push((*data1));
 
   free(data1);
   data1 = NULL;
 
-  uint16_t highc = (uint16_t)(result >> 16);
-  uint32_t high = highc;
-
-  Data * data2 = (Data*) malloc(sizeof(Data));
-  data2->operand = high;
-
-  frame->operandStack.push((*data2));
-
-  free(data2);
-  data2 = NULL;
+  //delete[] cstr;
 
   return;
 }
 
 void i_i2s(Frame* frame)
 {
-  uint32_t result = frame->operandStack.top().operand;
+  int32_t result = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-  uint16_t lowc = (uint16_t)(result & 0x00000000FFFFFFFF);
-  uint32_t low = lowc;
+  short temp = result;
+  int32_t value = temp;
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = low;
+  data1->operand = value;
 
   frame->operandStack.push((*data1));
 
+  //printf("value at i2s - %d\n", value);
+
   free(data1);
   data1 = NULL;
-
-  uint16_t highc = (uint16_t)(result >> 16);
-  uint32_t high = highc;
-
-  Data * data2 = (Data*) malloc(sizeof(Data));
-  data2->operand = high;
-
-  frame->operandStack.push((*data2));
-
-  free(data2);
-  data2 = NULL;
 
   return;
 }
