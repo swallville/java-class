@@ -501,7 +501,7 @@ void i_laload(Frame* frame)
     tArray* ref = (tArray*)frame->operandStack.top().reference;
     frame->operandStack.pop();
 
-    uint64_t* arrayRef = ref->info.tipoLong;
+    int64_t* arrayRef = ref->info.tipoLong;
 
     uint32_t low = (uint32_t)(arrayRef[index] & 0x00000000FFFFFFFF);
 
@@ -534,7 +534,7 @@ void i_faload(Frame* frame)
     tArray* ref = (tArray*)frame->operandStack.top().reference;
     frame->operandStack.pop();
 
-    uint32_t* arrayRef = ref->info.tipoFloat;
+    int32_t* arrayRef = ref->info.tipoFloat;
 
     Data * data1 = (Data*) malloc(sizeof(Data));
     data1->operand = arrayRef[index];
@@ -556,7 +556,7 @@ void i_daload(Frame* frame)
     tArray* ref = (tArray*)frame->operandStack.top().reference;
     frame->operandStack.pop();
 
-    uint64_t* arrayRef = ref->info.tipoDouble;
+    int64_t* arrayRef = ref->info.tipoDouble;
 
     uint32_t low = (uint32_t)(arrayRef[index] & 0x00000000FFFFFFFF);
 
@@ -598,7 +598,7 @@ void i_aaload(Frame* frame)
     {
       case TipoByte:
       {
-        uint8_t* arrayRef_byte = ref->info.tipoByte;
+        int8_t* arrayRef_byte = ref->info.tipoByte;
 
         data1->operand = arrayRef_byte[index];
         data1->reference = (void*)ref;
@@ -624,7 +624,7 @@ void i_aaload(Frame* frame)
       }
       case TipoDouble:
       {
-        uint64_t* arrayRef_double = ref->info.tipoDouble;
+        int64_t* arrayRef_double = ref->info.tipoDouble;
 
         data1->operand = arrayRef_double[index];
         data1->reference = (void*)ref;
@@ -637,7 +637,7 @@ void i_aaload(Frame* frame)
       }
       case TipoFloat:
       {
-        uint32_t* arrayRef_float = ref->info.tipoFloat;
+        int32_t* arrayRef_float = ref->info.tipoFloat;
 
         data1->operand = arrayRef_float[index];
         data1->reference = (void*)ref;
@@ -650,7 +650,7 @@ void i_aaload(Frame* frame)
       }
       case TipoInt:
       {
-        uint32_t* arrayRef_int = ref->info.tipoInt;
+        int32_t* arrayRef_int = ref->info.tipoInt;
 
         data1->operand = arrayRef_int[ref->array_pos];
 
@@ -673,7 +673,7 @@ void i_aaload(Frame* frame)
       }
       case TipoLong:
       {
-        uint64_t* arrayRef_long = ref->info.tipoLong;
+        int64_t* arrayRef_long = ref->info.tipoLong;
 
         data1->operand = arrayRef_long[index];
         data1->reference = (void*)ref;
@@ -686,7 +686,7 @@ void i_aaload(Frame* frame)
       }
       case TipoReferencia:
       {
-        uint32_t* arrayRef_ref = ref->info.tipoReferencia;
+        int32_t* arrayRef_ref = ref->info.tipoReferencia;
 
         data1->operand = arrayRef_ref[index];
         data1->reference = (void*)ref;
@@ -699,7 +699,7 @@ void i_aaload(Frame* frame)
       }
       case TipoShort:
       {
-        uint16_t* arrayRef_short = ref->info.tipoShort;
+        int16_t* arrayRef_short = ref->info.tipoShort;
 
         data1->operand = arrayRef_short[index];
         data1->reference = (void*)ref;
@@ -712,7 +712,7 @@ void i_aaload(Frame* frame)
       }
       case TipoBoolean:
       {
-        uint8_t* arrayRef_bool = ref->info.tipoBoolean;
+        int8_t* arrayRef_bool = ref->info.tipoBoolean;
 
         data1->operand = arrayRef_bool[index];
         data1->reference = (void*)ref;
@@ -725,7 +725,7 @@ void i_aaload(Frame* frame)
       }
       default:
       {
-        uint32_t* arrayRef_def = ref->info.tipoReferencia;
+        int32_t* arrayRef_def = ref->info.tipoReferencia;
 
         data1->operand = arrayRef_def[index];
         data1->reference = (void*)ref;
@@ -747,7 +747,7 @@ void i_baload(Frame* frame)
     tArray* ref = (tArray*)frame->operandStack.top().reference;
     frame->operandStack.pop();
 
-    uint8_t* arrayRef;
+    int8_t* arrayRef;
 
     if (ref->tag == TipoByte) {
       arrayRef = ref->info.tipoByte;
@@ -756,7 +756,8 @@ void i_baload(Frame* frame)
     }
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-    data1->operand = (uint32_t)arrayRef[index];
+    data1->operand = (int32_t)arrayRef[index];
+    //printf("value at baload - %d\n", data1->operand);
     data1->reference = (void*)ref;
 
     frame->operandStack.push((*data1));
@@ -778,7 +779,7 @@ void i_caload(Frame* frame)
     uint16_t* arrayRef = ref->info.tipoChar;
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-    data1->operand = (uint32_t)arrayRef[index];
+    data1->operand = (int32_t)arrayRef[index];
     data1->reference = (void*)ref;
 
     frame->operandStack.push((*data1));
@@ -797,10 +798,11 @@ void i_saload(Frame* frame)
     tArray* ref = (tArray*)frame->operandStack.top().reference;
     frame->operandStack.pop();
 
-    uint16_t* arrayRef = ref->info.tipoShort;
+    int16_t* arrayRef = ref->info.tipoShort;
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-    data1->operand = (uint32_t)arrayRef[index];
+    data1->operand = (int32_t)arrayRef[index];
+    //printf("value at saload - %d\n", data1->operand);
     data1->reference = (void*)ref;
 
     frame->operandStack.push((*data1));

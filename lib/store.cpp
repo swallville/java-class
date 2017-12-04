@@ -580,7 +580,7 @@ void i_dastore(Frame* frame)
 
 void i_aastore(Frame* frame)
 {
-    uint32_t valor = frame->operandStack.top().operand;
+    int32_t valor = frame->operandStack.top().operand;
     frame->operandStack.pop();
 
     uint32_t index = frame->operandStack.top().operand;
@@ -596,7 +596,7 @@ void i_aastore(Frame* frame)
 
 void i_bastore(Frame* frame)
 {
-    uint8_t valor = (uint8_t)frame->operandStack.top().operand;
+    int8_t valor = (uint8_t)frame->operandStack.top().operand;
     frame->operandStack.pop();
 
     uint32_t index = frame->operandStack.top().operand;
@@ -607,8 +607,11 @@ void i_bastore(Frame* frame)
 
     if (ref->tag == TipoByte) {
       ref->info.tipoByte[index] = valor;
+      //printf("value into bastore - %d\n", ref->info.tipoByte[index]);
+      //printf("real value into bastore - %d\n", valor);
     } else {
       ref->info.tipoBoolean[index] = valor;
+      //printf("value into bastore - %d\n", ref->info.tipoBoolean[index]);
     }
 
     return;
@@ -616,7 +619,7 @@ void i_bastore(Frame* frame)
 
 void i_castore(Frame* frame)
 {
-    uint16_t valor = (uint16_t)frame->operandStack.top().operand;
+    int16_t valor = (uint16_t)frame->operandStack.top().operand;
     frame->operandStack.pop();
 
     uint32_t index = frame->operandStack.top().operand;
@@ -632,8 +635,9 @@ void i_castore(Frame* frame)
 
 void i_sastore(Frame* frame)
 {
-    uint16_t valor = frame->operandStack.top().operand;
+    int16_t valor = frame->operandStack.top().operand;
     frame->operandStack.pop();
+    //printf("value into sastore - %d\n", valor);
 
     uint32_t index = frame->operandStack.top().operand;
     frame->operandStack.pop();

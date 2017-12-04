@@ -25,15 +25,15 @@ typedef struct tipoarray
     bool is_multarray;
     union
     {
-        uint8_t *tipoBoolean;
-        uint8_t *tipoByte;
+        int8_t *tipoBoolean;
+        int8_t *tipoByte;
         uint16_t *tipoChar;
-        uint16_t *tipoShort;
-        uint32_t *tipoReferencia;
-        uint32_t *tipoInt;
-        uint32_t *tipoFloat;
-        uint64_t *tipoLong;
-        uint64_t *tipoDouble;
+        int16_t *tipoShort;
+        int32_t *tipoReferencia;
+        int32_t *tipoInt;
+        int32_t *tipoFloat;
+        int64_t *tipoLong;
+        int64_t *tipoDouble;
     } info;
 } tArray;
 

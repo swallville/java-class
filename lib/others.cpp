@@ -1905,7 +1905,7 @@ void i_newarray(Frame *frame, uint8_t aType)
     {
     case TipoByte:
         array->tag = TipoByte;
-        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoByte = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     case TipoChar:
         array->tag = TipoChar;
@@ -1913,35 +1913,35 @@ void i_newarray(Frame *frame, uint8_t aType)
         break;
     case TipoDouble:
         array->tag = TipoDouble;
-        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoDouble = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case TipoFloat:
         array->tag = TipoFloat;
-        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoFloat = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case TipoInt:
         array->tag = TipoInt;
-        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoInt = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case TipoLong:
         array->tag = TipoLong;
-        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoLong = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case TipoReferencia:
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case TipoShort:
         array->tag = TipoShort;
-        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        array->info.tipoShort = (int16_t *) set_mem(sizeof(int16_t) * valor);
         break;
     case TipoBoolean:
         array->tag = TipoBoolean;
-        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoBoolean = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     default:
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     }
     array->array_pos = 0;
@@ -1988,7 +1988,7 @@ void i_anewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     {
     case 'B':
         array->tag = TipoByte;
-        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoByte = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     case 'C':
         array->tag = TipoChar;
@@ -1996,35 +1996,35 @@ void i_anewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
         break;
     case 'D':
         array->tag = TipoDouble;
-        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoDouble = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case 'F':
         array->tag = TipoFloat;
-        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoFloat = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'I':
         array->tag = TipoInt;
-        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoInt = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'J':
         array->tag = TipoLong;
-        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoLong = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case 'L':
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'S':
         array->tag = TipoShort;
-        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        array->info.tipoShort = (int16_t *) set_mem(sizeof(int16_t) * valor);
         break;
     case 'Z':
         array->tag = TipoBoolean;
-        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoBoolean = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     default:
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     }
     array->array_pos = 0;
@@ -2264,7 +2264,7 @@ void i_multianewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, uint
     {
     case 'B':
         array->tag = TipoByte;
-        array->info.tipoByte = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoByte = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     case 'C':
         array->tag = TipoChar;
@@ -2272,36 +2272,36 @@ void i_multianewarray(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, uint
         break;
     case 'D':
         array->tag = TipoDouble;
-        array->info.tipoDouble = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoDouble = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case 'F':
         array->tag = TipoFloat;
-        array->info.tipoFloat = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoFloat = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'I':
         array->tag = TipoInt;
         //printf("INT - TAG = %d\n", array->tag);
-        array->info.tipoInt = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoInt = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'J':
         array->tag = TipoLong;
-        array->info.tipoLong = (uint64_t *) set_mem(sizeof(uint64_t) * valor);
+        array->info.tipoLong = (int64_t *) set_mem(sizeof(int64_t) * valor);
         break;
     case 'L':
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     case 'S':
         array->tag = TipoShort;
-        array->info.tipoShort = (uint16_t *) set_mem(sizeof(uint16_t) * valor);
+        array->info.tipoShort = (int16_t *) set_mem(sizeof(int16_t) * valor);
         break;
     case 'Z':
         array->tag = TipoBoolean;
-        array->info.tipoBoolean = (uint8_t *) set_mem(sizeof(uint8_t) * valor);
+        array->info.tipoBoolean = (int8_t *) set_mem(sizeof(int8_t) * valor);
         break;
     default:
         array->tag = TipoReferencia;
-        array->info.tipoReferencia = (uint32_t *) set_mem(sizeof(uint32_t) * valor);
+        array->info.tipoReferencia = (int32_t *) set_mem(sizeof(int32_t) * valor);
         break;
     }
     array->array_pos = 0;
