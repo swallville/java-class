@@ -34,36 +34,54 @@ void run(Class classe){
 		desalocaHeap(heap);
 
 		heap = NULL;
-	}
+	}*/
 
-	initMethod = getMethod(&classe, (char*)"<clinit>");
+	Method* initMethod = getMethod(&classe, (char*)"<clinit>");
+	Frame* frame_init = NULL;
+	Heap* heap_init = NULL;
 
 	if(initMethod != NULL){
-<<<<<<< HEAD:lib/execute.cpp
-		prepareMethod(initMethod, &classe, frames_stack, &heap);
-		(void)InsereListaDeClasses(&heap->listaDeClasses, &classe);
+		heap_init = InicializaHeap();
 
-		if (!frames_stack.empty()) {
-			executeMethod(initMethod, classe, frames_stack);
+		std::stack<Frame*> frames_stack_init;
+
+		prepareMethod(initMethod, &classe, frames_stack_init, &heap_init);
+		heap_init->listaDeClasses.push_back(classe);
+		//printf("TOP MAGIC - 0x%.8X\n", heap_init->listaDeClasses.back().magic);
+
+		if (!frames_stack_init.empty()) {
+			executeMethod(initMethod, classe, frames_stack_init);
 		}
 
-		while (!frames_stack.empty())
+		if (!frames_stack_init.empty()) {
+			frame_init = frames_stack_init.top();
+		}
+
+		while (!frames_stack_init.empty())
 	  {
-	     frames_stack.pop();
+	     frames_stack_init.pop();
 	  }
 
-		desalocaHeap(heap);
-		heap = NULL;
-	}*/
+		//desalocaHeap(heap_init);
+		//heap_init = NULL;
+	}
 
 	Method* mainMethod = getMethod(&classe, (char*)"main");
 
 	if (mainMethod != NULL) {
-		Heap* heap = InicializaHeap();
+		Heap* heap = NULL;
 
 		std::stack<Frame*> frames_stack;
-
-		(void)InsereListaDeClasses(&heap->listaDeClasses, &classe);
+		if (initMethod != NULL) {
+			//frames_stack.push(frame_init);
+			//printf("Hello\n");
+			//printf("Value into lista MAIN - %d\n", heap_init->listaStaticField.front().valor.at(0));
+			heap = heap_init;
+			//printf("Hello2\n");
+		} else{
+			heap = InicializaHeap();
+			heap->listaDeClasses.push_back(classe);
+		}
 
 		prepareMethod(mainMethod, &classe, frames_stack, &heap);
 
@@ -75,6 +93,9 @@ void run(Class classe){
 	  {
 	     frames_stack.pop();
 	  }
+
+		desalocaHeap(heap);
+		heap = NULL;
 	}
 
 	printf("|==============================================================|\n");
@@ -146,8 +167,10 @@ void executeMethod(Method* method, Class classe, std::stack<Frame*> &frames_stac
 				frames_stack.push(current);
 				//printf("Pushing back into stack\n");
       } else {
-				free_mem( (void**) &current);
-				current = NULL;
+				if (current != NULL) {
+					free_mem( (void**) &current);
+					current = NULL;
+				}
 				//printf("destroying the frame\n");
       }
 
@@ -174,14 +197,13 @@ int run_instr(uint8_t* code, int* offset, Frame *frame, std::stack<Frame*> &fram
 	return 1;
 }
 
-
 Instruction* decode(uint8_t* bytecode, int* offset, int mode, Frame *frame, std::stack<Frame*> &framesStack) {
 	Instruction* runtime_instr = NULL;
 
 	int32_t numint32 = 0;
   int16_t numint16 = 0;
 	int8_t push_num = 0;
-  uint8_t index = 0, index2 = 0, /*inc = 0,*/ type = 0, constbyte1 = 0, constbyte2 = 0;
+  uint8_t index = 0, index2 = 0, type = 0, constbyte1 = 0, constbyte2 = 0;
   uint8_t branch1 = 0, branch2 = 0, branch3 = 0, branch4 = 0, dimensions = 0;
   int contagem = 0, zero = 0, zero_1 = 0, zero_2 = 0, opcode1 = 0;
 

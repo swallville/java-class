@@ -97,24 +97,24 @@ void i_fadd(Frame* frame){
 }
 
 void i_dadd(Frame* frame){
-	int32_t elem1h = (int32_t)frame->operandStack.top().operand;
+	int32_t elem1h = frame->operandStack.top().operand;
 	frame->operandStack.pop();
 
-	int32_t elem1l = (int32_t)frame->operandStack.top().operand;
+	int32_t elem1l = frame->operandStack.top().operand;
 	frame->operandStack.pop();
 
-	int32_t elem2h = (int32_t)frame->operandStack.top().operand;
+	int32_t elem2h = frame->operandStack.top().operand;
 	frame->operandStack.pop();
 
-	int32_t elem2l = (int32_t)frame->operandStack.top().operand;
+	int32_t elem2l = frame->operandStack.top().operand;
 	frame->operandStack.pop();
 
-	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
-	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
+	//int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
+	//int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
 	double d1 = decodeDouble(elem1h, elem1l);
 	double d2 = decodeDouble(elem2h, elem2l);
-	memcpy(&d1, &elem1, sizeof(int64_t));
-	memcpy(&d2, &elem2, sizeof(int64_t));
+	//memcpy(&d1, &elem1, sizeof(int64_t));
+	//memcpy(&d2, &elem2, sizeof(int64_t));
 	double dresult = d1 + d2;
 	//printf("double d1 at dadd - %f\n", d1);
 	//printf("double d2 at dadd - %f\n", d2);
@@ -135,6 +135,8 @@ void i_dadd(Frame* frame){
   data1 = NULL;
 
 	uint32_t high = (uint32_t)(result >> 32);
+
+	//printf("result 64t - %f\n",decodeDouble(high, low));
 
 	Data * data2 = (Data*) malloc(sizeof(Data));
 	data2->operand = high;
@@ -171,23 +173,30 @@ void i_isub(Frame* frame){
 }
 
 void i_lsub(Frame* frame){
-	int32_t elem1h = (int32_t)frame->operandStack.top().operand;
+	int32_t elem1h = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-	int32_t elem1l = (int32_t)frame->operandStack.top().operand;
+	int32_t elem1l = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-	int32_t elem2h = (int32_t)frame->operandStack.top().operand;
+	int32_t elem2h = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-	int32_t elem2l = (int32_t)frame->operandStack.top().operand;
+	int32_t elem2l = frame->operandStack.top().operand;
   frame->operandStack.pop();
 
-	int64_t elem1 = (((int64_t)elem1h) << 32) | elem1l;
-	int64_t elem2 = (((int64_t)elem2h) << 32) | elem2l;
-	int64_t sresult = elem2 - elem1;
+	uint64_t elem1 = (((uint64_t)elem1h) << 32) | elem1l;
+	uint64_t elem2 = (((uint64_t)elem2h) << 32) | elem2l;
+	long l1, l2;
+	memcpy(&l1, &elem1, sizeof(int64_t));
+	memcpy(&l2, &elem2, sizeof(int64_t));
+	long lresult = l2 - l1;
+	//printf("l1 result at lsub - %ld\n", l1);
+	//printf("l2 result at lsub - %ld\n", l2);
+	//printf("lresult result at lsub - %ld\n", lresult);
+
 	uint64_t result;
-	memcpy(&result, &sresult, sizeof(uint64_t));
+	memcpy(&result, &lresult, sizeof(uint64_t));
 
 	uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 

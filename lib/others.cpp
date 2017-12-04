@@ -205,7 +205,7 @@ void i_ldc2_w(Frame* frame, uint8_t index, uint8_t index2, ConstPool* constantPo
         //dado = (uint64_t)decodeDouble(constantPool[indexConcat-1].long_const.bytes.highBytes, constantPool[indexConcat-1].long_const.bytes.lowBytes);
 
         //printf("indexConcat - %d\n", indexConcat);
-        //printf("double - %llu\n", dado);
+        //printf("DOUBLE - %llu\n", dado);
 
         //empilhando 64 bits
         //uint32_t low = (uint32_t)(dado & 0x00000000FFFFFFFF);
@@ -322,9 +322,10 @@ void i_lookupswitch(Frame * frame, int32_t npairs, uint32_t enderecolookup, int3
 
 void i_ireturn(Frame *frame, std::stack<Frame*> &framesStack)
 {
-    Frame *frame1 = frame;
-    int32_t valor = (int32_t)frame->operandStack.top().operand;
+    Data data_i = frame->operandStack.top();
     frame->operandStack.pop();
+
+    Frame *frame1 = frame;
 
     //printf("value i_ireturn - %d\n", valor);
 
@@ -342,13 +343,13 @@ void i_ireturn(Frame *frame, std::stack<Frame*> &framesStack)
             //printf("codeIndexRef frame at top ireturn - %d\n", framesStack.top()->codeIndexRef);
         //}
 
-        Data * data1 = (Data*) malloc(sizeof(Data));
-    	data1->operand = valor;
+        //Data * data1 = (Data*) malloc(sizeof(Data));
+    	//data1->operand = valor;
 
-    	frame->operandStack.push((*data1));
+    	frame->operandStack.push(data_i);
 
-        free(data1);
-        data1 = NULL;
+        //free(data1);
+        //data1 = NULL;
 
         //delete data1;
         //data1 = NULL;
@@ -363,44 +364,46 @@ void i_ireturn(Frame *frame, std::stack<Frame*> &framesStack)
 
 void i_lreturn(Frame *frame, std::stack<Frame*> &framesStack)
 {
-    Frame *frame1 = frame;
-    uint64_t valor = (uint64_t)frame->operandStack.top().operand;
+    Data data_h = frame->operandStack.top();
     frame->operandStack.pop();
+
+    Data data_l = frame->operandStack.top();
+    frame->operandStack.pop();
+
+    Frame *frame1 = frame;
 
     if (!framesStack.empty())
     {
-      frame = framesStack.top();
-      framesStack.pop();
+        frame = framesStack.top();
+        framesStack.pop();
+        //empilha 64 bits
+        //uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
 
-      //empilha 64 bits
-      uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
+        //Data * data1 = (Data*) malloc(sizeof(Data));
+    	//data1->operand = low;
 
-      Data * data1 = (Data*) malloc(sizeof(Data));
-  	  data1->operand = low;
+    	frame->operandStack.push(data_l);
 
-  	  frame->operandStack.push((*data1));
+        //free(data1);
+        //data1 = NULL;
 
-      free(data1);
-      data1 = NULL;
+        //delete data1;
+        //data1 = NULL;
 
-      //delete data1;
-      //data1 = NULL;
+        //uint32_t high = (uint32_t)(valor >> 32);
 
-      uint32_t high = (uint32_t)(valor >> 32);
+        //Data * data2 = (Data*) malloc(sizeof(Data));
+    	//data2->operand = high;
 
-      Data * data2 = (Data*) malloc(sizeof(Data));
-  	  data2->operand = high;
+    	frame->operandStack.push(data_h);
 
-  	  frame->operandStack.push((*data2));
+        //free(data2);
+        //data2 = NULL;
 
-      free(data2);
-      data2 = NULL;
+        //delete data2;
+        //data2 = NULL;
 
-      //delete data2;
-      //data2 = NULL;
-
-      framesStack.push(frame);
-
+        framesStack.push(frame);
     }
 
     frame1->codeIndexRef = frame->codeAttribute->codeLength;
@@ -410,22 +413,23 @@ void i_lreturn(Frame *frame, std::stack<Frame*> &framesStack)
 
 void i_freturn(Frame *frame, std::stack<Frame*> &framesStack)
 {
-    Frame *frame1 = frame;
-    uint32_t valor = frame->operandStack.top().operand;
+    Data data_f = frame->operandStack.top();
     frame->operandStack.pop();
+
+    Frame *frame1 = frame;
 
     if (!framesStack.empty())
     {
       frame = framesStack.top();
       framesStack.pop();
 
-      Data * data1 = (Data*) malloc(sizeof(Data));
-  	  data1->operand = valor;
+      //Data * data1 = (Data*) malloc(sizeof(Data));
+  	  //data1->operand = valor;
 
-  	  frame->operandStack.push((*data1));
+  	  frame->operandStack.push(data_f);
 
-      free(data1);
-      data1 = NULL;
+      //free(data1);
+      //data1 = NULL;
 
       //delete data1;
       //data1 = NULL;
@@ -440,37 +444,41 @@ void i_freturn(Frame *frame, std::stack<Frame*> &framesStack)
 
 void i_dreturn(Frame* frame, std::stack<Frame*> &framesStack)
 {
-    Frame *frame1 = frame;
-    uint64_t valor = (uint64_t)frame->operandStack.top().operand;
+    Data data_h = frame->operandStack.top();
     frame->operandStack.pop();
+
+    Data data_l = frame->operandStack.top();
+    frame->operandStack.pop();
+
+    Frame *frame1 = frame;
 
     if (!framesStack.empty())
     {
       frame = framesStack.top();
       framesStack.pop();
       //empilha 64 bits
-      uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
+      //uint32_t low = (uint32_t)(valor & 0X00000000FFFFFFFF);
 
-      Data * data1 = (Data*) malloc(sizeof(Data));
-  	  data1->operand = low;
+      //Data * data1 = (Data*) malloc(sizeof(Data));
+  	  //data1->operand = low;
 
-  	  frame->operandStack.push((*data1));
+  	  frame->operandStack.push(data_l);
 
-      free(data1);
-      data1 = NULL;
+      //free(data1);
+      //data1 = NULL;
 
       //delete data1;
       //data1 = NULL;
 
-      uint32_t high = (uint32_t)(valor >> 32);
+      //uint32_t high = (uint32_t)(valor >> 32);
 
-      Data * data2 = (Data*) malloc(sizeof(Data));
-  	  data2->operand = high;
+      //Data * data2 = (Data*) malloc(sizeof(Data));
+  	  //data2->operand = high;
 
-  	  frame->operandStack.push((*data2));
+  	  frame->operandStack.push(data_h);
 
-      free(data2);
-      data2 = NULL;
+      //free(data2);
+      //data2 = NULL;
 
       //delete data2;
       //data2 = NULL;
@@ -485,22 +493,23 @@ void i_dreturn(Frame* frame, std::stack<Frame*> &framesStack)
 
 void i_areturn(Frame* frame, std::stack<Frame*> &framesStack)
 {
-    Frame *frame1 = frame;
-    uint32_t valor = frame->operandStack.top().operand;
+    Data data_a = frame->operandStack.top();
     frame->operandStack.pop();
+
+    Frame *frame1 = frame;
 
     if (!framesStack.empty())
     {
         frame = framesStack.top();
         framesStack.pop();
 
-        Data * data1 = (Data*) malloc(sizeof(Data));
-    	data1->operand = valor;
+        //Data * data1 = (Data*) malloc(sizeof(Data));
+    	//data1->operand = valor;
 
-        frame->operandStack.push((*data1));
+        frame->operandStack.push(data_a);
 
-        free(data1);
-        data1 = NULL;
+        //free(data1);
+        //data1 = NULL;
 
         //delete data1;
         //data1 = NULL;
@@ -519,13 +528,13 @@ void i_return(Frame* frame)
     return;
 }
 
-void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2)
+void i_getstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2)
 {
-    uint16_t index = 0, tipoIndex = 0, nameIndex = 0, fieldIndex = 0, nomeClasseIndex = 0;
+    uint16_t index = 0, tipoIndex = 0, nameIndex = 0, /*fieldIndex = 0,*/ nomeClasseIndex = 0;
     int32_t valor = 0;
-    char *tipo = NULL, *name = NULL, *nomeClasse = NULL, *nome = NULL;
-    Class *classe = NULL;
-    staticField *field = NULL;
+    char *tipo = NULL, *name = NULL, *nomeClasse = NULL/*, *nome = NULL*/;
+    Class* classe = NULL;
+    staticField* field = NULL;
     Data * data1 = (Data*) malloc(sizeof(Data));
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
@@ -540,14 +549,24 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     name = getUtf8FromConstantPool(nameIndex, frame->runtimeConstantPool);
     nomeClasse = getUtf8FromConstantPool(nomeClasseIndex, frame->runtimeConstantPool);
 
-    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
+
+    //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
     //printf("tipo - %s\n", tipo);
     //printf("name - %s\n", name);
     //printf("nomeClasse - %s\n", nomeClasse);
 
-    if(!classe)
+    if(classe == NULL)
     {
+        //printf("CLASSE NULL AT GETSTATIC\n");
         if(!strcmp(nomeClasse, "java/lang/System"))
         {
             //printf("value getstatic - %d\n", valor);
@@ -591,17 +610,45 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
         }
     }
 
-    field = recupera_field(nomeClasse, &listaDeFields);
+    for (size_t i = 0; i < listaDeFields.size(); i++) {
+        if (strstr(nomeClasse, listaDeFields.at(i).NomeClasse) != NULL) {
+            if (strstr(name, listaDeFields.at(i).Type_name) != NULL) {
+                field = &listaDeFields.at(i);
+                break;
+            }
+        }
+    }
 
-    if(!field)
+    //field = recupera_field(nomeClasse, &listaDeFields);
+
+    if(field != NULL)
     {
         //printf("value getstatic - %u\n", valor);
-        data1->operand = valor;
-        data1->reference = NULL;
-        frame->operandStack.push((*data1));
+        if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
+            //printf("field->fieldCount - %d\n", field->fieldCount);
+            data1->operand = field->valor.front();
+            data1->reference = NULL;
+            frame->operandStack.push((*data1));
 
-        free(data1);
-        data1 = NULL;
+            free(data1);
+            data1 = NULL;
+
+            Data * data2 = (Data*) malloc(sizeof(Data));
+
+            data2->operand = field->valor.back();
+            data2->reference = NULL;
+            frame->operandStack.push((*data2));
+
+            free(data2);
+            data2 = NULL;
+        } else {
+            data1->operand = field->valor.front();
+            data1->reference = NULL;
+            frame->operandStack.push((*data1));
+
+            free(data1);
+            data1 = NULL;
+        }
 
         //delete data1;
         //data1 = NULL;
@@ -613,28 +660,6 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
 
         return;
     }
-
-    for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
-    {
-        uint16_t nomeIndex = classe->fields[fieldIndex].name_index - 1;
-
-        nome = getUtf8FromConstantPool(nomeIndex, classe->constant_pool);
-
-        if (!strcmp(name, nome)){
-            free_mem((void **) &nome);
-            break;
-        }
-        free_mem((void **) &nome);
-    }
-
-    valor = field->valor[fieldIndex];
-    data1->operand = valor;
-    data1->reference = NULL;
-    frame->operandStack.push((*data1));
-
-    free(data1);
-    data1 = NULL;
-
     //delete data1;
     //data1 = NULL;
 
@@ -648,13 +673,16 @@ void i_getstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     return;
 }
 
-void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2)
+void i_putstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2)
 {
-    uint16_t index, tipoIndex, nameIndex, fieldIndex, nomeClasseIndex;
-    uint32_t valor;
-    char *tipo, *name, *nomeClasse, *nome;
-    Class *classe;
-    staticField *field;
+    uint16_t index, tipoIndex, nameIndex, /*fieldIndex,*/ nomeClasseIndex;
+    uint32_t valorh, valorl;
+    int32_t valor;
+    int32_t position;
+    int32_t count_int64 = 0;
+    char *tipo, *name, *nomeClasse/*, *nome*/;
+    Class* classe = NULL;
+    staticField* field = NULL;
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
 
@@ -668,38 +696,163 @@ void i_putstatic(Frame *frame, ListaStaticField *listaDeFields, ListaClasses *li
     name = getUtf8FromConstantPool(nameIndex, frame->runtimeConstantPool);
     nomeClasse = getUtf8FromConstantPool(nomeClasseIndex, frame->runtimeConstantPool);
 
-    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+    //printf("tipo - %s\n", tipo);
+    //printf("name - %s\n", name);
+    //printf("nomeClasse - %s\n", nomeClasse);
+    //printf("listaDeClasses.size() - %lu\n", listaDeClasses.size());
 
-    valor = frame->operandStack.top().operand;
-    frame->operandStack.pop();
+    //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
-    for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            //printf("HELLO\n");
+            classe = &listaDeClasses.at(i);
+            //printf("HELLO2\n");
+        }
+        free_mem( (void**) &thisClass );
+    }
+
+    if (classe == NULL) {
+        listaDeClasses.push_back((*frame->currentClass));
+        //InsereListaDeClasses(&listaDeClasses, frame->currentClass);
+    }
+
+    //Long
+    if (strstr(tipo, "J") != NULL)
     {
-        uint16_t nomeIndex = classe->fields[fieldIndex].name_index - 1;
+        valorh = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+
+        valorl = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+
+        count_int64++;
+
+        //uint64_t valor = (((uint64_t)valorh) << 32) | valorl;
+        //printf("LONG - %ld\n", decodeLong(valorh, valorl));
+    }
+    //Double
+    else if (strstr(tipo, "D") != NULL)
+    {
+        valorh = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+
+        valorl = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+
+        count_int64++;
+
+        //double d = decodeDouble(valorh, valorl);
+        //printf("Double - %f\n", d);
+    }
+    //Inteiro
+    else if (strstr(tipo, "I") != NULL){
+        //printf("Int\n");
+        valor = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+    }
+    //Float
+    else if (strstr(tipo, "F") != NULL)
+    {
+        valor = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+        //valorF = decodeFloat(valor);
+
+        //printf("Float - %f\n", decodeFloat(valor));
+    }
+    else {
+        valor = frame->operandStack.top().operand;
+        frame->operandStack.pop();
+    }
+
+    //printf("tipo - %s\n", tipo);
+    //printf("name - %s\n", name);
+    //printf("nomeClasse - %s\n", nomeClasse);
+    //printf("valor - %d\n", valor);
+
+    /*for (fieldIndex = 0; fieldIndex < classe->fields_count; fieldIndex++)
+    {
+        uint16_t nomeIndex = classe->fields[fieldIndex].name_index;
 
         nome = getUtf8FromConstantPool(nomeIndex, classe->constant_pool);
+        //printf("nome - %s\n", nome);
 
         if (!strcmp(name, nome)){
             free_mem((void **) &nome);
             break;
         }
         free_mem((void **) &nome);
+    }*/
+
+    for (size_t i = 0; i < listaDeFields.size(); i++) {
+        if (strstr(nomeClasse, listaDeFields.at(i).NomeClasse) != NULL) {
+            if (strstr(name, listaDeFields.at(i).Type_name) != NULL) {
+                field = &listaDeFields.at(i);
+                position = i;
+                break;
+            }
+        }
     }
 
-    field = recupera_field(nomeClasse, &listaDeFields);
+    //field = recupera_field(nomeClasse, &listaDeFields);
 
     if (field == NULL)
     {
+        //printf("field NULL\n");
         field = (staticField *) set_mem(sizeof(staticField));
         field->NomeClasse = (char *) set_mem(sizeof(char) * (strlen(nomeClasse) + 1));
         strcpy(field->NomeClasse, nomeClasse);
-        field->fieldCount = classe->fields_count;
-        field->valor = (uint64_t *) set_mem(sizeof(uint64_t) * field->fieldCount);
-        field->valor[fieldIndex] = valor;
-        InsereListaDeFields(&listaDeFields, field);
-    }
 
-    field->valor[fieldIndex] = valor;
+        field->Type_name = (char *) set_mem(sizeof(char) * (strlen(name) + 1));
+        strcpy(field->Type_name, name);
+        field->fieldCount = classe->fields_count;
+
+        //if (field->valor.size() < (field->fieldCount + count_int64)) {
+            //field->valor.resize(field->fieldCount + count_int64);
+        //}
+        if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
+            field->valor.push_back(valorl);
+            field->valor.push_back(valorh);
+            //field->valor.at(0) = valorl;
+            //field->valor.at(1) = valorh;
+            /*if (strstr(tipo, "J") != NULL) {
+                printf("Long - %llu\n", (((uint64_t)field->valor.at(1)) << 32) | field->valor.at(0));
+            }
+
+            if (strstr(tipo, "D") != NULL) {
+                printf("Double - %f\n", decodeDouble(field->valor.at(1), field->valor.at(0)));
+            }*/
+        } else {
+            field->valor.push_back(valor);
+            //printf("Value - %d\n", field->valor.at(0));
+        }
+        listaDeFields.push_back((*field));
+        //InsereListaDeFields(&listaDeFields, field);
+        /*if (strstr(tipo, "I") != NULL) {
+            printf("Value into lista - %d\n", listaDeFields.back().valor.at(0));
+        }*/
+        //free_mem((void **) &field);
+    } else {
+        //printf("field not NULL\n");
+
+        if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
+            field->valor.push_back(valorl);
+            field->valor.push_back(valorh);
+            /*if (strstr(tipo, "J") != NULL) {
+                printf("Long - %llu\n", (((uint64_t)valorh) << 32) | valorl);
+            }
+
+            if (strstr(tipo, "D") != NULL) {
+                printf("Double - %f\n", decodeDouble(valorh, valorl));
+            }*/
+        } else {
+            field->valor.push_back(valor);
+            //printf("Value - %d\n", valor);
+        }
+        listaDeFields.at(position) = (*field);
+    }
 
     free_mem((void **) &tipo);
     free_mem((void **) &name);
@@ -794,14 +947,16 @@ void i_putfield(Frame *frame, uint8_t indexByte1, uint8_t indexByte2)
     return;
 }
 
-void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0;
-    uint32_t valor = 0, *argumentos = NULL;
+    int32_t valor = 0, *argumentos = NULL;
     char *nomeClasse = NULL, *nomeMetodo = NULL, *metodoDesc = NULL, *nome = NULL, *nomeDesc = NULL;
     float valorF = 0;
     int i = 0;
-    Class *classe = NULL;
+    Class* classe = NULL;
+
+    std::stack<Data> helper;
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
     classIndex = frame->runtimeConstantPool[index - 1].methodRef_const.class_index - 1;
@@ -983,9 +1138,18 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
     }
     else
     {
-        uint32_t numparam = 0;
+        uint32_t numParam = 0;
 
-        classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+        for (size_t i = 0; i < listaDeClasses.size(); i++) {
+            char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+            //printf("thisClass - %s\n", thisClass);
+            if (strstr(nomeClasse, thisClass) != NULL) {
+                classe = &listaDeClasses.at(i);
+            }
+            free_mem( (void**) &thisClass );
+        }
+
+        //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
         if (classe == NULL)
         {
@@ -1004,8 +1168,9 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
             FILE* fp = openFile((char*)nomeArquivo, (char*)"rb");
 
             classe = getClassfile(fp);
-            listaDeClasses = InsereListaDeClasses(&listaDeClasses, classe);
-            frame->heap->listaDeClasses = listaDeClasses;
+            listaDeClasses.push_back((*classe));
+            //listaDeClasses = InsereListaDeClasses(&listaDeClasses, classe);
+            //frame->heap->listaDeClasses = listaDeClasses;
 
             free_mem((void **) &nomeArquivo);
             closeFile(&fp);
@@ -1018,27 +1183,38 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
         {
             if(bytes[i] == 'L')
             {
-                while(bytes[i] != ';') {
+                while(bytes[i] != ';'){
                     i++;
                 }
+                numParam++;
+                Data data_l = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_l);
+            }
+            else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
+                numParam++;
+                Data data_b = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_b);
+            }
+            else if((bytes[i] == 'D') || (bytes[i] == 'J')){
+                numParam += 2;
+                Data data_high = frame->operandStack.top();
+                frame->operandStack.pop();
 
-                numparam++;
-            }
-            else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z'))
-            {
-                numparam++;
-            }
-            else if((bytes[i] == 'D')||(bytes[i] == 'J'))
-            {
-                numparam += 2;
+                Data data_low = frame->operandStack.top();
+                frame->operandStack.pop();
+
+                helper.push(data_low);
+                helper.push(data_high);
             }
         }
 
-        argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (numparam + 1));
+        argumentos = (int32_t *) set_mem(sizeof(int32_t) * numParam);
 
-        for (i = numparam; i >= 0; i--) {
-            argumentos[i] = frame->operandStack.top().operand;
-            frame->operandStack.pop();
+        for (i = (numParam - 1); i >= 0; i--) {
+            argumentos[i] = helper.top().operand;
+            helper.pop();
         }
 
         nomeMetodo = getUtf8FromConstantPool(metodoIndex, frame->runtimeConstantPool);
@@ -1110,7 +1286,7 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
                 Frame *current = frame;
                 pilhaDeFrames.pop();
 
-                for (int j = numparam; j >= 0; j--)
+                for (int j = (numParam - 1); j >= 0; j--)
                 {
                     Data * data1 = (Data*) malloc(sizeof(Data));
                 	data1->operand = argumentos[j];
@@ -1127,8 +1303,9 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
                 executeMethod(&classe->methods[i], *(classe), pilhaDeFrames);
             }
         }
-        else
+        else{
             printf("metodo não encontrado");
+        }
     }
 
     //free_mem((void **) &nomeClasse);
@@ -1141,28 +1318,39 @@ void i_invokevirtual(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
     return;
 }
 
-void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     uint8_t *bytes = NULL;
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0, length = 0;
-    uint32_t numParam = 0, *argumentos = NULL;
+    int32_t numParam = 0, *argumentos = NULL;
     char *nomeClasse = NULL, *nomeMetodo = NULL, *nome, *nomeDesc, *metodoDesc;
     int i = 0;
     Class *classe = NULL;
+
+    std::stack<Data> helper;
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
     classIndex = frame->runtimeConstantPool[index - 1].methodRef_const.class_index - 1;
     classIndex = frame->runtimeConstantPool[classIndex].class_const.name_index ;
     nomeClasse = getUtf8FromConstantPool(classIndex, frame->runtimeConstantPool);
-    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
+    //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
     if (classe == NULL)
     {
         char path[] = "./etc/";
         char *nomeArquivo;
 
-        classe = (Class *) set_mem(sizeof(Class));
-        nomeArquivo = (char *) set_mem(sizeof(char) * (strlen(nomeClasse) + 13));
+        classe = (Class*) set_mem(sizeof(Class));
+        nomeArquivo = (char*) set_mem(sizeof(char) * (strlen(nomeClasse) + 13));
 
         strcpy(nomeArquivo, path);
         strcat(nomeArquivo, nomeClasse);
@@ -1173,8 +1361,9 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
         FILE* fp = openFile((char*)nomeArquivo, (char*)"rb");
 
         classe = getClassfile(fp);
-        listaDeClasses = InsereListaDeClasses(&listaDeClasses, classe);
-        frame->heap->listaDeClasses = listaDeClasses;
+        listaDeClasses.push_back((*classe));
+        //listaDeClasses = InsereListaDeClasses(&listaDeClasses, classe);
+        //frame->heap->listaDeClasses = listaDeClasses;
 
         free_mem((void **) &nomeArquivo);
         closeFile(&fp);
@@ -1212,22 +1401,38 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
     {
         if(bytes[i] == 'L')
         {
-            while(bytes[i] != ';')
+            while(bytes[i] != ';'){
                 i++;
-
+            }
             numParam++;
+            Data data_l = frame->operandStack.top();
+            frame->operandStack.pop();
+            helper.push(data_l);
         }
-        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z'))
+        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
             numParam++;
-        else if((bytes[i] == 'D') || (bytes[i] == 'J'))
+            Data data_b = frame->operandStack.top();
+            frame->operandStack.pop();
+            helper.push(data_b);
+        }
+        else if((bytes[i] == 'D') || (bytes[i] == 'J')){
             numParam += 2;
+            Data data_high = frame->operandStack.top();
+            frame->operandStack.pop();
+
+            Data data_low = frame->operandStack.top();
+            frame->operandStack.pop();
+
+            helper.push(data_low);
+            helper.push(data_high);
+        }
     }
 
-    argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (numParam + 1));
+    argumentos = (int32_t *) set_mem(sizeof(int32_t) * numParam);
 
-    for (i = numParam; i >= 0; i--){
-        argumentos[i] = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+    for (i = (numParam - 1); i >= 0; i--) {
+        argumentos[i] = helper.top().operand;
+        helper.pop();
     }
 
     for(i = 0; i < classe->methods_count; i++)
@@ -1293,7 +1498,7 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
         Frame *frame1 = pilhaDeFrames.top();
         pilhaDeFrames.pop();
 
-        for (int j = numParam; j >= 0; j--) {
+        for (int j = (numParam - 1); j >= 0; j--) {
             Data * data1 = (Data*) malloc(sizeof(Data));
             data1->operand = argumentos[j];
 
@@ -1319,7 +1524,7 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClass
     return;
 }
 
-void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
+void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, Heap *heap)
 {
     uint8_t *bytes = NULL;
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0, length = 0;
@@ -1328,13 +1533,21 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
     int i = 0;
     Class *classe = NULL;
 
+    std::stack<Data> helper;
+
     index = (uint32_t) indexByte1 << 8 | (uint32_t) indexByte2;
     classIndex = frame->runtimeConstantPool[index - 1].methodRef_const.class_index - 1;
     classIndex = frame->runtimeConstantPool[classIndex].class_const.name_index;
     nomeClasse = getUtf8FromConstantPool(classIndex, frame->runtimeConstantPool);
 
-
-    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
 
     descriptorIndex = frame->runtimeConstantPool[index - 1].methodRef_const.nameAndType_index - 1;
     metodoIndex = frame->runtimeConstantPool[descriptorIndex].nameAndType_const.name_index;
@@ -1356,24 +1569,38 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
     {
         if(bytes[i] == 'L')
         {
-            while(bytes[i] != ';')
+            while(bytes[i] != ';'){
                 i++;
-
+            }
             numParam++;
+            Data data_l = frame->operandStack.top();
+            frame->operandStack.pop();
+            helper.push(data_l);
         }
-        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z'))
+        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
             numParam++;
-        else if((bytes[i] == 'D') || (bytes[i] == 'J'))
+            Data data_b = frame->operandStack.top();
+            frame->operandStack.pop();
+            helper.push(data_b);
+        }
+        else if((bytes[i] == 'D') || (bytes[i] == 'J')){
             numParam += 2;
-    }
+            Data data_high = frame->operandStack.top();
+            frame->operandStack.pop();
 
-    //printf("numParam - %d\n", numParam);
+            Data data_low = frame->operandStack.top();
+            frame->operandStack.pop();
+
+            helper.push(data_low);
+            helper.push(data_high);
+        }
+    }
 
     argumentos = (int32_t *) set_mem(sizeof(int32_t) * numParam);
 
     for (i = (numParam - 1); i >= 0; i--) {
-        argumentos[i] = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+        argumentos[i] = helper.top().operand;
+        helper.pop();
     }
 
     nomeMetodo = getUtf8FromConstantPool(metodoIndex, frame->runtimeConstantPool);
@@ -1404,6 +1631,7 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
 
     if (i != classe->methods_count)
     {
+        //printf("HELLO\n");
         if (classe->methods[i].access_flags & ACC_NATIVE)
         {
             uint32_t zero32 = 0;
@@ -1411,8 +1639,9 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
 
             bytes = classe->constant_pool[classe->methods[i].descriptor_index - 1].utf8_const.bytes;
             length = classe->constant_pool[classe->methods[i].descriptor_index - 1].utf8_const.length;
-
+            //printf("bytes[length - 1] - %c\n", bytes[length - 1]);
             if(bytes[length - 1] == 'D' || bytes[length - 1] == 'J') {
+                //printf("isdouble or long\n");
                 uint32_t low = (uint32_t)(zero64 & 0x00000000FFFFFFFF);
 
                 Data * data1 = (Data*) malloc(sizeof(Data));
@@ -1422,15 +1651,11 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
 
                 free(data1);
                 data1 = NULL;
-                //delete data1;
-                //data1 = NULL;
 
                 uint32_t high = (uint32_t)(zero64 >> 32);
 
                 Data * data2 = (Data*) malloc(sizeof(Data));
             	data2->operand = high;
-                //delete data2;
-                //data2 = NULL;
 
             	frame->operandStack.push((*data2));
 
@@ -1439,9 +1664,6 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
             } else if(bytes[length - 1] != 'V') {
                 Data * data1 = (Data*) malloc(sizeof(Data));
             	data1->operand = zero32;
-
-                //delete data1;
-                //data1 = NULL;
 
             	frame->operandStack.push((*data1));
 
@@ -1455,15 +1677,12 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
             Frame* current = frame;
             Frame *frame1 = pilhaDeFrames.top();
             pilhaDeFrames.pop();
+            //printf("numParam - %d\n", numParam);
 
             for (int j = (numParam - 1); j >= 0; j--){
                 //printf("argumentos[%d] - %d\n", j, argumentos[j]);
                 Data * data1 = (Data*) malloc(sizeof(Data));
                 data1->operand = argumentos[j];
-
-                //delete data1;
-                //data1 = NULL;
-
                 frame1->localVariables.push_back((*data1));
 
                 free(data1);
@@ -1473,13 +1692,12 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
             pilhaDeFrames.push(current);
             pilhaDeFrames.push(frame1);
 
-            //printf("method executed - %d\n", classe->methods[i].name_index);
-            //printf("TOP OF FRAME CODEINDEXREF - %d\n", pilhaDeFrames.top()->codeIndexRef);
             executeMethod(&classe->methods[i], *(classe), pilhaDeFrames);
         }
     }
-    else
+    else {
         printf("metodo não encontrado");
+    }
 
     //free_mem((void **) &nomeClasse);
     //free_mem((void **) &nomeMetodo);
@@ -1491,13 +1709,14 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasse
     return;
 }
 
-void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t contagem, uint8_t zero, Heap *heap)
+void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t contagem, uint8_t zero, Heap *heap)
 {
     uint32_t *argumentos;
     uint16_t index = 0, classeIndex = 0, descriptorIndex = 0;
     char *nome = NULL, *nomeMetodo = NULL, *nomeClasse = NULL, *nomeDesc = NULL, *metodoDesc = NULL;
-    int i = 0;
-    Class *classe;
+    int j = 0;
+    int i;
+    Class *classe = NULL;
     Objeto *obj = (Objeto *) set_mem(sizeof(Objeto));
 
     argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (contagem + 1));
@@ -1505,11 +1724,20 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaCla
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
     classeIndex = index;
     nomeClasse = getUtf8FromConstantPool(classeIndex, frame->runtimeConstantPool);
-    obj->classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
-    for (i = contagem; i >= 0; i--)
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            obj->classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
+    //obj->classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+
+    for (j = contagem; j >= 0; j--)
     {
-        argumentos[i] = frame->operandStack.top().operand;
+        argumentos[j] = frame->operandStack.top().operand;
         frame->operandStack.pop();
     }
 
@@ -1523,7 +1751,16 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaCla
     metodoDesc = getUtf8FromConstantPool(descriptorIndex, frame->runtimeConstantPool);
     nomeMetodo = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
 
-    classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
+
+    //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
     for(i = 0; i < classe->methods_count; i++)
     {
@@ -1534,8 +1771,9 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaCla
         index = classe->methods[i].name_index - 1;
         nome = getUtf8FromConstantPool(index, classe->constant_pool);
 
-        if(!strcmp(nomeMetodo, nome) && !strcmp(metodoDesc, nomeDesc))
+        if(!strcmp(nomeMetodo, nome) && !strcmp(metodoDesc, nomeDesc)){
             break;
+        }
     }
     free_mem((void **) &nome);
     free_mem((void **) &nomeMetodo);
@@ -1567,8 +1805,9 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaCla
 
         executeMethod(&obj->classe->methods[i], *(obj->classe), pilhaDeFrames);
     }
-    else
+    else{
         printf("Metodo não encontrado");
+    }
 
     //free_mem((void **) &nome);
     //free_mem((void **) &nomeMetodo);
@@ -1580,24 +1819,31 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaCla
     return;
 }
 
-void i_invokedynamic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t zero_1, uint8_t zero_2, Heap *heap)
+void i_invokedynamic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t zero_1, uint8_t zero_2, Heap *heap)
 {
     return;
 }
 
-void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *listaDeClasses)
+void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, std::vector<Class> &listaDeClasses)
 {
     uint16_t index;
     char *nomeClasse;
-    Objeto *obj;
+    Objeto *obj = (Objeto*) set_mem(sizeof(Objeto));;
 
     index = (uint16_t) (indexByte1 << 8) | (uint16_t) (indexByte2);
     index = frame->runtimeConstantPool[index - 1].class_const.name_index;
 
     nomeClasse = getUtf8FromConstantPool(index, frame->runtimeConstantPool);
 
-    obj = (Objeto *) set_mem(sizeof(Objeto));
-    obj->classe = RecuperaClassePorNome(nomeClasse,&listaDeClasses);
+    for (size_t i = 0; i < listaDeClasses.size(); i++) {
+        char* thisClass = getUtf8FromConstantPool(listaDeClasses.at(i).constant_pool[listaDeClasses.at(i).thisClass - 1].class_const.name_index, listaDeClasses.at(i).constant_pool);
+        //printf("thisClass - %s\n", thisClass);
+        if (strstr(nomeClasse, thisClass) != NULL) {
+            obj->classe = &listaDeClasses.at(i);
+        }
+        free_mem( (void**) &thisClass );
+    }
+    //obj->classe = RecuperaClassePorNome(nomeClasse,&listaDeClasses);
 
     if (obj->classe == NULL)
     {
@@ -1615,15 +1861,16 @@ void i_new(Frame *frame, uint8_t indexByte1, uint8_t indexByte2, ListaClasses *l
         FILE* fp = openFile((char*)nomeArquivo, (char*)"rb");
 
         obj->classe = getClassfile(fp);
-        listaDeClasses = InsereListaDeClasses(&listaDeClasses, obj->classe);
-        frame->heap->listaDeClasses = listaDeClasses;
+        listaDeClasses.push_back((*obj->classe));
+        //listaDeClasses = InsereListaDeClasses(&listaDeClasses, obj->classe);
+        //frame->heap->listaDeClasses = listaDeClasses;
 
         free_mem((void **) &nomeArquivo);
         closeFile(&fp);
     }
 
     obj->tamanhotipoField = obj->classe->fields_count;
-    obj->tipofield = (uint32_t *) set_mem(sizeof(uint32_t) * obj->tamanhotipoField);
+    //obj->tipofield = (uint32_t *) set_mem(sizeof(uint32_t) * obj->tamanhotipoField);
 
     Data * data1 = (Data*) malloc(sizeof(Data));
 	data1->reference = (void*)obj;
@@ -2141,15 +2388,16 @@ void i_jsr_w(Frame *frame, uint8_t branchByte1, uint8_t branchByte2, uint8_t bra
     return;
 }
 
-staticField *recupera_field(char *nome, ListaStaticField **listadefields)
+/*staticField *recupera_field(char *nome, ListaStaticField **listadefields)
 {
     ListaStaticField *lsf1;
     lsf1 = *listadefields;
     while (lsf1 != NULL)
     {
-        if (!strcmp(nome, lsf1->dado->NomeClasse))
+        if (!strcmp(nome, lsf1->dado->NomeClasse)){
             return lsf1->dado;
+        }
         lsf1 = lsf1->prox;
     }
     return NULL;
-}
+}*/

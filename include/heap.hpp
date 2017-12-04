@@ -10,6 +10,7 @@
 #define _HEAP_H
 
 #include <string.h>
+#include <vector>
 #include "class.hpp"
 #include "mem-manager.hpp"
 
@@ -36,100 +37,30 @@ typedef struct tipoarray
     } info;
 } tArray;
 
-typedef struct listadearrays
-{
-    tArray                  *dado;
-    struct listadearrays    *prox;
-} ListaArrays;
-
 typedef struct tipoobjeto
 {
     Class    *classe;
     uint16_t tamanhotipoField;
-    uint32_t *tipofield;
+    std::vector<int32_t> tipofield;
+    //uint32_t *tipofield;
 } Objeto;
 
 typedef struct
 {
 	char     *NomeClasse;
+  char     *Type_name;
 	uint16_t  fieldCount;
-	uint64_t  *valor;
+	std::vector<int32_t> valor;
 } staticField;
-
-typedef struct listastaticfield
-{
-	staticField             *dado;
-	struct listastaticfield *prox;
-} ListaStaticField;
-
-typedef struct listadeobjetos
-{
-    Objeto                  *dado;
-    struct listadeobjetos   *prox;
-} ListaObjetos;
-
-typedef struct listadeclasses
-{
-    Class                   *dado;
-    struct listadeclasses   *prox;
-} ListaClasses;
 
 typedef struct heap
 {
-    struct listadearrays    *listaDeArrays;
-    struct listastaticfield *listaStaticField;
-    struct listadeobjetos   *listaDeObjetos;
-    struct listadeclasses   *listaDeClasses;
+    std::vector<staticField> listaStaticField;
+    std::vector<tArray> listaDeArrays;
+    std::vector<Objeto> listaDeObjetos;
+    std::vector<Class> listaDeClasses;
     //struct pilhadeframes    *pilhaDeFrames;
 } Heap;
-
-/**
-*   @fn void InsereListaDeClasses(ListaClasses **listadeclasses, Class *dado)
-*   @brief Funcao que insere um elemento na lista de classes.
-*   @param listadeclasses Lista que recebera o elemento.
-*   @param dado Dado a ser inserido.
-*/
-ListaClasses* InsereListaDeClasses(ListaClasses**, Class*);
-
-/**
-*   @fn void desalocaListaDeClasses(ListaClasses *listadeclasses)
-*   @brief Funcao que desaloca completamente uma lista de classes.
-*   @param listadeclasses Lista a ser destruida.
-*/
-void desalocaListaDeClasses(ListaClasses*);
-
-/**
-*   @fn void InsereListaDeFields(ListaStaticField **listadefields, staticField *dado)
-*   @brief Funcao que insere um elemento na lista de fields.
-*   @param listadefields Lista que recebera o elemento.
-*   @param dado Dado a ser inserido.
-*/
-void InsereListaDeFields(ListaStaticField**, staticField*);
-
-/**
-*   @fn void desalocaListaDeFields(ListaStaticField *listadefields)
-*   @brief Funcao que desaloca completamente uma lista de fields.
-*   @param listadefields Lista a ser destruida.
-*/
-void desalocaListaDeFields(ListaStaticField*);
-
-/**
-*   @fn Class *RecuperaIesimaClasse(int index, ListaClasses **listadeclasses)
-*   @brief Funcao que recebe um indice e procura na lista de classes a classe correspondente a esse indice.
-*   @param index Indice da lista a ser recuperado.
-*   @param listadeclasses Lista que contem as classes carregadas.
-*   @return I-esima classe da lista.
-*/
-Class *RecuperaIesimaClasse(int, ListaClasses**);
-
-/**
-*   @fn Class *RecuperaClassePorNome(char *nome, ListaClasses **listadeclasses)
-*   @brief Funcao que recebe um indice e procura na lista de classes a classe correspondente a esse indice.
-*   @param nome Nome da classe a ser recuperada.
-*   @param listadeclasses Lista que contem as classes carregadas.
-*   @return Classe com o nome correspondente.
-*/
-Class *RecuperaClassePorNome(char*, ListaClasses**);
 
 /**
 *   @fn Heap* InicializaHeap()

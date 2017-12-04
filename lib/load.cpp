@@ -144,41 +144,43 @@ void i_iload_3(Frame* frame)
 
 void i_lload_0(Frame* frame)
 {
-    uint32_t index = 0;
-    uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
+  //uint32_t index = 0;
+  //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
-    uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
+  //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
-    Data * data1 = (Data*) malloc(sizeof(Data));
-  	data1->operand = low;
+  Data * data1 = (Data*) malloc(sizeof(Data));
+  data1->operand = frame->localVariables.at(1).operand;
 
-  	frame->operandStack.push((*data1));
+  frame->operandStack.push((*data1));
 
-    free(data1);
-    data1 = NULL;
+  free(data1);
+  data1 = NULL;
 
-	  uint32_t high = (uint32_t)(result >> 32);
+  //uint32_t high = (uint32_t)(result >> 32);
 
-    Data * data2 = (Data*) malloc(sizeof(Data));
-  	data2->operand = high;
+  Data * data2 = (Data*) malloc(sizeof(Data));
+  data2->operand = frame->localVariables.at(0).operand;
 
-  	frame->operandStack.push((*data2));
+  frame->operandStack.push((*data2));
 
-    free(data2);
-    data2 = NULL;
+  free(data2);
+  data2 = NULL;
 
-  return;
+  //printf("Value at lload_0 - %ld\n", decodeLong(frame->localVariables.at(0).operand, frame->localVariables.at(1).operand));
+
+ return;
 }
 
 void i_lload_1(Frame* frame)
 {
-    uint32_t index = 1;
+    //uint32_t index = 1;
     //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
     //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-  	data1->operand = frame->localVariables.at(index + 1).operand;
+  	data1->operand = frame->localVariables.at(2).operand;
 
   	frame->operandStack.push((*data1));
 
@@ -188,7 +190,7 @@ void i_lload_1(Frame* frame)
 	  //uint32_t high = (uint32_t)(result >> 32);
 
     Data * data2 = (Data*) malloc(sizeof(Data));
-  	data2->operand = frame->localVariables.at(index).operand;
+  	data2->operand = frame->localVariables.at(1).operand;
 
   	frame->operandStack.push((*data2));
 
@@ -200,13 +202,13 @@ void i_lload_1(Frame* frame)
 
 void i_lload_2(Frame* frame)
 {
-    uint32_t index = 2;
+    //uint32_t index = 2;
     //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
     //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-  	data1->operand = frame->localVariables.at(index + 1).operand;
+  	data1->operand = frame->localVariables.at(3).operand;
 
   	frame->operandStack.push((*data1));
 
@@ -216,7 +218,7 @@ void i_lload_2(Frame* frame)
 	  //uint32_t high = (uint32_t)(result >> 32);
 
     Data * data2 = (Data*) malloc(sizeof(Data));
-  	data2->operand = frame->localVariables.at(index).operand;
+  	data2->operand = frame->localVariables.at(2).operand;
 
   	frame->operandStack.push((*data2));
 
@@ -228,13 +230,13 @@ void i_lload_2(Frame* frame)
 
 void i_lload_3(Frame* frame)
 {
-    uint32_t index = 3;
+    //uint32_t index = 3;
     //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
     //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-  	data1->operand = frame->localVariables.at(index + 1).operand;
+  	data1->operand = frame->localVariables.at(4).operand;
 
   	frame->operandStack.push((*data1));
 
@@ -244,7 +246,7 @@ void i_lload_3(Frame* frame)
 	  //uint32_t high = (uint32_t)(result >> 32);
 
     Data * data2 = (Data*) malloc(sizeof(Data));
-  	data2->operand = frame->localVariables.at(index).operand;
+  	data2->operand = frame->localVariables.at(3).operand;
 
   	frame->operandStack.push((*data2));
 
@@ -313,13 +315,15 @@ void i_fload_3(Frame* frame)
 
 void i_dload_0(Frame* frame)
 {
-   uint32_t index = 0;
+   //int32_t index = 0;
    //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
    //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
+   //printf("double at dload_0 - %f\n", decodeDouble(frame->localVariables.at(0).operand, frame->localVariables.at(1).operand));
+
    Data * data1 = (Data*) malloc(sizeof(Data));
-   data1->operand = frame->localVariables.at(index + 1).operand;
+   data1->operand = frame->localVariables.at(1).operand;
 
    frame->operandStack.push((*data1));
 
@@ -329,7 +333,7 @@ void i_dload_0(Frame* frame)
 	 //uint32_t high = (uint32_t)(result >> 32);
 
    Data * data2 = (Data*) malloc(sizeof(Data));
- 	 data2->operand = frame->localVariables.at(index).operand;
+ 	 data2->operand = frame->localVariables.at(0).operand;
 
  	 frame->operandStack.push((*data2));
 
@@ -341,13 +345,13 @@ void i_dload_0(Frame* frame)
 
 void i_dload_1(Frame* frame)
 {
-  uint32_t index = 1;
+  //int32_t index = 1;
   //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
   //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
   Data * data1 = (Data*) malloc(sizeof(Data));
-  data1->operand = frame->localVariables.at(index + 1).operand;
+  data1->operand = frame->localVariables.at(2).operand;
 
   frame->operandStack.push((*data1));
 
@@ -357,7 +361,7 @@ void i_dload_1(Frame* frame)
  //uint32_t high = (uint32_t)(result >> 32);
 
   Data * data2 = (Data*) malloc(sizeof(Data));
-  data2->operand = frame->localVariables.at(index).operand;
+  data2->operand = frame->localVariables.at(1).operand;
 
   frame->operandStack.push((*data2));
 
@@ -369,13 +373,15 @@ void i_dload_1(Frame* frame)
 
 void i_dload_2(Frame* frame)
 {
-    uint32_t index = 2;
+    //int32_t index = 2;
     //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
     //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
+    //printf("double at dload_2- %f\n", decodeDouble(frame->localVariables.at(2).operand, frame->localVariables.at(3).operand));
+
     Data * data1 = (Data*) malloc(sizeof(Data));
-    data1->operand = frame->localVariables.at(index + 1).operand;
+    data1->operand = frame->localVariables.at(3).operand;
 
     frame->operandStack.push((*data1));
 
@@ -385,7 +391,7 @@ void i_dload_2(Frame* frame)
 	  //uint32_t high = (uint32_t)(result >> 32);
 
     Data * data2 = (Data*) malloc(sizeof(Data));
-    data2->operand = frame->localVariables.at(index).operand;
+    data2->operand = frame->localVariables.at(2).operand;
 
     frame->operandStack.push((*data2));
 
@@ -397,7 +403,7 @@ void i_dload_2(Frame* frame)
 
 void i_dload_3(Frame* frame)
 {
-    uint32_t index = 3;
+    //int32_t index = 3;
     //uint64_t result = (((uint64_t)frame->localVariables.at(index).operand) << 32) |(frame->localVariables.at(index + 1).operand);
 
     //printf("double into dload_3 - %llu\n", result);
@@ -405,7 +411,7 @@ void i_dload_3(Frame* frame)
     //uint32_t low = (uint32_t)(result & 0x00000000FFFFFFFF);
 
     Data * data1 = (Data*) malloc(sizeof(Data));
-    data1->operand = frame->localVariables.at(index + 1).operand;
+    data1->operand = frame->localVariables.at(4).operand;
 
     frame->operandStack.push((*data1));
 
@@ -415,7 +421,7 @@ void i_dload_3(Frame* frame)
 	  //uint32_t high = (uint32_t)(result >> 32);
 
     Data * data2 = (Data*) malloc(sizeof(Data));
-    data2->operand = frame->localVariables.at(index).operand;
+    data2->operand = frame->localVariables.at(3).operand;
 
     frame->operandStack.push((*data2));
 

@@ -154,7 +154,7 @@ void i_areturn(Frame*, std::stack<Frame*>&);
 void i_return(Frame*);
 
 /**
-*   @fn void i_getstatic(Frame*, ListaStaticField *listadefields, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2)
+*   @fn void i_getstatic(Frame*, std::vector<staticField>&, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2)
 *   @brief identifica um field e coloca na pilha de operandos
 *	@param frame
 *   @param listadefields
@@ -163,10 +163,10 @@ void i_return(Frame*);
 *   @param indexbyte2
 *   @return
 */
-void i_getstatic(Frame*, ListaStaticField *listadefields, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2);
+void i_getstatic(Frame*, std::vector<staticField>&, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2);
 
 /**
-*   @fn void i_putstatic(Frame*, ListaStaticField *listadefields, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2)
+*   @fn void i_putstatic(Frame*, std::vector<staticField>&, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2)
 *   @brief pega um field da pilha de operandos e coloca na lista de fields
 *	@param frame
 *   @param listadefields
@@ -175,7 +175,7 @@ void i_getstatic(Frame*, ListaStaticField *listadefields, ListaClasses *listadec
 *   @param indexbyte2
 *   @return
 */
-void i_putstatic(Frame*, ListaStaticField *listadefields, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2);
+void i_putstatic(Frame*, std::vector<staticField>&, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2);
 
 /**
 *   @fn void i_getfield(Frame*, uint8_t indexbyte1, uint8_t indexbyte2)
@@ -198,7 +198,7 @@ void i_getfield(Frame*, uint8_t indexbyte1, uint8_t indexbyte2);
 void i_putfield(Frame*, uint8_t indexbyte1, uint8_t indexbyte2);
 
 /**
-*   @fn void i_invokevirtual(Frame*, Stack *pilhadeframes, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
+*   @fn void i_invokevirtual(Frame*, std::stack<Frame*> &, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
 *   @brief invoca um metodo ,que esta em um objeto na pilha de operandos junto com seus argumentos, e coloca o resultado na pilha de operandos o nome do metodo eh identificado por (indexbyte1<<8 + indexbyte2) no constant_pool do frame corrente
 *	@param frame
 *	@param pilhadeframes
@@ -207,10 +207,10 @@ void i_putfield(Frame*, uint8_t indexbyte1, uint8_t indexbyte2);
 *   @param indexbyte2
 *   @return
 */
-void i_invokevirtual(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
+void i_invokevirtual(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
 
 /**
-*   @fn void i_invokespecial(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
+*   @fn void i_invokespecial(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
 *   @brief invoca um metodo ,que esta em um objeto na pilha de operandos junto com seus argumentos, e coloca o resultado na pilha de operandos o nome do metodo eh identificado por (indexbyte1<<8 + indexbyte2) no constant_pool do frame corrente
 *	@param frame
 *	@param pilhadeframes
@@ -219,10 +219,10 @@ void i_invokevirtual(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *li
 *   @param indexbyte2
 *   @return
 */
-void i_invokespecial(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
+void i_invokespecial(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
 
 /**
-*   @fn void i_invokestatic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
+*   @fn void i_invokestatic(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap)
 *   @brief invoca um metodo ,que tem seus argumentos na pilha de operandos, e coloca o resultado na pilha de operandos o nome do metodo eh identificado por (indexbyte1<<8 + indexbyte2) no constant_pool do frame corrente
 *	@param frame
 *	@param pilhadeframes
@@ -231,10 +231,10 @@ void i_invokespecial(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *li
 *   @param indexbyte2
 *   @return
 */
-void i_invokestatic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
+void i_invokestatic(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, Heap *heap);
 
 /**
-*   @fn void i_invokeinterface(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t contagem, uint8_t zero, Heap *heap)
+*   @fn void i_invokeinterface(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t contagem, uint8_t zero, Heap *heap)
 *   @brief invoca um metodo ,que esta em um objeto na pilha de operandos junto com seus argumentos, e coloca o resultado na pilha de operandos o nome do metodo eh identificado por (indexbyte1<<8 + indexbyte2) no constant_pool do frame corrente
 *	@param frame
 *	@param pilhadeframes
@@ -245,7 +245,7 @@ void i_invokestatic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *lis
 *   @param zero
 *   @return
 */
-void i_invokeinterface(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t contagem, uint8_t zero, Heap *heap);
+void i_invokeinterface(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t contagem, uint8_t zero, Heap *heap);
 
 /**
 *   @fn void i_invokedynamic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t zero_1, uint8_t zero_2, Heap *heap)
@@ -259,7 +259,7 @@ void i_invokeinterface(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *
 *   @param zero_2
 *   @return
 */
-void i_invokedynamic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *listadeclasses, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t zero_1, uint8_t zero_2, Heap *heap);
+void i_invokedynamic(Frame*, std::stack<Frame*> &pilhaDeFrames, std::vector<Class>&, uint8_t indexbyte1, uint8_t indexbyte2, uint8_t zero_1, uint8_t zero_2, Heap *heap);
 
 /**
 *   @fn void i_new(Frame*, uint8_t indexbyte1, uint8_t indexbyte2, ListaClasses *listadeclasses)
@@ -270,7 +270,7 @@ void i_invokedynamic(Frame*, std::stack<Frame*> &pilhaDeFrames, ListaClasses *li
 *	@param listadeclasses
 *   @return
 */
-void i_new(Frame*, uint8_t indexbyte1, uint8_t indexbyte2, ListaClasses *listadeclasses);
+void i_new(Frame*, uint8_t indexbyte1, uint8_t indexbyte2, std::vector<Class>&);
 
 /**
 *   @fn void i_newarray(Frame*, uint8_t atype)
@@ -424,14 +424,5 @@ void i_tableswitch(Frame*, uint32_t enderecotable, int32_t high, int32_t low, in
 *	@return
 */
 void i_lookupswitch(Frame*, int32_t npairs, uint32_t enderecolookup, int32_t defaultbyte, int32_t *match, int32_t *offset_table);
-
-/**
-*   @fn staticField *recupera_field(char *nome, ListaStaticField **listadefields)
-*   @brief retorna um staticField identificado por nome da listadefields
-*	@param nome
-*	@param listadefields
-*   @return
-*/
-staticField *recupera_field(char *nome, ListaStaticField **listadefields);
 
 #endif //OTHERS_H

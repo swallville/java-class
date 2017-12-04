@@ -225,12 +225,12 @@ enum {
 } byteCodeEnum;
 
 typedef struct data{
-	int32_t operand;    /**< Caso o operando seja um valor, é armazenado nesta variável */
-    double operand_double;
-    float operand_float;
-    long operand_long;
-	void* reference;    /**< Caso o operando seja uma referência, é armazenado nesta variável */
-    int tag;            /**< Caso o operando seja uma referência, é armazenado o tipo da mesma nesta variável */
+  int32_t operand;    /**< Caso o operando seja um valor, é armazenado nesta variável */
+  double operand_double;
+  float operand_float;
+  long operand_long;
+  void* reference;    /**< Caso o operando seja uma referência, é armazenado nesta variável */
+  int tag;            /**< Caso o operando seja uma referência, é armazenado o tipo da mesma nesta variável */
 } Data;
 // codeIndexRef would be the frame PC + 1 (the actual index into the CodeAttribute)
 typedef struct _frame {
