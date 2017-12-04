@@ -560,7 +560,7 @@ void i_getstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vec
 
     //classe = RecuperaClassePorNome(nomeClasse, &listaDeClasses);
 
-    //printf("tipo - %s\n", tipo);
+    //printf("tipo at getstatic - %s\n", tipo);
     //printf("name - %s\n", name);
     //printf("nomeClasse - %s\n", nomeClasse);
 
@@ -624,32 +624,39 @@ void i_getstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vec
     if(field != NULL)
     {
         //printf("value getstatic - %u\n", valor);
-        if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
-            //printf("field->fieldCount - %d\n", field->fieldCount);
-            data1->operand = field->valor.front();
-            data1->reference = NULL;
+        if (strstr(tipo, "[") != NULL) {
+            data1->reference = (void*)field->ref;
             frame->operandStack.push((*data1));
 
             free(data1);
             data1 = NULL;
-
-            Data * data2 = (Data*) malloc(sizeof(Data));
-
-            data2->operand = field->valor.back();
-            data2->reference = NULL;
-            frame->operandStack.push((*data2));
-
-            free(data2);
-            data2 = NULL;
         } else {
-            data1->operand = field->valor.front();
-            data1->reference = NULL;
-            frame->operandStack.push((*data1));
+            if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
+                //printf("field->fieldCount - %d\n", field->fieldCount);
+                data1->operand = field->valor.front();
+                data1->reference = NULL;
+                frame->operandStack.push((*data1));
 
-            free(data1);
-            data1 = NULL;
+                free(data1);
+                data1 = NULL;
+
+                Data * data2 = (Data*) malloc(sizeof(Data));
+
+                data2->operand = field->valor.back();
+                data2->reference = NULL;
+                frame->operandStack.push((*data2));
+
+                free(data2);
+                data2 = NULL;
+            } else {
+                data1->operand = field->valor.front();
+                data1->reference = NULL;
+                frame->operandStack.push((*data1));
+
+                free(data1);
+                data1 = NULL;
+            }
         }
-
         //delete data1;
         //data1 = NULL;
         //printf("value top stack - %d\n", frame->operandStack.top());
@@ -683,6 +690,7 @@ void i_putstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vec
     char *tipo, *name, *nomeClasse/*, *nome*/;
     Class* classe = NULL;
     staticField* field = NULL;
+    Data for_reference;
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
 
@@ -719,52 +727,57 @@ void i_putstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vec
         //InsereListaDeClasses(&listaDeClasses, frame->currentClass);
     }
 
-    //Long
-    if (strstr(tipo, "J") != NULL)
-    {
-        valorh = frame->operandStack.top().operand;
+    if (strstr(tipo, "[") != NULL) {
+        for_reference = frame->operandStack.top();
         frame->operandStack.pop();
+    } else {
+        //Long
+        if (strstr(tipo, "J") != NULL)
+        {
+            valorh = frame->operandStack.top().operand;
+            frame->operandStack.pop();
 
-        valorl = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+            valorl = frame->operandStack.top().operand;
+            frame->operandStack.pop();
 
-        count_int64++;
+            count_int64++;
 
-        //uint64_t valor = (((uint64_t)valorh) << 32) | valorl;
-        //printf("LONG - %ld\n", decodeLong(valorh, valorl));
-    }
-    //Double
-    else if (strstr(tipo, "D") != NULL)
-    {
-        valorh = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+            //uint64_t valor = (((uint64_t)valorh) << 32) | valorl;
+            //printf("LONG - %ld\n", decodeLong(valorh, valorl));
+        }
+        //Double
+        else if (strstr(tipo, "D") != NULL)
+        {
+            valorh = frame->operandStack.top().operand;
+            frame->operandStack.pop();
 
-        valorl = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+            valorl = frame->operandStack.top().operand;
+            frame->operandStack.pop();
 
-        count_int64++;
+            count_int64++;
 
-        //double d = decodeDouble(valorh, valorl);
-        //printf("Double - %f\n", d);
-    }
-    //Inteiro
-    else if (strstr(tipo, "I") != NULL){
-        //printf("Int\n");
-        valor = frame->operandStack.top().operand;
-        frame->operandStack.pop();
-    }
-    //Float
-    else if (strstr(tipo, "F") != NULL)
-    {
-        valor = frame->operandStack.top().operand;
-        frame->operandStack.pop();
-        //valorF = decodeFloat(valor);
+            //double d = decodeDouble(valorh, valorl);
+            //printf("Double - %f\n", d);
+        }
+        //Inteiro
+        else if (strstr(tipo, "I") != NULL){
+            //printf("Int\n");
+            valor = frame->operandStack.top().operand;
+            frame->operandStack.pop();
+        }
+        //Float
+        else if (strstr(tipo, "F") != NULL)
+        {
+            valor = frame->operandStack.top().operand;
+            frame->operandStack.pop();
+            //valorF = decodeFloat(valor);
 
-        //printf("Float - %f\n", decodeFloat(valor));
-    }
-    else {
-        valor = frame->operandStack.top().operand;
-        frame->operandStack.pop();
+            //printf("Float - %f\n", decodeFloat(valor));
+        }
+        else {
+            valor = frame->operandStack.top().operand;
+            frame->operandStack.pop();
+        }
     }
 
     //printf("tipo - %s\n", tipo);
@@ -812,21 +825,27 @@ void i_putstatic(Frame *frame, std::vector<staticField>& listaDeFields, std::vec
         //if (field->valor.size() < (field->fieldCount + count_int64)) {
             //field->valor.resize(field->fieldCount + count_int64);
         //}
-        if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
-            field->valor.push_back(valorl);
-            field->valor.push_back(valorh);
-            //field->valor.at(0) = valorl;
-            //field->valor.at(1) = valorh;
-            /*if (strstr(tipo, "J") != NULL) {
-                printf("Long - %llu\n", (((uint64_t)field->valor.at(1)) << 32) | field->valor.at(0));
-            }
+        if (strstr(tipo, "[") != NULL) {
+            // Setar referencias por tipo
+            //printf("putstatic array\n");
+            field->ref = (void*)for_reference.reference;
+        } else{
+            if ((strstr(tipo, "D") != NULL) || (strstr(tipo, "J") != NULL)) {
+                field->valor.push_back(valorl);
+                field->valor.push_back(valorh);
+                //field->valor.at(0) = valorl;
+                //field->valor.at(1) = valorh;
+                /*if (strstr(tipo, "J") != NULL) {
+                    printf("Long - %llu\n", (((uint64_t)field->valor.at(1)) << 32) | field->valor.at(0));
+                }
 
-            if (strstr(tipo, "D") != NULL) {
-                printf("Double - %f\n", decodeDouble(field->valor.at(1), field->valor.at(0)));
-            }*/
-        } else {
-            field->valor.push_back(valor);
-            //printf("Value - %d\n", field->valor.at(0));
+                if (strstr(tipo, "D") != NULL) {
+                    printf("Double - %f\n", decodeDouble(field->valor.at(1), field->valor.at(0)));
+                }*/
+            } else {
+                field->valor.push_back(valor);
+                //printf("Value - %d\n", field->valor.at(0));
+            }
         }
         listaDeFields.push_back((*field));
         //InsereListaDeFields(&listaDeFields, field);
@@ -1322,7 +1341,8 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vecto
 {
     uint8_t *bytes = NULL;
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0, length = 0;
-    int32_t numParam = 0, *argumentos = NULL;
+    int32_t numParam = 0;
+    Data* argumentos = NULL;
     char *nomeClasse = NULL, *nomeMetodo = NULL, *nome, *nomeDesc, *metodoDesc;
     int i = 0;
     Class *classe = NULL;
@@ -1397,41 +1417,49 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vecto
     //printf("bytes - %s\n", bytes);
     //printf("length - %d\n", length);
 
-    for (i = 0; i < length && bytes[i] != ')'; i++)
-    {
-        if(bytes[i] == 'L')
+    if (strstr(metodoDesc, "[") != NULL) {
+        numParam++;
+        Data data_ar = frame->operandStack.top();
+        frame->operandStack.pop();
+        helper.push(data_ar);
+    } else {
+        for (i = 0; i < length && bytes[i] != ')'; i++)
         {
-            while(bytes[i] != ';'){
-                i++;
+            if(bytes[i] == 'L')
+            {
+                while(bytes[i] != ';'){
+                    i++;
+                }
+                numParam++;
+                Data data_l = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_l);
             }
-            numParam++;
-            Data data_l = frame->operandStack.top();
-            frame->operandStack.pop();
-            helper.push(data_l);
-        }
-        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
-            numParam++;
-            Data data_b = frame->operandStack.top();
-            frame->operandStack.pop();
-            helper.push(data_b);
-        }
-        else if((bytes[i] == 'D') || (bytes[i] == 'J')){
-            numParam += 2;
-            Data data_high = frame->operandStack.top();
-            frame->operandStack.pop();
+            else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
+                numParam++;
+                Data data_b = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_b);
+            }
+            else if((bytes[i] == 'D') || (bytes[i] == 'J')){
+                numParam += 2;
+                Data data_high = frame->operandStack.top();
+                frame->operandStack.pop();
 
-            Data data_low = frame->operandStack.top();
-            frame->operandStack.pop();
+                Data data_low = frame->operandStack.top();
+                frame->operandStack.pop();
 
-            helper.push(data_low);
-            helper.push(data_high);
+                helper.push(data_low);
+                helper.push(data_high);
+            }
         }
     }
 
-    argumentos = (int32_t *) set_mem(sizeof(int32_t) * numParam);
+    //printf("numParam - %d\n", numParam);
+    argumentos = (Data *) set_mem(sizeof(Data) * numParam);
 
     for (i = (numParam - 1); i >= 0; i--) {
-        argumentos[i] = helper.top().operand;
+        argumentos[i] = helper.top();
         helper.pop();
     }
 
@@ -1499,13 +1527,14 @@ void i_invokespecial(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vecto
         pilhaDeFrames.pop();
 
         for (int j = (numParam - 1); j >= 0; j--) {
-            Data * data1 = (Data*) malloc(sizeof(Data));
-            data1->operand = argumentos[j];
+            //Data * data1 = (Data*) malloc(sizeof(Data));
+            //data1->operand = argumentos[j];
 
-            frame1->localVariables.push_back((*data1));
+            //frame1->localVariables.push_back((*data1));
+            frame1->localVariables.push_back(argumentos[j]);
 
-            free(data1);
-            data1 = NULL;
+            //free(data1);
+            //data1 = NULL;
         }
         free_mem((void **) &argumentos);
         pilhaDeFrames.push(current);
@@ -1528,7 +1557,8 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector
 {
     uint8_t *bytes = NULL;
     uint16_t index = 0, classIndex = 0, descriptorIndex = 0, metodoIndex = 0, length = 0;
-    int32_t numParam = 0, *argumentos = NULL;
+    int32_t numParam = 0;
+    Data* argumentos = NULL;
     char *nomeClasse = NULL, *nomeMetodo = NULL, *metodoDesc = NULL, *nome = NULL, *nomeDesc = NULL;
     int i = 0;
     Class *classe = NULL;
@@ -1565,41 +1595,49 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector
     //printf("bytes - %s\n", bytes);
     //printf("length - %d\n", length);
 
-    for (i = 0; i < length && bytes[i] != ')'; i++)
-    {
-        if(bytes[i] == 'L')
+    if (strstr(metodoDesc, "[") != NULL) {
+        numParam++;
+        Data data_ar = frame->operandStack.top();
+        frame->operandStack.pop();
+        helper.push(data_ar);
+    } else {
+        for (i = 0; i < length && bytes[i] != ')'; i++)
         {
-            while(bytes[i] != ';'){
-                i++;
+            if(bytes[i] == 'L')
+            {
+                while(bytes[i] != ';'){
+                    i++;
+                }
+                numParam++;
+                Data data_l = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_l);
             }
-            numParam++;
-            Data data_l = frame->operandStack.top();
-            frame->operandStack.pop();
-            helper.push(data_l);
-        }
-        else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
-            numParam++;
-            Data data_b = frame->operandStack.top();
-            frame->operandStack.pop();
-            helper.push(data_b);
-        }
-        else if((bytes[i] == 'D') || (bytes[i] == 'J')){
-            numParam += 2;
-            Data data_high = frame->operandStack.top();
-            frame->operandStack.pop();
+            else if((bytes[i] == 'B') || (bytes[i] == 'C') || (bytes[i] == 'F') || (bytes[i] == 'I') || (bytes[i] == 'S') || (bytes[i] == 'Z')){
+                numParam++;
+                Data data_b = frame->operandStack.top();
+                frame->operandStack.pop();
+                helper.push(data_b);
+            }
+            else if((bytes[i] == 'D') || (bytes[i] == 'J')){
+                numParam += 2;
+                Data data_high = frame->operandStack.top();
+                frame->operandStack.pop();
 
-            Data data_low = frame->operandStack.top();
-            frame->operandStack.pop();
+                Data data_low = frame->operandStack.top();
+                frame->operandStack.pop();
 
-            helper.push(data_low);
-            helper.push(data_high);
+                helper.push(data_low);
+                helper.push(data_high);
+            }
         }
     }
 
-    argumentos = (int32_t *) set_mem(sizeof(int32_t) * numParam);
+    //printf("numParam - %d\n", numParam);
+    argumentos = (Data *) set_mem(sizeof(Data) * numParam);
 
     for (i = (numParam - 1); i >= 0; i--) {
-        argumentos[i] = helper.top().operand;
+        argumentos[i] = helper.top();
         helper.pop();
     }
 
@@ -1681,12 +1719,12 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector
 
             for (int j = (numParam - 1); j >= 0; j--){
                 //printf("argumentos[%d] - %d\n", j, argumentos[j]);
-                Data * data1 = (Data*) malloc(sizeof(Data));
-                data1->operand = argumentos[j];
-                frame1->localVariables.push_back((*data1));
-
-                free(data1);
-                data1 = NULL;
+                //Data * data1 = (Data*) malloc(sizeof(Data));
+                //data1->operand = argumentos[j];
+                //frame1->localVariables.push_back((*data1));
+                frame1->localVariables.push_back(argumentos[j]);
+                //free(data1);
+                //data1 = NULL;
             }
             free_mem((void **) &argumentos);
             pilhaDeFrames.push(current);
@@ -1711,7 +1749,7 @@ void i_invokestatic(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector
 
 void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vector<Class> &listaDeClasses, uint8_t indexByte1, uint8_t indexByte2, uint8_t contagem, uint8_t zero, Heap *heap)
 {
-    uint32_t *argumentos;
+    Data* argumentos = NULL;
     uint16_t index = 0, classeIndex = 0, descriptorIndex = 0;
     char *nome = NULL, *nomeMetodo = NULL, *nomeClasse = NULL, *nomeDesc = NULL, *metodoDesc = NULL;
     int j = 0;
@@ -1719,7 +1757,7 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vec
     Class *classe = NULL;
     Objeto *obj = (Objeto *) set_mem(sizeof(Objeto));
 
-    argumentos = (uint32_t *) set_mem(sizeof(uint32_t) * (contagem + 1));
+    argumentos = (Data *) set_mem(sizeof(Data) * (contagem + 1));
 
     index = (uint16_t) indexByte1 << 8 | (uint16_t) indexByte2;
     classeIndex = index;
@@ -1737,7 +1775,7 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vec
 
     for (j = contagem; j >= 0; j--)
     {
-        argumentos[j] = frame->operandStack.top().operand;
+        argumentos[j] = frame->operandStack.top();
         frame->operandStack.pop();
     }
 
@@ -1791,13 +1829,14 @@ void i_invokeinterface(Frame *frame, std::stack<Frame*> &pilhaDeFrames, std::vec
 
         for (int j = contagem; j >= 0; j--){
             //printf("argumentos[%d] - %d\n", j, argumentos[j]);
-            Data * data1 = (Data*) malloc(sizeof(Data));
-            data1->operand = argumentos[j];
+            //Data * data1 = (Data*) malloc(sizeof(Data));
+            //data1->operand = argumentos[j];
 
-            frame1->localVariables.push_back((*data1));
+            //frame1->localVariables.push_back((*data1));
+            frame1->localVariables.push_back(argumentos[j]);
 
-            free(data1);
-            data1 = NULL;
+            //free(data1);
+            //data1 = NULL;
         }
         free_mem((void **) &argumentos);
         pilhaDeFrames.push(current);

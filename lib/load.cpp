@@ -467,20 +467,22 @@ void i_iaload(Frame* frame)
 
    tArray* arrayRef = (tArray*)frame->operandStack.top().reference;
    frame->operandStack.pop();
-
    Data * data1 = (Data*) malloc(sizeof(Data));
 
+   //printf("tag - %d\n", arrayRef->tag);
+   //printf("arrayRef->info.tipoInt[index] - %d[%d]\n", arrayRef->info.tipoInt[index], index);
    if (arrayRef->is_multarray == true) {
      data1->operand = *((uint32_t*)arrayRef->reference_helper);
    } else {
      data1->operand = arrayRef->info.tipoInt[index];
    }
    //printf("value at iaload - %d\n", *((uint32_t*)arrayRef->reference_helper));
-
-   if (arrayRef->array_pos == arrayRef->base_array_pos) {
-         arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[arrayRef->base_array_pos]);
-         arrayRef->array_pos = arrayRef->base_array_pos;
-         arrayRef->base_array_pos += arrayRef->tamanho1;
+   if (arrayRef->is_multarray == true) {
+     if (arrayRef->array_pos == arrayRef->base_array_pos) {
+           arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[arrayRef->base_array_pos]);
+           arrayRef->array_pos = arrayRef->base_array_pos;
+           arrayRef->base_array_pos += arrayRef->tamanho1;
+     }
    }
 
    data1->reference = (void*)arrayRef;
@@ -538,6 +540,7 @@ void i_faload(Frame* frame)
 
     Data * data1 = (Data*) malloc(sizeof(Data));
     data1->operand = arrayRef[index];
+    //printf("value at faload - %d\n", data1->operand);
     data1->reference = (void*)ref;
 
     frame->operandStack.push((*data1));
@@ -557,6 +560,8 @@ void i_daload(Frame* frame)
     frame->operandStack.pop();
 
     int64_t* arrayRef = ref->info.tipoDouble;
+
+    //printf("value at daload - %lld\n", arrayRef[index]);
 
     uint32_t low = (uint32_t)(arrayRef[index] & 0x00000000FFFFFFFF);
 

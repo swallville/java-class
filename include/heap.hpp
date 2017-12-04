@@ -49,6 +49,7 @@ typedef struct
 {
 	char     *NomeClasse;
   char     *Type_name;
+  void     *ref;
 	uint16_t  fieldCount;
 	std::vector<int32_t> valor;
 } staticField;

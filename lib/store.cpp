@@ -486,6 +486,7 @@ void i_iastore(Frame* frame)
         *((uint32_t*)arrayRef->reference_helper) = valor;
     } else {
         arrayRef->info.tipoInt[index] = valor;
+        //printf("valor at iastore[%d] - %d\n", index, arrayRef->info.tipoInt[index]);
     }
 
     //printf("index at i_astore - %d\n", index);
@@ -497,20 +498,22 @@ void i_iastore(Frame* frame)
 
     //printf("index - %d\n", index);
 
-    if (arrayRef->array_pos == arrayRef->base_array_pos) {
-        arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[arrayRef->base_array_pos]);
-        arrayRef->array_pos = arrayRef->base_array_pos;
-        arrayRef->base_array_pos += arrayRef->tamanho1;
-    }
+    if (arrayRef->is_multarray == true) {
+        if (arrayRef->array_pos == arrayRef->base_array_pos) {
+            arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[arrayRef->base_array_pos]);
+            arrayRef->array_pos = arrayRef->base_array_pos;
+            arrayRef->base_array_pos += arrayRef->tamanho1;
+        }
 
-    if (arrayRef->array_pos == arrayRef->tamanho) {
-        arrayRef->array_pos = 0;
-        arrayRef->base_array_pos = arrayRef->tamanho1;
-        arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[0]);
-        //printf("arrayRef->base_array_pos after reset - %d\n", arrayRef->base_array_pos);
-        //printf("arrayRef->array_pos after reset - %d\n", arrayRef->array_pos);
-        //printf("arrayRef->info.tipoInt[0] after reset - %d\n", *((uint32_t*)arrayRef->reference_helper));
-        //printf("arrayRef->info.tipoInt[10] after reset - %d\n", arrayRef->info.tipoInt[10]);
+        if (arrayRef->array_pos == arrayRef->tamanho) {
+            arrayRef->array_pos = 0;
+            arrayRef->base_array_pos = arrayRef->tamanho1;
+            arrayRef->reference_helper = (void*)(&arrayRef->info.tipoInt[0]);
+            //printf("arrayRef->base_array_pos after reset - %d\n", arrayRef->base_array_pos);
+            //printf("arrayRef->array_pos after reset - %d\n", arrayRef->array_pos);
+            //printf("arrayRef->info.tipoInt[0] after reset - %d\n", *((uint32_t*)arrayRef->reference_helper));
+            //printf("arrayRef->info.tipoInt[10] after reset - %d\n", arrayRef->info.tipoInt[10]);
+        }
     }
 
     return;
@@ -533,16 +536,17 @@ void i_lastore(Frame* frame)
     frame->operandStack.pop();
 
     arrayRef->info.tipoLong[index] = valor;
+    //printf("valor at lastore[%d] - %lld\n", index, arrayRef->info.tipoLong[index]);
 
     return;
 }
 
 void i_fastore(Frame* frame)
 {
-    uint32_t valor = frame->operandStack.top().operand;
+    int32_t valor = frame->operandStack.top().operand;
     frame->operandStack.pop();
-    float f = (float) valor;
-    uint32_t uf = f;
+    //float f = decodeFloat((uint32_t)valor);
+    //int32_t uf = (int32_t)f;
 
     uint32_t index = frame->operandStack.top().operand;
     frame->operandStack.pop();
@@ -550,7 +554,8 @@ void i_fastore(Frame* frame)
     tArray* arrayRef = (tArray*)(frame->operandStack.top().reference);
     frame->operandStack.pop();
 
-    arrayRef->info.tipoFloat[index] = uf;
+    arrayRef->info.tipoFloat[index] = valor;
+    //printf("valor at fastore[%d] - %d\n", index, arrayRef->info.tipoFloat[index]);
 
     return;
 }
@@ -563,9 +568,9 @@ void i_dastore(Frame* frame)
     uint32_t valorl = frame->operandStack.top().operand;
     frame->operandStack.pop();
 
-    uint64_t valor = (((uint64_t)valorh) << 32) | valorl;
-    double d = (double) valor;
-    uint64_t ud = d;
+    int64_t valor = (((uint64_t)valorh) << 32) | valorl;
+    //double d = decodeDouble(valorh, valorl);
+    //int64_t ud = (int64_t)d;
 
     uint32_t index = frame->operandStack.top().operand;
     frame->operandStack.pop();
@@ -573,7 +578,8 @@ void i_dastore(Frame* frame)
     tArray* arrayRef = (tArray*)(frame->operandStack.top().reference);
     frame->operandStack.pop();
 
-    arrayRef->info.tipoDouble[index] = ud;
+    arrayRef->info.tipoDouble[index] = valor;
+    //printf("valor at dastore[%d] - %lld\n", index, arrayRef->info.tipoDouble[index]);
 
     return;
 }
@@ -590,6 +596,7 @@ void i_aastore(Frame* frame)
     frame->operandStack.pop();
 
     arrayRef->info.tipoReferencia[index] = valor;
+    //printf("valor at aastore[%d] - %d\n", index, arrayRef->info.tipoReferencia[index]);
 
     return;
 }
@@ -607,6 +614,7 @@ void i_bastore(Frame* frame)
 
     if (ref->tag == TipoByte) {
       ref->info.tipoByte[index] = valor;
+      //printf("valor at bastore[%d] - %d\n", index, ref->info.tipoByte[index]);
       //printf("value into bastore - %d\n", ref->info.tipoByte[index]);
       //printf("real value into bastore - %d\n", valor);
     } else {
@@ -646,6 +654,7 @@ void i_sastore(Frame* frame)
     frame->operandStack.pop();
 
     arrayRef->info.tipoShort[index] = valor;
+    //printf("valor at sastore[%d] - %d\n", index, arrayRef->info.tipoShort[index]);
 
     return;
 }
